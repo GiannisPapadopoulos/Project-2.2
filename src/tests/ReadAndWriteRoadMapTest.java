@@ -1,14 +1,16 @@
-import java.io.FileNotFoundException;
-import java.io.IOException;
+package tests;
 
 import io.RoadMapReader;
 import io.RoadMapWriter;
+
+import java.io.IOException;
+
 import core.Road;
 import core.RoadEndpoint;
 import core.RoadMap;
 
+public class ReadAndWriteRoadMapTest {
 
-public class Main {
 	public static void main(String[] args){
 		
 		//This currently just contains a test for the reader and writer

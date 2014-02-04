@@ -1,9 +1,9 @@
 package io;
 
-import java.util.HashMap;
-import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Scanner;
 
 import core.Road;
 import core.RoadEndpoint;
@@ -34,7 +34,7 @@ public class RoadMapReader {
 			Road road = new Road(start, end, length, speed);
 			rm.addRoad(road);
 		}
-		
+		s.close();
 		return rm;
 	}
 }

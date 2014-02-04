@@ -1,10 +1,11 @@
 package core;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 public class RoadMap {
+	
 	private ArrayList<Road> roads = new ArrayList<Road>();
 	private HashSet<RoadEndpoint> endpoints = new HashSet<RoadEndpoint>();
 	
@@ -23,12 +24,14 @@ public class RoadMap {
 		roads.add(road);
 	}
 	
-	public Collection<RoadEndpoint> getEndpoints(){
-		return (Collection<RoadEndpoint>)endpoints.clone(); //I'm cloning because we don't want outsiders modifying our roads list
+	public List<RoadEndpoint> getEndpoints() {
+		return new ArrayList<RoadEndpoint>(endpoints); // I'm cloning because we don't want outsiders modifying our roads list
+														// If this method is called frequently, we won't want to clone
+														// every time - Giannis
 	}
 	
-	public Collection<Road> getRoads(){
-		return (Collection<Road>) roads.clone(); 
+	public List<Road> getRoads() {
+		return new ArrayList<Road>(roads);
 	}
 	
 	public int getNumEndpoints(){

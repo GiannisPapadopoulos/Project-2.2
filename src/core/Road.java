@@ -28,4 +28,12 @@ public class Road {
 	public RoadEndpoint getEnd(){
 		return end;
 	}
+	
+	public Double getLength(){
+		return length;
+	}
+	
+	public Double getSpeed(){
+		return speed;
+	}
 }

@@ -18,7 +18,7 @@ public class EditorScreen implements Screen {
 	private WorldRenderer renderer;
 	private Group g;
 
-	private static final double ZOOMING_FACTOR = 0.1f;
+	private static final double ZOOMING_FACTOR = 0.8f;
 	private static final float TRANSLATION_FACTOR = 0.5f;
 
 	public EditorScreen(Game editorGame, EditorData editorData) {

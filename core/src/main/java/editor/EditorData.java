@@ -5,6 +5,17 @@ import lombok.Getter;
 public class EditorData {
 	
 	private static final int LAND_EMPTY = 1;
+	
+	private static final int LAND_ROAD_LOWER_BOUND = 100;
+	private static final int LAND_ROAD_UPPER_BOUND = 999;
+	
+	private static final int LAND_ROAD_STANDARD = 101;
+	private static final int LAND_ROAD_LARGE_AVENUE = 102;
+	private static final int LAND_ROAD_STREET = 103;
+	private static final int LAND_ROAD_HIGHWAY = 104;
+	
+	
+	
 
 	@Getter
 	private int height;

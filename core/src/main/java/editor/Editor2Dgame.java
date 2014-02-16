@@ -8,7 +8,7 @@ public class Editor2Dgame extends Game {
 
 	@Override
 	public void create() {
-		val currentScreen = new EditorScreen(this, new EditorData(1000,1000));
+		val currentScreen = new EditorScreen(this, new EditorData(100,100));
 		setScreen(currentScreen);
 	}
 	@Override

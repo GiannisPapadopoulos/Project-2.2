@@ -30,6 +30,7 @@ public class PhysicsBodyFactory {
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.0f;
 		fixtureDef.restitution = 1;
+		body.createFixture(fixtureDef);
 
 		return new PhysicsBodyComponent(body);
 	}

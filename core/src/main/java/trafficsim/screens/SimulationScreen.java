@@ -41,6 +41,7 @@ public class SimulationScreen
 
 		EntityFactory.createCar(world, new Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 20f, "red-car").addToWorld();
 
+
 	}
 
 	@Override

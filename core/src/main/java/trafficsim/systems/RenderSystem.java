@@ -39,7 +39,8 @@ public class RenderSystem
 	@Override
 	protected void initialize() {
 		regions = new HashMap<String, AtlasRegion>();
-		textureAtlas = new TextureAtlas(Gdx.files.internal("assets/packed-textures/pack"), Gdx.files.internal("assets/packed-textures"));
+		textureAtlas = new TextureAtlas(Gdx.files.internal("assets/packed-textures/textures.pack"),
+										Gdx.files.internal("assets/packed-textures"));
 		for (AtlasRegion r : textureAtlas.getRegions()) {
 			regions.put(r.name, r);
 		}

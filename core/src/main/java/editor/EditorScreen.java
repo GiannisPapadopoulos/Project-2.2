@@ -18,8 +18,8 @@ public class EditorScreen implements Screen {
 	private WorldRenderer renderer;
 	private Group g;
 
-	private static final double ZOOMING_FACTOR = 10;
-	private static final float TRANSLATION_FACTOR = 50f;
+	private static final double ZOOMING_FACTOR = 0.1f;
+	private static final float TRANSLATION_FACTOR = 0.5f;
 
 	public EditorScreen(Game editorGame, EditorData editorData) {
 		this.editorGame = editorGame;
@@ -47,18 +47,16 @@ public class EditorScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+		Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		outputScreen.act(delta);
 		outputScreen.draw();
-		outputScreen.getCamera().update();
 
-		renderer.render();
-		SLEEP(10);
+		renderer.render((OrthographicCamera) outputScreen.getCamera());
 		
 	}
 
-	private void SLEEP(int time) {
+	public void SLEEP(int time) {
 		try {
 			Thread.sleep(time);
 		} catch (InterruptedException e) {
@@ -88,10 +86,8 @@ public class EditorScreen implements Screen {
 			@Override
 			public boolean scrolled(InputEvent event, float x, float y,
 					int amount) {
-				System.out.println("Scrolled");
 				if (cam.zoom + amount > 0) {
 					cam.zoom += amount * ZOOMING_FACTOR;
-					cam.update();
 				}
 				return false;
 			}
@@ -99,7 +95,6 @@ public class EditorScreen implements Screen {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				System.out.println("TouchDown");
 				previousDragX = x;
 				previousDragY = y;
 				return true;
@@ -108,12 +103,10 @@ public class EditorScreen implements Screen {
 			@Override
 			public void touchDragged(InputEvent event, float x, float y,
 					int pointer) {
-				System.out.println("TouchDragged");
 				cam.translate((previousDragX - x) * TRANSLATION_FACTOR,
 						(previousDragY - y) * TRANSLATION_FACTOR);
 				previousDragX = x;
 				previousDragY = y;
-				cam.update();
 			}
 		});
 

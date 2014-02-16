@@ -8,10 +8,9 @@ public class Editor2Dgame extends Game {
 
 	@Override
 	public void create() {
-		val currentScreen = new EditorScreen(this, new EditorData(10,10));
+		val currentScreen = new EditorScreen(this, new EditorData(1000,1000));
 		setScreen(currentScreen);
 	}
-/*
 	@Override
 	public void dispose() {
 		super.dispose();	
@@ -36,5 +35,4 @@ public class Editor2Dgame extends Game {
 	public void resume() {
 		super.resume();
 	}
-*/
 }

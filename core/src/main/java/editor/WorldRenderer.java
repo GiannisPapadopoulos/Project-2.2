@@ -8,37 +8,35 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 public class WorldRenderer {
 
-	private EditorData editorData;
+	private EditorData data;
 	private OrthographicCamera cam;
+	
+	private static final int CELL_SIZE = 20;
 
 	private ShapeRenderer gridRenderer;
 
-	public WorldRenderer(EditorData editorData) {
-		this.editorData = editorData;
+	public WorldRenderer(EditorData data) {
+		this.data = data;
 		this.cam = new OrthographicCamera(1500, 800);
 		this.cam.position.set(0, 0, 0);
 		this.cam.update();
 		this.gridRenderer = new ShapeRenderer();
 	}
 
-	public void render() {
+	public void render(OrthographicCamera cam) {
 		gridRenderer.setProjectionMatrix(cam.combined);
 		gridRenderer.begin(ShapeType.Line);
 		Gdx.gl.glLineWidth(1);
 		gridRenderer.setColor(Color.GREEN);
 
-		for (int i = 0; i < 2; i++) {
-			float start_x = 0;
-			float start_y = 0;
-			float end_x = (int) (Math.random() * 100);
-			float end_y = (int) (Math.random() * 100);
-			gridRenderer.line(start_x, start_y, end_x, end_y);
-			start_x = 0.1f;
-			start_y = 0;
-			end_x = (int) (Math.random() * 10);
-			end_y = (int) (Math.random() * 10);
-			gridRenderer.line(start_x, start_y, end_x, end_y);
-		}
+		for(int i=0;i<data.getHeight()+1;i++)
+			gridRenderer.line(0, i*CELL_SIZE,data.getWidth()*CELL_SIZE,i*CELL_SIZE);
+			
+		for(int j=0;j<data.getWidth()+1;j++)
+			gridRenderer.line(j*CELL_SIZE,0,j*CELL_SIZE,data.getHeight()*CELL_SIZE);
+				
+		
+
 		gridRenderer.end();
 	}
 

@@ -16,6 +16,7 @@ public class Editor2D {
 		config.useGL20 = true;
 		config.height = 800;
 		config.width = 1500;
+		config.foregroundFPS = 10;
 		new LwjglApplication(new Editor2Dgame(), config);
 	}
 	

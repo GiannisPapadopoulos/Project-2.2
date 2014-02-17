@@ -18,11 +18,14 @@ public final class TrafficSimConstants {
 	/**
 	 * Box2D Constants, used to convert between the 2 coordinate systems
 	 */
-	public static final float WORLD_TO_BOX = 0.01f;
+	public static final float WORLD_TO_BOX = 0.1f;
 	public static final float BOX_TO_WORLD = 1 / WORLD_TO_BOX;
 
 	/** Dimensions of car(s) */
 	public static final float CAR_LENGTH = 5.0f;
 	public static final float CAR_WIDTH = 2.0f;
+
+	/** The width of a single lane, one way */
+	public static final float LANE_WIDTH = 3f;
 
 }

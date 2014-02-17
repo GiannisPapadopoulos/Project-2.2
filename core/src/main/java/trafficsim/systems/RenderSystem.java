@@ -1,12 +1,12 @@
 package trafficsim.systems;
 
 import static trafficsim.TrafficSimConstants.BOX_TO_WORLD;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.CAR_WIDTH;
 
 import java.util.HashMap;
 
+import trafficsim.components.DimensionComponent;
 import trafficsim.components.PhysicsBodyComponent;
+import trafficsim.components.PositionComponent;
 import trafficsim.components.SpriteComponent;
 
 import com.artemis.Aspect;
@@ -25,9 +25,13 @@ public class RenderSystem
 		extends EntityProcessingSystem {
 
 	@Mapper
-	ComponentMapper<PhysicsBodyComponent> positionMapper;
+	ComponentMapper<PhysicsBodyComponent> physicsBodyMapper;
+	@Mapper
+	ComponentMapper<PositionComponent> positionMapper;
 	@Mapper
 	ComponentMapper<SpriteComponent> spriteMapper;
+	@Mapper
+	ComponentMapper<DimensionComponent> dimensionMapper;
 
 	private HashMap<String, AtlasRegion> regions;
 	private TextureAtlas textureAtlas;
@@ -36,7 +40,7 @@ public class RenderSystem
 
 	@SuppressWarnings("unchecked")
 	public RenderSystem(OrthographicCamera camera) {
-		super(Aspect.getAspectForAll(PhysicsBodyComponent.class, SpriteComponent.class));
+		super(Aspect.getAspectForAll(SpriteComponent.class).one(PhysicsBodyComponent.class, PositionComponent.class));
 		this.camera = camera;
 	}
 
@@ -67,14 +71,15 @@ public class RenderSystem
 
 	@Override
 	protected void process(Entity e) {
-		if (positionMapper.has(e)) {
-			Vector2 position = positionMapper.getSafe(e).getPosition();
+		Vector2 position = getPosition(e);
+		if (position != null) {
+			// Vector2 position = physicsBodyMapper.get(e).getPosition();
 			SpriteComponent sprite = spriteMapper.get(e);
 
 			AtlasRegion spriteRegion = regions.get(sprite.getName());
 
-			float scaleX = (CAR_LENGTH * BOX_TO_WORLD) / spriteRegion.getRegionWidth();
-			float scaleY = (CAR_WIDTH * BOX_TO_WORLD) / spriteRegion.getRegionHeight();
+			float scaleX = (dimensionMapper.get(e).getLength() * BOX_TO_WORLD) / spriteRegion.getRegionWidth();
+			float scaleY = (dimensionMapper.get(e).getWidth() * BOX_TO_WORLD) / spriteRegion.getRegionHeight();
 			sprite.setScaleX(scaleX);
 			sprite.setScaleY(scaleY);
 
@@ -84,6 +89,14 @@ public class RenderSystem
 						sprite.getScaleY(), sprite.getRotation());
 			// GdxUtils.drawCentered(batch, spriteRegion, position.x, position.y);
 		}
+	}
+
+	private Vector2 getPosition(Entity e) {
+		if (physicsBodyMapper.has(e))
+			return physicsBodyMapper.get(e).getPosition();
+		else if (positionMapper.has(e))
+			return positionMapper.get(e).getPosition();
+		return null;
 	}
 
 

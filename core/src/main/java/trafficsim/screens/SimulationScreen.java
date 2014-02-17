@@ -41,7 +41,10 @@ public class SimulationScreen
 
 		world.initialize();
 
-		EntityFactory.createCar(world, new Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 20f, "red-car").addToWorld();
+		EntityFactory.createRoad(world, new Vector2(0, -200), 60, false, "road1x1").addToWorld();
+		EntityFactory.createRoad(world, new Vector2(330, 70), 60, true, "road1x1v").addToWorld();
+		EntityFactory.createCar(world, new Vector2(-270, -215), 20f, "red-car").addToWorld();
+		EntityFactory.createCar(world, new Vector2(-200, -215), 20f, "red-car").addToWorld();
 	}
 
 	@Override

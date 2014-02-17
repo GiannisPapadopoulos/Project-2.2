@@ -34,6 +34,18 @@ textures3.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+road1x1v
+  rotate: false
+  xy: 2, 2
+  size: 640, 640
+  orig: 640, 640
+  offset: 0, 0
+  index: -1
+
+textures4.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
 blue-car
   rotate: false
   xy: 2, 2

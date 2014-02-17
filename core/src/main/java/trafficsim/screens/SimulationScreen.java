@@ -14,6 +14,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 /**
  * The main screen of the simulation
@@ -26,6 +27,7 @@ public class SimulationScreen
 
 	private TrafficSimWorld world;
 	private OrthographicCamera camera;
+	Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, false);
 
 	public SimulationScreen() {
 		world = new TrafficSimWorld();
@@ -40,8 +42,6 @@ public class SimulationScreen
 		world.initialize();
 
 		EntityFactory.createCar(world, new Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 20f, "red-car").addToWorld();
-
-
 	}
 
 	@Override
@@ -52,6 +52,7 @@ public class SimulationScreen
 		world.setDelta(delta);
 
 		world.process();
+		debugRenderer.render(world.getBox2dWorld(), camera.combined);
 	}
 
 	@Override

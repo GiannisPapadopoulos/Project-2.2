@@ -23,8 +23,8 @@ public class SpriteComponent
 	/** The name of the texture file */
 	private final String name;
 	/** Scale on each axis */
-	private int scaleX;
-	private int scaleY;
+	private float scaleX;
+	private float scaleY;
 	/** Rotation with respect to bottom left corner */
 	private float rotation;
 

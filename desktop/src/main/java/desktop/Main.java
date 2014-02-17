@@ -1,5 +1,6 @@
 package desktop;
 
+import static trafficsim.TrafficSimConstants.PACK;
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
 import trafficsim.TrafficSimulation;
@@ -12,7 +13,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		ImagePacker.run();
+		if (PACK)
+			ImagePacker.run();
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.useGL20 = true;

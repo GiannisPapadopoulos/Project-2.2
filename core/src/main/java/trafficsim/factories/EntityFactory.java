@@ -1,5 +1,8 @@
 package trafficsim.factories;
 
+import static trafficsim.TrafficSimConstants.BOX_TO_WORLD;
+import static trafficsim.TrafficSimConstants.CAR_LENGTH;
+import static trafficsim.TrafficSimConstants.CAR_WIDTH;
 import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.Acceleration;
@@ -25,7 +28,8 @@ public class EntityFactory {
 	 */
 	public static Entity createCar(TrafficSimWorld world, Vector2 position, float acceleration, String name) {
 		Entity car = world.createEntity();
-		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(3f, 2f)
+		// boxShape takes the half width/height as input
+		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(CAR_LENGTH * BOX_TO_WORLD / 2, CAR_WIDTH * BOX_TO_WORLD / 2)
 																.density(1.0f)
 																.restitution(1.0f)
 																.friction(0f);

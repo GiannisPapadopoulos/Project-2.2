@@ -34,7 +34,7 @@ public class MovementSystem
 		// TODO
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
-			physicsBodyMapper.get(e).applyForceToCenter(new Vector2(-accelerationMapper.get(e).getAcceleration()
+			physicsBodyMapper.get(e).applyForceToCenter(new Vector2(accelerationMapper.get(e).getAcceleration()
 																	* physicsBodyMapper.get(e).getMass(), 0), true);
 		}
 	}

@@ -1,5 +1,9 @@
 package trafficsim.systems;
 
+import static trafficsim.TrafficSimConstants.BOX_TO_WORLD;
+import static trafficsim.TrafficSimConstants.CAR_LENGTH;
+import static trafficsim.TrafficSimConstants.CAR_WIDTH;
+
 import java.util.HashMap;
 
 import trafficsim.components.PhysicsBodyComponent;
@@ -42,6 +46,7 @@ public class RenderSystem
 		textureAtlas = new TextureAtlas(Gdx.files.internal("assets/packed-textures/textures.pack"),
 										Gdx.files.internal("assets/packed-textures"));
 		for (AtlasRegion r : textureAtlas.getRegions()) {
+			r.flip(true, false);
 			regions.put(r.name, r);
 		}
 
@@ -67,6 +72,11 @@ public class RenderSystem
 			SpriteComponent sprite = spriteMapper.get(e);
 
 			AtlasRegion spriteRegion = regions.get(sprite.getName());
+
+			float scaleX = (CAR_LENGTH * BOX_TO_WORLD) / spriteRegion.getRegionWidth();
+			float scaleY = (CAR_WIDTH * BOX_TO_WORLD) / spriteRegion.getRegionHeight();
+			sprite.setScaleX(scaleX);
+			sprite.setScaleY(scaleY);
 
 			float posX = position.x - (spriteRegion.getRegionWidth() / 2 * sprite.getScaleX());
 			float posY = position.y - (spriteRegion.getRegionHeight() / 2 * sprite.getScaleY());

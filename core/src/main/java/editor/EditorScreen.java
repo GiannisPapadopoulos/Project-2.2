@@ -47,7 +47,7 @@ public class EditorScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
+		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		outputScreen.act(delta);
 		outputScreen.draw();
@@ -94,7 +94,7 @@ public class EditorScreen implements Screen {
 
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
+					int pointer, int button) {		
 				previousDragX = x;
 				previousDragY = y;
 				return true;

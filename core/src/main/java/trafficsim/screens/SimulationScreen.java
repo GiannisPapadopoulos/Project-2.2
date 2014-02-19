@@ -3,12 +3,14 @@ package trafficsim.screens;
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
 import trafficsim.TrafficSimWorld;
+import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.factories.EntityFactory;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -41,10 +43,16 @@ public class SimulationScreen
 
 		world.initialize();
 
+		EntityFactory.createRoad(world, new Vector2(0, 0), 10, false, "road1x1").addToWorld();
 		EntityFactory.createRoad(world, new Vector2(0, -200), 60, false, "road1x1").addToWorld();
 		EntityFactory.createRoad(world, new Vector2(330, 70), 60, true, "road1x1v").addToWorld();
 		EntityFactory.createCar(world, new Vector2(-270, -215), 20f, "red-car").addToWorld();
 		EntityFactory.createCar(world, new Vector2(-200, -215), 20f, "red-car").addToWorld();
+		EntityFactory.createCar(world, new Vector2(0, 15), 20f, "red-car").addToWorld();
+
+		Entity car = EntityFactory.createCar(world, new Vector2(280, -215), 20f, "red-car");
+		car.getComponent(PhysicsBodyComponent.class).setLinearVelocity(30, 0);
+		car.addToWorld();
 	}
 
 	@Override

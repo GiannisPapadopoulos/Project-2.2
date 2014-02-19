@@ -13,7 +13,7 @@ import com.artemis.Component;
  * 
  */
 @AllArgsConstructor
-public class Acceleration
+public class AccelerationComponent
 		extends Component {
 
 	@Getter

@@ -1,5 +1,8 @@
 package trafficsim.systems;
 
+import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
+import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
+
 import com.artemis.systems.VoidEntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -48,7 +51,9 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		System.out.println(screenX + " " + screenY);
+		Vector3 vec = new Vector3(screenX, screenY, 0);
+		camera.unproject(vec, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		System.out.println(screenX + " " + screenY + " v " + vec);
 		return false;
 	}
 
@@ -64,7 +69,6 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO zoom in or out
 		return false;
 	}
 

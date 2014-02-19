@@ -5,8 +5,9 @@ import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.CAR_WIDTH;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
 import trafficsim.TrafficSimWorld;
-import trafficsim.components.Acceleration;
+import trafficsim.components.AccelerationComponent;
 import trafficsim.components.DimensionComponent;
+import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.PositionComponent;
 import trafficsim.components.SpriteComponent;
@@ -47,7 +48,8 @@ public class EntityFactory {
 		SpriteComponent sprite = new SpriteComponent(name, 1, 1, 0);
 		car.addComponent(sprite);
 
-		car.addComponent(new Acceleration(acceleration));
+		car.addComponent(new AccelerationComponent(acceleration));
+		car.addComponent(new MaxSpeedComponent(60));
 
 		return car;
 	}

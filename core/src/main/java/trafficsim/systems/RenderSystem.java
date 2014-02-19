@@ -70,24 +70,27 @@ public class RenderSystem
 	}
 
 	@Override
+	protected void inserted(Entity e) {
+
+	}
+
+	@Override
 	protected void process(Entity e) {
 		Vector2 position = getPosition(e);
 		if (position != null) {
-			// Vector2 position = physicsBodyMapper.get(e).getPosition();
-			SpriteComponent sprite = spriteMapper.get(e);
+			SpriteComponent spriteComp = spriteMapper.get(e);
 
-			AtlasRegion spriteRegion = regions.get(sprite.getName());
+			AtlasRegion spriteRegion = regions.get(spriteComp.getName());
 
 			float scaleX = (dimensionMapper.get(e).getLength() * BOX_TO_WORLD) / spriteRegion.getRegionWidth();
 			float scaleY = (dimensionMapper.get(e).getWidth() * BOX_TO_WORLD) / spriteRegion.getRegionHeight();
-			sprite.setScaleX(scaleX);
-			sprite.setScaleY(scaleY);
+			spriteComp.setScaleX(scaleX);
+			spriteComp.setScaleY(scaleY);
 
-			float posX = position.x - (spriteRegion.getRegionWidth() / 2 * sprite.getScaleX());
-			float posY = position.y - (spriteRegion.getRegionHeight() / 2 * sprite.getScaleY());
-			batch.draw(	spriteRegion, posX, posY, 0, 0, spriteRegion.getRegionWidth(), spriteRegion.getRegionHeight(), sprite.getScaleX(),
-						sprite.getScaleY(), sprite.getRotation());
-			// GdxUtils.drawCentered(batch, spriteRegion, position.x, position.y);
+			float posX = position.x - (spriteRegion.getRegionWidth() / 2 * spriteComp.getScaleX());
+			float posY = position.y - (spriteRegion.getRegionHeight() / 2 * spriteComp.getScaleY());
+			batch.draw(	spriteRegion, posX, posY, 0, 0, spriteRegion.getRegionWidth(), spriteRegion.getRegionHeight(), spriteComp.getScaleX(),
+						spriteComp.getScaleY(), spriteComp.getRotation());
 		}
 	}
 

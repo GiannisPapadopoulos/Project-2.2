@@ -5,7 +5,6 @@ import static trafficsim.TrafficSimConstants.CAR_WIDTH;
 import trafficsim.components.AccelerationComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
-import trafficsim.components.SpriteComponent;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -57,16 +56,25 @@ public class MovementSystem
 					physComp.applyForceToCenter(new Vector2(accelerationMapper.get(e).getAcceleration() * physComp.getMass(), 0), true);
 				}
 
-				e.getComponent(SpriteComponent.class).setRotation((float) (physComp.getAngle() * 180 / Math.PI));
-				System.out.println(physComp.getLinearVelocity() + " " + physComp.getAngle());
+				// e.getComponent(SpriteComponent.class).setRotation((float) (physComp.getAngle() * 180 / Math.PI));
+				// e.getComponent(SpriteComponent.class).getSprite().setRotation(physComp.getAngle() *
+				// MathUtils.radiansToDegrees);
+				// e.getComponent(SpriteComponent.class).getSprite().setPosition(physComp.getPosition().x,
+				// physComp.getPosition().y);
+				// System.out.println(physComp.getLinearVelocity() + " " + physComp.getAngle());
 				continue;
 			}
 			if (!maxSpeedMapper.has(e) || physComp.getLinearVelocity().len() < maxSpeedMapper.get(e).getSpeed())
 				physComp.applyForceToCenter(new Vector2(accelerationMapper.get(e).getAcceleration() * physComp.getMass(), 0), true);
 			else
 				physComp.applyForceToCenter(new Vector2(-accelerationMapper.get(e).getAcceleration() * physComp.getMass(), 0), true);
+			// e.getComponent(SpriteComponent.class).getSprite().setRotation(physComp.getAngle() *
+			// MathUtils.radiansToDegrees);
+			// e.getComponent(SpriteComponent.class).getSprite().setPosition(physComp.getPosition().x,
+			// physComp.getPosition().y);
 
 		}
+		// ((TrafficSimWorld) world).getBox2dWorld().clearForces();
 	}
 
 	@Override

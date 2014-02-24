@@ -17,11 +17,9 @@ public class Main {
 			ImagePacker.run();
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.useGL20 = true;
 		config.width = WINDOW_WIDTH;
 		config.height = WINDOW_HEIGHT;
 		config.foregroundFPS = config.backgroundFPS = 60;
 		new LwjglApplication(new TrafficSimulation(), config);
-
 	}
 }

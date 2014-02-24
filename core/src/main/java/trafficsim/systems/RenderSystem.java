@@ -16,9 +16,11 @@ import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class RenderSystem
@@ -71,7 +73,24 @@ public class RenderSystem
 
 	@Override
 	protected void inserted(Entity e) {
-
+		SpriteComponent spriteComp = spriteMapper.get(e);
+		AtlasRegion spriteRegion = regions.get(spriteComp.getName());
+		float scaleX = (dimensionMapper.get(e).getLength() * BOX_TO_WORLD) / spriteRegion.getRegionWidth();
+		float scaleY = (dimensionMapper.get(e).getWidth() * BOX_TO_WORLD) / spriteRegion.getRegionHeight();
+		spriteComp.setScaleX(scaleX);
+		spriteComp.setScaleY(scaleY);
+		Vector2 position = getPosition(e);
+		float posX = position.x - (spriteRegion.getRegionWidth() / 2 * spriteComp.getScaleX());
+		float posY = position.y - (spriteRegion.getRegionHeight() / 2 * spriteComp.getScaleY());
+		// Sprite sprite = new Sprite(spriteRegion, 0, 0, spriteRegion.getRegionWidth(),
+		// spriteRegion.getRegionHeight());
+		Sprite sprite = new Sprite(spriteRegion);
+		sprite.setSize(spriteRegion.getRegionWidth() * scaleX, spriteRegion.getRegionHeight() * scaleY);
+		sprite.setPosition(posX, posY);
+		// sprite.setScale(scaleX, scaleY);
+		// sprite.setPosition(posX, posY);
+		spriteComp.setSprite(sprite);
+		System.out.println(spriteComp.getSprite().getBoundingRectangle());
 	}
 
 	@Override
@@ -87,12 +106,21 @@ public class RenderSystem
 			spriteComp.setScaleX(scaleX);
 			spriteComp.setScaleY(scaleY);
 
-			float posX = position.x - (spriteRegion.getRegionWidth() / 2 * spriteComp.getScaleX());
-			float posY = position.y - (spriteRegion.getRegionHeight() / 2 * spriteComp.getScaleY());
-			batch.draw(	spriteRegion, posX, posY, 0, 0, spriteRegion.getRegionWidth(), spriteRegion.getRegionHeight(), spriteComp.getScaleX(),
-						spriteComp.getScaleY(), spriteComp.getRotation());
+			// float posX = position.x - (spriteRegion.getRegionWidth() / 2 * spriteComp.getScaleX());
+			// float posY = position.y - (spriteRegion.getRegionHeight() / 2 * spriteComp.getScaleY());
+			float posX = position.x - (dimensionMapper.get(e).getLength() * BOX_TO_WORLD / 2);
+			float posY = position.y - (dimensionMapper.get(e).getWidth() * BOX_TO_WORLD / 2);
+			// batch.draw( spriteRegion, posX, posY, 0, 0, spriteRegion.getRegionWidth(),
+			// spriteRegion.getRegionHeight(),
+			// spriteComp.getScaleX(), spriteComp.getScaleY(), spriteComp.getRotation());
+
+			if (physicsBodyMapper.has(e))
+				spriteComp.getSprite().setRotation(physicsBodyMapper.get(e).getAngle() * MathUtils.radDeg);
+			spriteComp.getSprite().setPosition(posX, posY);
+			spriteComp.getSprite().draw(batch);
 		}
 	}
+
 
 	private Vector2 getPosition(Entity e) {
 		if (physicsBodyMapper.has(e))
@@ -107,7 +135,5 @@ public class RenderSystem
 	protected void end() {
 		batch.end();
 	}
-
-
 
 }

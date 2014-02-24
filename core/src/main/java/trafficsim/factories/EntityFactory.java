@@ -45,7 +45,8 @@ public class EntityFactory {
 		/** @formatter:on */
 		car.addComponent(new PhysicsBodyComponent(body));
 
-		SpriteComponent sprite = new SpriteComponent(name, 1, 1, 0);
+		// SpriteComponent sprite = new SpriteComponent(name, 1, 1, 0);
+		SpriteComponent sprite = new SpriteComponent(name);
 		car.addComponent(sprite);
 
 		car.addComponent(new AccelerationComponent(acceleration));
@@ -79,7 +80,8 @@ public class EntityFactory {
 		// road.addComponent(new PhysicsBodyComponent(body));
 		road.addComponent(new PositionComponent(position));
 
-		SpriteComponent sprite = new SpriteComponent(name, 1, 1, 0);
+		// / SpriteComponent sprite = new SpriteComponent(name, 1, 1, 0);
+		SpriteComponent sprite = new SpriteComponent(name);
 		road.addComponent(sprite);
 
 

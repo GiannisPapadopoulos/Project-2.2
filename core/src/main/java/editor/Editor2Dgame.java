@@ -8,9 +8,10 @@ public class Editor2Dgame extends Game {
 
 	@Override
 	public void create() {
-		val currentScreen = new EditorScreen(this, new EditorData(100,100));
+		val currentScreen = new EditorScreen(this, new EditorData(1000,1000));
 		setScreen(currentScreen);
 	}
+	//initial grid "look" is 40 x 75
 	@Override
 	public void dispose() {
 		super.dispose();	

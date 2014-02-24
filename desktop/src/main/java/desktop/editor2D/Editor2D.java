@@ -10,7 +10,8 @@ public class Editor2D {
 	public Editor2D() {
 		
 	}
-	
+	//gdx.graphics.getHeight();
+	//gdx.graphics.getWidth();
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.useGL20 = true;

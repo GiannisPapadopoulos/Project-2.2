@@ -6,6 +6,8 @@ import graph.Vertex;
 
 import java.awt.Point;
 
+import lombok.Getter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,7 +18,7 @@ public class WorldRenderer {
 
 	private EditorData data;
 
-	private static final int CELL_SIZE = 20;
+	public static final int CELL_SIZE = 20; // No you won't hate me for this
 	private static final int LINE_WIDTH = 1;
 	private static final Color gridColor = Color.GREEN;
 
@@ -29,7 +31,9 @@ public class WorldRenderer {
 		this.gridRenderer = new ShapeRenderer();
 		graph_debug = GraphFactory.createGraph(data);
 	}
-
+	
+	
+	
 	public void render(OrthographicCamera cam) {
 		gridRenderer.setProjectionMatrix(cam.combined);
 		gridRenderer.begin(ShapeType.Line);

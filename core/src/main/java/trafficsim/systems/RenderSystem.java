@@ -1,7 +1,5 @@
 package trafficsim.systems;
 
-import static trafficsim.TrafficSimConstants.BOX_TO_WORLD;
-
 import java.util.HashMap;
 
 import trafficsim.components.DimensionComponent;
@@ -75,22 +73,14 @@ public class RenderSystem
 	protected void inserted(Entity e) {
 		SpriteComponent spriteComp = spriteMapper.get(e);
 		AtlasRegion spriteRegion = regions.get(spriteComp.getName());
-		float scaleX = (dimensionMapper.get(e).getLength() * BOX_TO_WORLD) / spriteRegion.getRegionWidth();
-		float scaleY = (dimensionMapper.get(e).getWidth() * BOX_TO_WORLD) / spriteRegion.getRegionHeight();
-		spriteComp.setScaleX(scaleX);
-		spriteComp.setScaleY(scaleY);
-		Vector2 position = getPosition(e);
-		float posX = position.x - (spriteRegion.getRegionWidth() / 2 * spriteComp.getScaleX());
-		float posY = position.y - (spriteRegion.getRegionHeight() / 2 * spriteComp.getScaleY());
-		// Sprite sprite = new Sprite(spriteRegion, 0, 0, spriteRegion.getRegionWidth(),
-		// spriteRegion.getRegionHeight());
 		Sprite sprite = new Sprite(spriteRegion);
-		sprite.setSize(spriteRegion.getRegionWidth() * scaleX, spriteRegion.getRegionHeight() * scaleY);
-		sprite.setPosition(posX, posY);
-		// sprite.setScale(scaleX, scaleY);
-		// sprite.setPosition(posX, posY);
+		sprite.setSize(dimensionMapper.get(e).getLength(), dimensionMapper.get(e).getWidth());
+		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+		if (physicsBodyMapper.has(e)) {
+			sprite.setRotation(physicsBodyMapper.get(e).getAngle() * MathUtils.radDeg);
+		}
 		spriteComp.setSprite(sprite);
-		System.out.println(spriteComp.getSprite().getBoundingRectangle());
+		// System.out.println(spriteComp.getSprite().getBoundingRectangle());
 	}
 
 	@Override
@@ -98,25 +88,29 @@ public class RenderSystem
 		Vector2 position = getPosition(e);
 		if (position != null) {
 			SpriteComponent spriteComp = spriteMapper.get(e);
+			Sprite sprite = spriteComp.getSprite();
 
-			AtlasRegion spriteRegion = regions.get(spriteComp.getName());
-
-			float scaleX = (dimensionMapper.get(e).getLength() * BOX_TO_WORLD) / spriteRegion.getRegionWidth();
-			float scaleY = (dimensionMapper.get(e).getWidth() * BOX_TO_WORLD) / spriteRegion.getRegionHeight();
-			spriteComp.setScaleX(scaleX);
-			spriteComp.setScaleY(scaleY);
+			PhysicsBodyComponent physComp = physicsBodyMapper.get(e);
+			// AtlasRegion spriteRegion = regions.get(spriteComp.getName());
+			// float scaleX = (dimensionMapper.get(e).getLength() * BOX_TO_WORLD) / spriteRegion.getRegionWidth();
+			// float scaleY = (dimensionMapper.get(e).getWidth() * BOX_TO_WORLD) / spriteRegion.getRegionHeight();
+			// spriteComp.setScaleX(scaleX);
+			// spriteComp.setScaleY(scaleY);
 
 			// float posX = position.x - (spriteRegion.getRegionWidth() / 2 * spriteComp.getScaleX());
 			// float posY = position.y - (spriteRegion.getRegionHeight() / 2 * spriteComp.getScaleY());
-			float posX = position.x - (dimensionMapper.get(e).getLength() * BOX_TO_WORLD / 2);
-			float posY = position.y - (dimensionMapper.get(e).getWidth() * BOX_TO_WORLD / 2);
+
+			float posX = position.x - sprite.getWidth() / 2;
+			float posY = position.y - sprite.getHeight() / 2;
+
 			// batch.draw( spriteRegion, posX, posY, 0, 0, spriteRegion.getRegionWidth(),
 			// spriteRegion.getRegionHeight(),
 			// spriteComp.getScaleX(), spriteComp.getScaleY(), spriteComp.getRotation());
-
+			// spriteComp.getSprite().setBounds(posX, posY, dimensionMapper.get(e).getLength() * BOX_TO_WORLD,
+			// dimensionMapper.get(e).getWidth() * BOX_TO_WORLD);
+			sprite.setPosition(posX, posY);
 			if (physicsBodyMapper.has(e))
-				spriteComp.getSprite().setRotation(physicsBodyMapper.get(e).getAngle() * MathUtils.radDeg);
-			spriteComp.getSprite().setPosition(posX, posY);
+				sprite.setRotation(physComp.getAngle() * MathUtils.radDeg);
 			spriteComp.getSprite().draw(batch);
 		}
 	}

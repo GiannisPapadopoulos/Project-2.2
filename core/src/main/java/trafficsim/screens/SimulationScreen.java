@@ -13,7 +13,7 @@ import trafficsim.systems.RenderSystem;
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -43,21 +43,23 @@ public class SimulationScreen
 
 		world.initialize();
 
-		EntityFactory.createRoad(world, new Vector2(0, 0), 10, false, "road1x1").addToWorld();
-		EntityFactory.createRoad(world, new Vector2(0, -200), 60, false, "road1x1").addToWorld();
-		EntityFactory.createRoad(world, new Vector2(330, 70), 60, true, "road1x1v").addToWorld();
+
+		EntityFactory.createRoad(world, new Vector2(0, 0), 60 * 10, false, "road1x1").addToWorld();
+		EntityFactory.createRoad(world, new Vector2(0, -200), 60 * 10, false, "road1x1").addToWorld();
+		EntityFactory.createRoad(world, new Vector2(330, 70), 60 * 10, true, "road1x1").addToWorld();
 		EntityFactory.createCar(world, new Vector2(-270, -215), 20f, "red-car").addToWorld();
 		EntityFactory.createCar(world, new Vector2(-200, -215), 20f, "red-car").addToWorld();
-		EntityFactory.createCar(world, new Vector2(0, 15), 20f, "red-car").addToWorld();
+		Entity carV = EntityFactory.createCar(world, new Vector2(-100, 15), 20f, 0, "red-car");
+		carV.addToWorld();
 
 		Entity car = EntityFactory.createCar(world, new Vector2(280, -215), 20f, "red-car");
-		car.getComponent(PhysicsBodyComponent.class).setLinearVelocity(30, 0);
+		car.getComponent(PhysicsBodyComponent.class).setLinearVelocity(40, 0);
 		car.addToWorld();
 	}
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
 		world.setDelta(delta);

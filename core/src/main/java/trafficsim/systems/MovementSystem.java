@@ -43,9 +43,9 @@ public class MovementSystem
 			if (e.getId() == 6) {
 				// System.out.println(physComp.getAngle());
 				if (physComp.getAngle() < Math.PI / 2) {
-					physComp.applyForce(new Vector2(0, 1.3f * accelerationMapper.get(e).getAcceleration() * physComp.getMass()),
+					physComp.applyForce(new Vector2(0, 1.2f * accelerationMapper.get(e).getAcceleration() * physComp.getMass()),
 											physComp.getWorldPoint(new Vector2(CAR_LENGTH / 2, CAR_WIDTH / 2)), true);
-					physComp.applyForce(new Vector2(0, 1.3f * accelerationMapper.get(e).getAcceleration() * physComp.getMass()),
+					physComp.applyForce(new Vector2(0, 1.2f * accelerationMapper.get(e).getAcceleration() * physComp.getMass()),
 											physComp.getWorldPoint(new Vector2(CAR_LENGTH / 2, -CAR_WIDTH / 2)), true);
 				}
 				else {

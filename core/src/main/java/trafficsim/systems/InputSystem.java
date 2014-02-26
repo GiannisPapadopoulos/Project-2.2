@@ -53,7 +53,7 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		Vector3 vec = new Vector3(screenX, screenY, 0);
 		camera.unproject(vec, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-		System.out.println(screenX + " " + screenY + " v " + vec);
+		// System.out.println(screenX + " " + screenY + " v " + vec);
 		return false;
 	}
 

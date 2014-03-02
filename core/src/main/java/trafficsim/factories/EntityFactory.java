@@ -3,12 +3,14 @@ package trafficsim.factories;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.CAR_WIDTH;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import graph.Graph;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.AccelerationComponent;
 import trafficsim.components.DimensionComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.SpriteComponent;
+import trafficsim.roads.Road;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.MathUtils;
@@ -96,6 +98,10 @@ public class EntityFactory {
 
 	public static Entity createCar(TrafficSimWorld world, Vector2 vector2, float acceleration, String string) {
 		return createCar(world, vector2, acceleration, 0, string);
+	}
+
+	public void populateWorld(TrafficSimWorld world, Graph<Road> graph) {
+
 	}
 
 }

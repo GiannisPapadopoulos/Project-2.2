@@ -22,10 +22,10 @@ public final class TrafficSimConstants {
 	public static final float BOX_TO_WORLD = 1 / WORLD_TO_BOX;
 
 	/** Dimensions of car(s) */
-	public static final float CAR_LENGTH = 50.0f;
-	public static final float CAR_WIDTH = 20.0f;
+	public static final float CAR_LENGTH = 5.0f;
+	public static final float CAR_WIDTH = 2.0f;
 
 	/** The width of a single lane, one way */
-	public static final float LANE_WIDTH = 30f;
+	public static final float LANE_WIDTH = 3f;
 
 }

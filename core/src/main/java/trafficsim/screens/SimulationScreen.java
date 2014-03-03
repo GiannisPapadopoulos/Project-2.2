@@ -2,9 +2,13 @@ package trafficsim.screens;
 
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
+import graph.Edge;
+import graph.Graph;
+import graph.GraphFactory;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.factories.EntityFactory;
+import trafficsim.roads.Road;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PhysicsSystem;
@@ -29,7 +33,7 @@ public class SimulationScreen
 
 	private TrafficSimWorld world;
 	private OrthographicCamera camera;
-	Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, false);
+	Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
 
 	public SimulationScreen() {
 		world = new TrafficSimWorld();
@@ -43,11 +47,24 @@ public class SimulationScreen
 
 		world.initialize();
 
+		createTestRoads();
 
-		EntityFactory.createRoad(world, new Vector2(0, 0), 60 * 10, false, "road1x1").addToWorld();
-		EntityFactory.createRoad(world, new Vector2(0, -200), 60 * 10, false, "road1x1").addToWorld();
-		EntityFactory.createRoad(world, new Vector2(330, 70), 60 * 10, true, "road1x1").addToWorld();
-		EntityFactory.createCar(world, new Vector2(-270, -215), 20f, "red-car").addToWorld();
+		// EntityFactory.createRoad(world, new Vector2(0, 200), 60 * 10, 0, "road1x1").addToWorld();
+		// Graph<Road> graph = new Graph<Road>();
+		// Vertex<Road> v1 = graph.addVertex(null);
+		// Vertex<Road> v2 = graph.addVertex(null);
+		// Vector2 left = new Vector2(-30, 200);
+		// Vector2 right = new Vector2(30, 200);
+		// Edge<Road> edge = graph.addEdge(new Road(left, right, 1, Road.Direction.BOTH), v1, v2, false);
+		// EntityFactory.populateWorld(world, graph);
+		//
+		// EntityFactory.createRoad(world, new Vector2(0, 0), 60 * 1, 0, "road1x1").addToWorld();
+		// EntityFactory.createRoad(world, new Vector2(0, -200), 60 * 1, 0, "road1x1").addToWorld();
+		// EntityFactory.createRoad(world, new Vector2(330, 70), 60 * 1, 90, "road1x1").addToWorld();
+		// EntityFactory.createCar(world, new Vector2(-300, -200), 0f, "red-car").addToWorld();
+		// EntityFactory.createCar(world, new Vector2(-240, -200), 0f, "red-car").addToWorld();
+		// EntityFactory.createCar(world, new Vector2(-300, -140), 0f, "red-car").addToWorld();
+
 		EntityFactory.createCar(world, new Vector2(-200, -215), 20f, "red-car").addToWorld();
 		Entity carV = EntityFactory.createCar(world, new Vector2(-100, 15), 20f, 0, "red-car");
 		carV.addToWorld();
@@ -57,10 +74,18 @@ public class SimulationScreen
 		car.addToWorld();
 	}
 
+	private void createTestRoads() {
+		Graph<Road> graph = GraphFactory.createManhattanGraph(15, 10, 60, -300, -200);
+		EntityFactory.populateWorld(world, graph);
+		System.out.println("V " + graph.getVertexCount() + " E " + graph.getEdgeCount());
+		for (Edge<Road> edge : graph.getEdgeIterator()) {
+			System.out.println(edge + " " + edge.getData().getPointA() + " " + edge.getData().getPointB());
+		}
+	}
+
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-
 		camera.update();
 		world.setDelta(delta);
 

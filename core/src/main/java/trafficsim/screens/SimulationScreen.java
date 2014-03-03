@@ -2,7 +2,7 @@ package trafficsim.screens;
 
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
-import graph.Edge;
+import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
 import graph.Graph;
 import graph.GraphFactory;
 import trafficsim.TrafficSimWorld;
@@ -37,7 +37,7 @@ public class SimulationScreen
 
 	public SimulationScreen() {
 		world = new TrafficSimWorld();
-		camera = new OrthographicCamera(WINDOW_WIDTH, WINDOW_HEIGHT);
+		camera = new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX, WINDOW_HEIGHT * WORLD_TO_BOX);
 
 		// Add systems
 		world.setSystem(new RenderSystem(camera));
@@ -75,12 +75,12 @@ public class SimulationScreen
 	}
 
 	private void createTestRoads() {
-		Graph<Road> graph = GraphFactory.createManhattanGraph(15, 10, 60, -300, -200);
+		Graph<Road> graph = GraphFactory.createManhattanGraph(25, 20, 60, -300, -200);
 		EntityFactory.populateWorld(world, graph);
 		System.out.println("V " + graph.getVertexCount() + " E " + graph.getEdgeCount());
-		for (Edge<Road> edge : graph.getEdgeIterator()) {
-			System.out.println(edge + " " + edge.getData().getPointA() + " " + edge.getData().getPointB());
-		}
+		// for (Edge<Road> edge : graph.getEdgeIterator()) {
+		// System.out.println(edge + " " + edge.getData().getPointA() + " " + edge.getData().getPointB());
+		// }
 	}
 
 	@Override

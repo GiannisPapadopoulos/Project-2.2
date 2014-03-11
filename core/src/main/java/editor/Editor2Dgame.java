@@ -4,6 +4,8 @@ import lombok.val;
 
 import com.badlogic.gdx.Game;
 
+import editor.EditorData;
+
 public class Editor2Dgame extends Game {
 
 	@Override

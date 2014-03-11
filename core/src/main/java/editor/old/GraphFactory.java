@@ -1,13 +1,17 @@
-package graph;
+package editor.old;
 
 import java.awt.Point;
 import java.util.ArrayList;
 
 import editor.EditorData;
+import graph.Edge;
+import graph.Graph;
+import graph.VD_Gen;
+import graph.Vertex;
 
 public class GraphFactory {
 
-	public static Graph createGraph(EditorData data) {
+	public static Graph createGraph(OLD_EditorData data) {
 
 		Graph graph = new Graph();
 
@@ -18,8 +22,8 @@ public class GraphFactory {
 				crM[i][j] = false;
 		for (int i = 0; i < data.getHeight(); i++)
 			for (int j = 0; j < data.getWidth(); j++) {
-				if (data.getAt(i, j) > EditorData.LAND_CROSS_ROAD_LOWER_BOUND
-						&& data.getAt(i, j) < EditorData.LAND_CROSS_ROAD_UPPER_BOUND
+				if (data.getAt(i, j) > OLD_EditorData.LAND_CROSS_ROAD_LOWER_BOUND
+						&& data.getAt(i, j) < OLD_EditorData.LAND_CROSS_ROAD_UPPER_BOUND
 						&& !crM[i][j]) {
 					int vert_size = i;
 					int hori_size = j;
@@ -77,16 +81,16 @@ public class GraphFactory {
 			int y, Integer[][] grid, int[][] costMap, boolean[][] occupancyGrid) {
 		if (occupancyGrid[x][y])
 			return;
-		else if (grid[x][y] > EditorData.LAND_CROSS_ROAD_LOWER_BOUND
-				&& grid[x][y] < EditorData.LAND_CROSS_ROAD_UPPER_BOUND) {
+		else if (grid[x][y] > OLD_EditorData.LAND_CROSS_ROAD_LOWER_BOUND
+				&& grid[x][y] < OLD_EditorData.LAND_CROSS_ROAD_UPPER_BOUND) {
 			for (Vertex v : graph.getVertices())
 				for (Point p : v.getData().getGridPositions())
 					if (p.x == x && p.y == y) {
 						new Edge(v, startVertex, null);
 						return;
 					}
-		} else if (grid[x][y] > EditorData.LAND_ROAD_SINGLE_LANE_LOWER_BOUND
-				&& grid[x][y] < EditorData.LAND_ROAD_DOUBLE_LANE_UPPER_BOUND) {
+		} else if (grid[x][y] > OLD_EditorData.LAND_ROAD_SINGLE_LANE_LOWER_BOUND
+				&& grid[x][y] < OLD_EditorData.LAND_ROAD_DOUBLE_LANE_UPPER_BOUND) {
 			occupancyGrid[x][y] = true;
 			exploreGrid(graph, startVertex, x + 1, y, grid, costMap,
 					occupancyGrid);

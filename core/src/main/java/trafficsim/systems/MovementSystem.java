@@ -40,7 +40,7 @@ public class MovementSystem
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			PhysicsBodyComponent physComp = physicsBodyMapper.get(e);
-			if (e.getId() == 6) {
+			if (e.getId() == 956) {
 				// System.out.println(physComp.getAngle());
 				if (physComp.getAngle() < Math.PI / 2) {
 					physComp.applyForce(new Vector2(0, 1.2f * accelerationMapper.get(e).getAcceleration() * physComp.getMass()),

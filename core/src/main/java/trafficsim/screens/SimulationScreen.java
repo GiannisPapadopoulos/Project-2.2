@@ -1,12 +1,12 @@
 package trafficsim.screens;
 
+import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
 import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
 import graph.Graph;
 import graph.GraphFactory;
 import trafficsim.TrafficSimWorld;
-import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.systems.InputSystem;
@@ -65,12 +65,11 @@ public class SimulationScreen
 		// EntityFactory.createCar(world, new Vector2(-240, -200), 0f, "red-car").addToWorld();
 		// EntityFactory.createCar(world, new Vector2(-300, -140), 0f, "red-car").addToWorld();
 
-		EntityFactory.createCar(world, new Vector2(-200, -215), 20f, "red-car").addToWorld();
-		Entity carV = EntityFactory.createCar(world, new Vector2(-100, 15), 20f, 0, "red-car");
+		EntityFactory.createCar(world, new Vector2(-200, -215), 20f, 5, 0, "red-car").addToWorld();
+		Entity carV = EntityFactory.createCar(world, new Vector2(-100, 15), 10, 20, 0, "red-car");
 		carV.addToWorld();
 
-		Entity car = EntityFactory.createCar(world, new Vector2(280, -215), 20f, "red-car");
-		car.getComponent(PhysicsBodyComponent.class).setLinearVelocity(40, 0);
+		Entity car = EntityFactory.createCar(world, new Vector2(-300, -200), 0f, 30, 0, "car4");
 		car.addToWorld();
 	}
 
@@ -78,9 +77,6 @@ public class SimulationScreen
 		Graph<Road> graph = GraphFactory.createManhattanGraph(25, 20, 60, -300, -200);
 		EntityFactory.populateWorld(world, graph);
 		System.out.println("V " + graph.getVertexCount() + " E " + graph.getEdgeCount());
-		// for (Edge<Road> edge : graph.getEdgeIterator()) {
-		// System.out.println(edge + " " + edge.getData().getPointA() + " " + edge.getData().getPointB());
-		// }
 	}
 
 	@Override
@@ -90,7 +86,8 @@ public class SimulationScreen
 		world.setDelta(delta);
 
 		world.process();
-		debugRenderer.render(world.getBox2dWorld(), camera.combined);
+		if (DEBUG_RENDER)
+			debugRenderer.render(world.getBox2dWorld(), camera.combined);
 	}
 
 	@Override

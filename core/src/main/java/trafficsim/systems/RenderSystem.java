@@ -50,7 +50,7 @@ public class RenderSystem
 		textureAtlas = new TextureAtlas(Gdx.files.internal("assets/packed-textures/textures.pack"),
 										Gdx.files.internal("assets/packed-textures"));
 		for (AtlasRegion r : textureAtlas.getRegions()) {
-			r.flip(true, false);
+			// r.flip(true, false);
 			regions.put(r.name, r);
 		}
 

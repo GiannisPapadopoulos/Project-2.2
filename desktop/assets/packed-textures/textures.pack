@@ -3,6 +3,55 @@ textures.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+car1
+  rotate: false
+  xy: 804, 751
+  size: 97, 188
+  orig: 97, 188
+  offset: 0, 0
+  index: -1
+car2
+  rotate: false
+  xy: 804, 561
+  size: 97, 188
+  orig: 97, 188
+  offset: 0, 0
+  index: -1
+car3
+  rotate: false
+  xy: 903, 751
+  size: 97, 188
+  orig: 97, 188
+  offset: 0, 0
+  index: -1
+car4
+  rotate: false
+  xy: 804, 371
+  size: 97, 188
+  orig: 97, 188
+  offset: 0, 0
+  index: -1
+car5
+  rotate: false
+  xy: 903, 561
+  size: 97, 188
+  orig: 97, 188
+  offset: 0, 0
+  index: -1
+car6
+  rotate: false
+  xy: 804, 181
+  size: 97, 188
+  orig: 97, 188
+  offset: 0, 0
+  index: -1
+car7
+  rotate: false
+  xy: 903, 371
+  size: 97, 188
+  orig: 97, 188
+  offset: 0, 0
+  index: -1
 red-car
   rotate: false
   xy: 2, 2

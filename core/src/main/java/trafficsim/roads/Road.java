@@ -40,4 +40,6 @@ public class Road {
 	/** The direction of the road */
 	private Direction direction;
 
+	private float speedLimit;
+
 }

@@ -5,6 +5,7 @@ import static trafficsim.TrafficSimConstants.CAR_WIDTH;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
 import graph.Edge;
 import graph.Graph;
+import graph.Vertex;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.AccelerationComponent;
 import trafficsim.components.DimensionComponent;
@@ -33,7 +34,7 @@ public class EntityFactory {
 	 * @param angle The angle in ?
 	 * @param name Must be the same as the name of the texture file
 	 */
-	public static Entity createCar(TrafficSimWorld world, Vector2 position, float acceleration, float angle, String name) {
+	public static Entity createCar(TrafficSimWorld world, Vector2 position, float acceleration, float maxSpeed, float angle, String name) {
 		Entity car = world.createEntity();
 		// boxShape takes the half width/height as input
 		car.addComponent(new DimensionComponent(CAR_LENGTH, CAR_WIDTH));
@@ -56,7 +57,7 @@ public class EntityFactory {
 		car.addComponent(sprite);
 
 		car.addComponent(new AccelerationComponent(acceleration));
-		car.addComponent(new MaxSpeedComponent(60));
+		car.addComponent(new MaxSpeedComponent(maxSpeed));
 		
 		
 
@@ -101,7 +102,7 @@ public class EntityFactory {
 	/**
 	 * Creates a road with the given parameters
 	 * 
-	 * @param angle The andgle in degrees
+	 * @param angle The angle in degrees
 	 * @param name Must be the same as the name of the texture file
 	 */
 	public static Entity createRoad(TrafficSimWorld world, Road data) {
@@ -138,23 +139,16 @@ public class EntityFactory {
 		return road;
 	}
 
-	public static Entity createCar(TrafficSimWorld world, Vector2 vector2, float acceleration, String string) {
-		return createCar(world, vector2, acceleration, 0, string);
-	}
+	// public static Entity createCar(TrafficSimWorld world, Vector2 vector2, float acceleration, String string) {
+	// return createCar(world, vector2, acceleration, 0, string);
+	// }
 
 	public static void populateWorld(TrafficSimWorld world, Graph<Road> graph) {
 		for (Edge<Road> edge : graph.getEdgeIterator()) {
 			world.addEntity(createRoad(world, edge.getData()));
-			Vector2 vector = edge.getData().getPointB().cpy().sub(edge.getData().getPointA());
-			Vector2 position = new Vector2((edge.getData().getPointB().x + edge.getData().getPointA().x) / 2,
-											(edge.getData().getPointB().y + edge.getData().getPointA().y) / 2);
-			System.out.println("pointA " + edge.getData().getPointA());
-			System.out.println("pointB " + edge.getData().getPointB());
-			System.out.println("vector " + vector);
-			System.out.println("pos " + position);
-			System.out.println("len " + vector.len());
-			// Entity road = createRoad(world, position, vector.len(), vector.angle(), "road1x1");
-			// world.addEntity(road);
+		}
+		for (Vertex<Road> vertex : graph.getVertexIterator()) {
+			world.addEntity(createRoad(world, vertex.getData()));
 		}
 	}
 

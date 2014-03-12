@@ -1,5 +1,6 @@
 package desktop;
 
+import static trafficsim.TrafficSimConstants.FPS;
 import static trafficsim.TrafficSimConstants.PACK;
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
@@ -19,7 +20,7 @@ public class Main {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = WINDOW_WIDTH;
 		config.height = WINDOW_HEIGHT;
-		config.foregroundFPS = config.backgroundFPS = 60;
+		config.foregroundFPS = config.backgroundFPS = FPS;
 		new LwjglApplication(new TrafficSimulation(), config);
 	}
 }

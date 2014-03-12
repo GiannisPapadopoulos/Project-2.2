@@ -16,11 +16,13 @@ public class EditorScreen implements Screen {
 	private EditorData editorData;
 	private Stage outputScreen;
 	private WorldRenderer renderer;
-	
+
 	private MouseGridPosition mouseGridPosition;
 	private MouseScreenPosition mouseScreenPosition;
-
-
+	private MouseAbsolutePosition mouseAbsolutePosition;
+	
+	private CrossRoadGhost crossRoadGhost;
+	private RoadGhost roadGhost;
 
 	private static final double ZOOMING_FACTOR = 0.1f;
 	private static final float TRANSLATION_FACTOR = 0.5f;
@@ -28,7 +30,7 @@ public class EditorScreen implements Screen {
 	public EditorScreen(Game editorGame, EditorData editorData) {
 		this.editorGame = editorGame;
 		this.editorData = editorData;
-		
+
 		this.mouseGridPosition = new MouseGridPosition(editorData);
 		this.mouseScreenPosition = new MouseScreenPosition();
 
@@ -55,14 +57,15 @@ public class EditorScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+
 		outputScreen.act(delta);
 		outputScreen.draw();
-		mouseScreenPosition.update(Gdx.input.getX(), Gdx.input.getY());
-		mouseGridPosition.update((OrthographicCamera) outputScreen.getCamera(), mouseScreenPosition);
-		
-		
-		// System.out.println(Gdx.input.getX()+" | "+Gdx.input.getY());
-		renderer.render((OrthographicCamera) outputScreen.getCamera());
+
+		renderer.renderWorld((OrthographicCamera) outputScreen.getCamera());
+		if (mouseGridPosition.getStatus() == MouseGridPosition.Status.IN_GRID)
+			renderer.renderGridUnderMouse(
+					(OrthographicCamera) outputScreen.getCamera(),
+					mouseGridPosition.getX(), mouseGridPosition.getY());
 
 	}
 
@@ -82,9 +85,83 @@ public class EditorScreen implements Screen {
 	@Override
 	public void resume() {
 	}
-	
 
-	public void getScreenToGridInfo() {
+	@Override
+	public void show() {
+		outputScreen = new Stage();
+		Gdx.input.setInputProcessor(outputScreen);
+		outputScreen.addListener(new InputListener() {
+
+			boolean clickCharged = false;
+
+			OrthographicCamera cam = (OrthographicCamera) outputScreen
+					.getCamera();
+
+			float previousDragX;
+			float previousDragY;
+
+			@Override
+			public boolean scrolled(InputEvent event, float x, float y,
+					int amount) {
+				if (cam.zoom + amount > 0) {
+					cam.zoom += amount * ZOOMING_FACTOR;
+				}
+				return false;
+			}
+
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				clickCharged = true;
+				previousDragX = x;
+				previousDragY = y;
+				return true;
+			}
+
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int point,
+					int button) {
+				if (clickCharged) {
+					// user clicked
+					if (mouseGridPosition.getStatus() == MouseGridPosition.Status.IN_GRID)
+						System.out.println("Clicked on grid cell: ["
+								+ mouseGridPosition.getX() + ","
+								+ mouseGridPosition.getY() + "]");
+					else
+						System.out.println("Clicked outside of grid!");
+				}
+			}
+
+			@Override
+			public void touchDragged(InputEvent event, float x, float y,
+					int pointer) {
+				cam.translate((previousDragX - x) * TRANSLATION_FACTOR,
+						(previousDragY - y) * TRANSLATION_FACTOR);
+				previousDragX = x;
+				previousDragY = y;
+				updateMousePositions();
+				clickCharged = false;
+			}
+
+			@Override
+			public boolean mouseMoved(InputEvent event, float x, float y) {
+				updateMousePositions();
+				return false;
+			}
+		});
+
+		System.out.println("SHOW");
+		InputListener il = new InputListener();
+	}
+
+	private void updateMousePositions() {
+		mouseScreenPosition.update(Gdx.input.getX(), Gdx.input.getY());
+		mouseGridPosition.update((OrthographicCamera) outputScreen.getCamera(),
+				mouseScreenPosition);
+
+	}
+
+	private void getScreenToGridInfo() {
 		OrthographicCamera cam = (OrthographicCamera) outputScreen.getCamera();
 		Vector3 botLeft = new Vector3(0, cam.viewportHeight, 0);
 		Vector3 topRight = new Vector3(cam.viewportWidth, 0, 0);
@@ -125,47 +202,6 @@ public class EditorScreen implements Screen {
 				.format("Boxes displayed on screen (width & height): %d-%d, total: %d \r\n",
 						totBoxWScreen, totBoxHScreen, totBoxWScreen
 								* totBoxHScreen);
-	}
-
-	@Override
-	public void show() {
-		outputScreen = new Stage();
-		Gdx.input.setInputProcessor(outputScreen);
-		outputScreen.addListener(new InputListener() {
-			OrthographicCamera cam = (OrthographicCamera) outputScreen
-					.getCamera();
-
-			float previousDragX;
-			float previousDragY;
-
-			@Override
-			public boolean scrolled(InputEvent event, float x, float y,
-					int amount) {
-				if (cam.zoom + amount > 0) {
-					cam.zoom += amount * ZOOMING_FACTOR;
-				}
-				return false;
-			}
-
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				previousDragX = x;
-				previousDragY = y;
-				return true;
-			}
-
-			@Override
-			public void touchDragged(InputEvent event, float x, float y,
-					int pointer) {
-				cam.translate((previousDragX - x) * TRANSLATION_FACTOR,
-						(previousDragY - y) * TRANSLATION_FACTOR);
-				previousDragX = x;
-				previousDragY = y;
-			}
-		});
-
-		System.out.println("SHOW");
 	}
 
 }

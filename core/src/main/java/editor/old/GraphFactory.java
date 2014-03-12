@@ -1,13 +1,12 @@
 package editor.old;
 
-import java.awt.Point;
-import java.util.ArrayList;
-
-import editor.EditorData;
 import graph.Edge;
 import graph.Graph;
 import graph.VD_Gen;
 import graph.Vertex;
+
+import java.awt.Point;
+import java.util.ArrayList;
 
 public class GraphFactory {
 

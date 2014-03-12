@@ -7,13 +7,15 @@ import com.badlogic.gdx.Game;
 import editor.EditorData;
 
 public class Editor2Dgame extends Game {
+	
+	public static final boolean DEBUG_PRINT_LEVEL_0 = false;
 
 	@Override
 	public void create() {
 		val currentScreen = new EditorScreen(this, new EditorData(1000,1000));
 		setScreen(currentScreen);
 	}
-	//initial grid "look" is 40 x 75
+	
 	@Override
 	public void dispose() {
 		super.dispose();	

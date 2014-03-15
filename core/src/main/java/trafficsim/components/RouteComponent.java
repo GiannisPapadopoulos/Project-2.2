@@ -1,5 +1,6 @@
 package trafficsim.components;
 
+import graph.Edge;
 import graph.Vertex;
 import lombok.Delegate;
 import lombok.Getter;
@@ -35,5 +36,13 @@ public class RouteComponent
 
 	/** If false, path will be recomputed */
 	private boolean set;
+
+	public Edge<Road> getCurrentEdge() {
+		return path.getRoute().get(edgeIndex).getEdge();
+	}
+
+	public Vertex<Road> getNextVertex() {
+		return currentVertex == target ? currentVertex : currentVertex.getNeighbor(getCurrentEdge());
+	}
 
 }

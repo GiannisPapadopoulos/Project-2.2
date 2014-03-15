@@ -3,9 +3,6 @@ package trafficsim.factories;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.CAR_WIDTH;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
-import graph.Edge;
-import graph.Graph;
-import graph.Vertex;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.AccelerationComponent;
 import trafficsim.components.DimensionComponent;
@@ -19,6 +16,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+
+import functions.GetLength;
+import graph.Edge;
+import graph.Graph;
+import graph.Vertex;
 
 /**
  * Contains methods to create the different entities used in the world and add the required components
@@ -108,10 +110,11 @@ public class EntityFactory {
 	public static Entity createRoad(TrafficSimWorld world, Road data) {
 		Entity road = world.createEntity();
 
-		Vector2 vector = data.getPointB().cpy().sub(data.getPointA());
+		// Vector2 vector = new GetVector().apply(data);
 		Vector2 position = new Vector2((data.getPointB().x + data.getPointA().x) / 2, (data.getPointB().y + data.getPointA().y) / 2);
-		float length = vector.len();
-		float angle = vector.angle();
+		float angle = new GetAngle().apply(data);
+
+		float length = new GetLength().apply(data);
 
 		// TODO Check number of lanes here
 		String name = "road1x1";
@@ -137,6 +140,11 @@ public class EntityFactory {
 		SpriteComponent sprite = new SpriteComponent(name);
 		road.addComponent(sprite);
 		return road;
+	}
+
+	public static float computeAngle(Vector2 vector) {
+		float angle = vector.angle();
+		return angle;
 	}
 
 	// public static Entity createCar(TrafficSimWorld world, Vector2 vector2, float acceleration, String string) {

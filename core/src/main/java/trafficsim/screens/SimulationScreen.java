@@ -7,10 +7,14 @@ import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
 import graph.Graph;
 import graph.GraphFactory;
 import trafficsim.TrafficSimWorld;
+import trafficsim.components.PhysicsBodyComponent;
+import trafficsim.components.RouteComponent;
+import trafficsim.components.SteeringComponent;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
+import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 
@@ -44,39 +48,20 @@ public class SimulationScreen
 		world.setSystem(new MovementSystem());
 		world.setSystem(new PhysicsSystem());
 		world.setSystem(new InputSystem(camera));
+		world.setSystem(new PathFindingSystem());
 
 		world.initialize();
 
-		createTestRoads();
-
-		// EntityFactory.createRoad(world, new Vector2(0, 200), 60 * 10, 0, "road1x1").addToWorld();
-		// Graph<Road> graph = new Graph<Road>();
-		// Vertex<Road> v1 = graph.addVertex(null);
-		// Vertex<Road> v2 = graph.addVertex(null);
-		// Vector2 left = new Vector2(-30, 200);
-		// Vector2 right = new Vector2(30, 200);
-		// Edge<Road> edge = graph.addEdge(new Road(left, right, 1, Road.Direction.BOTH), v1, v2, false);
-		// EntityFactory.populateWorld(world, graph);
-		//
-		// EntityFactory.createRoad(world, new Vector2(0, 0), 60 * 1, 0, "road1x1").addToWorld();
-		// EntityFactory.createRoad(world, new Vector2(0, -200), 60 * 1, 0, "road1x1").addToWorld();
-		// EntityFactory.createRoad(world, new Vector2(330, 70), 60 * 1, 90, "road1x1").addToWorld();
-		// EntityFactory.createCar(world, new Vector2(-300, -200), 0f, "red-car").addToWorld();
-		// EntityFactory.createCar(world, new Vector2(-240, -200), 0f, "red-car").addToWorld();
-		// EntityFactory.createCar(world, new Vector2(-300, -140), 0f, "red-car").addToWorld();
-
-		EntityFactory.createCar(world, new Vector2(-200, -215), 20f, 5, 0, "red-car").addToWorld();
-		Entity carV = EntityFactory.createCar(world, new Vector2(-100, 15), 10, 20, 0, "red-car");
-		carV.addToWorld();
-
-		Entity car = EntityFactory.createCar(world, new Vector2(-300, -200), 0f, 30, 0, "car4");
-		car.addToWorld();
-	}
-
-	private void createTestRoads() {
-		Graph<Road> graph = GraphFactory.createManhattanGraph(25, 20, 60, -300, -200);
+		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, -0, -0);
 		EntityFactory.populateWorld(world, graph);
-		System.out.println("V " + graph.getVertexCount() + " E " + graph.getEdgeCount());
+
+		// EntityFactory.createCar(world, new Vector2(-20, -20), 0f, 30, MathUtils.PI / 2, "car4").addToWorld();
+
+		Entity car = EntityFactory.createCar(world, new Vector2(-0, -0), 0f, 30, 0, "car4");
+		car.addComponent(new RouteComponent(graph.getVertex(0), graph.getVertex(graph.getVertexCount() - 1)));
+		car.addComponent(new SteeringComponent(car.getComponent(PhysicsBodyComponent.class).getAngle(), false));
+		car.addToWorld();
+
 	}
 
 	@Override

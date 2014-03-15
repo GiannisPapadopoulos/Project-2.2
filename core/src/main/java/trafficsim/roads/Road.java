@@ -2,6 +2,7 @@ package trafficsim.roads;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -12,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 @AllArgsConstructor
 @Getter
+@ToString
 public class Road {
 
 	/** The direction of a road, UPSTREAM is from pointA to pointB */

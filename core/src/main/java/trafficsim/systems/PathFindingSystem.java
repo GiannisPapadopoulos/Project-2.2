@@ -13,6 +13,13 @@ import com.artemis.EntitySystem;
 import com.artemis.annotations.Mapper;
 import com.artemis.utils.ImmutableBag;
 
+/**
+ * System responsible for computing(by calling A*) a path between the assigned source and target vertices
+ * The source vertex(assumed to be the current position) is assigned at creation by the Spawning system
+ * and the target is assigned by the DestinationSystem
+ * 
+ * @author Giannis Papadopoulos
+ */
 public class PathFindingSystem
 		extends EntitySystem {
 
@@ -30,9 +37,7 @@ public class PathFindingSystem
 			Entity entity = entities.get(i);
 			if (routeComponentMapper.has(entity)) {
 				RouteComponent routeComp = routeComponentMapper.get(entity);
-				if (!routeComp.isSet()) {
-					// sanity check
-					assert routeComp.getSource() != null && routeComp.getTarget() != null;
+				if (!routeComp.isSet() && routeComp.getSource() != null && routeComp.getTarget() != null) {
 					Path<GraphState, GraphAction> path = new GraphBasedAstar().findRoute(	routeComp.getSource(),
 																							routeComp.getTarget());
 					assert path.isValidPath() : " No valid path found!";

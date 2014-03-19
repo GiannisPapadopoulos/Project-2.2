@@ -1,6 +1,6 @@
 package pathfinding;
 
-import functions.CalculateExpectedTime;
+import functions.VectorUtils;
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
@@ -28,7 +28,7 @@ public class GraphSuccessorFunction
 		for (int i = 0; i < v.getAdjacentVertices().size(); i++) {
 			Vertex<Road> adj = graph.getVertex(v.getAdjacentVertices().get(i));
 			Edge<Road> edge = graph.getEdge(v.getAdjacentEdges().get(i));
-			double cost = new CalculateExpectedTime().apply(edge.getData());
+			double cost = VectorUtils.calculateExpectedTime(edge.getData());
 			successors.add(ImmutableTriple.of(new GraphState(adj), new GraphAction(edge), cost));
 		}
 		return successors;

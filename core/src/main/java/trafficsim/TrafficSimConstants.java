@@ -1,5 +1,7 @@
 package trafficsim;
 
+import java.util.Random;
+
 /** All constants used in the simulation are defined here */
 public final class TrafficSimConstants {
 
@@ -36,5 +38,8 @@ public final class TrafficSimConstants {
 
 	/** Whether to do box2d debug rendering */
 	public static boolean DEBUG_RENDER = true;
+
+	/** The random instance used throughout the traffic simulation */
+	public static final Random RANDOM = new Random();
 
 }

@@ -80,7 +80,6 @@ public class RenderSystem
 			sprite.setRotation(physicsBodyMapper.get(e).getAngle() * MathUtils.radDeg);
 		}
 		spriteComp.setSprite(sprite);
-		// System.out.println(spriteComp.getSprite().getBoundingRectangle());
 	}
 
 	@Override

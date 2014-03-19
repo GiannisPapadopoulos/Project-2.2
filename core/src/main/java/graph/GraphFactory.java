@@ -7,7 +7,7 @@ import trafficsim.roads.Road.Direction;
 
 import com.badlogic.gdx.math.Vector2;
 
-import functions.GetMidPoint;
+import functions.VectorUtils;
 
 public class GraphFactory {
 
@@ -32,16 +32,16 @@ public class GraphFactory {
 					Vertex<Road> v2 = graph.getVertex((i + 1) * height + j);
 					// graph.addEdge(new Road(v1.getData().getPointA(), v2.getData().getPointA(), 1, Direction.BOTH),
 					// v1, v2, false);
-					graph.addEdge(	new Road(new GetMidPoint().apply(v1.getData()),
-												new GetMidPoint().apply(v2.getData()), 1, Direction.BOTH,
+					graph.addEdge(	new Road(VectorUtils.getMidPoint(v1.getData()),
+												VectorUtils.getMidPoint(v2.getData()), 1, Direction.BOTH,
 												CITY_SPEED_LIMIT), v1, v2, false);
 				}
 				if (j < height - 1) {
 					Vertex<Road> v3 = graph.getVertex(i * height + j + 1);
 					// graph.addEdge(new Road(v1.getData().getPointA(), v3.getData().getPointA(), 1, Direction.BOTH),
 					// v1, v3, false);
-					graph.addEdge(	new Road(new GetMidPoint().apply(v1.getData()),
-												new GetMidPoint().apply(v3.getData()), 1, Direction.BOTH,
+					graph.addEdge(	new Road(VectorUtils.getMidPoint(v1.getData()),
+												VectorUtils.getMidPoint(v3.getData()), 1, Direction.BOTH,
 												CITY_SPEED_LIMIT), v1, v3, false);
 				}
 			}

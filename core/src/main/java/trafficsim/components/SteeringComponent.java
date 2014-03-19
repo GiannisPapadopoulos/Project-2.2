@@ -12,9 +12,22 @@ import com.artemis.Component;
 public class SteeringComponent
 		extends Component {
 
-	/** The desired angle, same as the angle of the target road */
-	private float desiredAngle;
-	/** If the entity is currently taking a turn */
-	private boolean turning;
+	public enum State {
+		DEFAULT,
+		TURNING,
+		STOPPING,
+		ARRIVED;
+	}
+
+	private State state;
+
+	private float maxForce;
+
+	private float maxTorque;
+
+	// /** The desired angle, same as the angle of the target road */
+	// private float desiredAngle;
+	// /** If the entity is currently taking a turn */
+	// private boolean turning;
 
 }

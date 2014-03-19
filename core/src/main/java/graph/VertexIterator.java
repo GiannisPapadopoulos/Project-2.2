@@ -27,7 +27,7 @@ public class VertexIterator<E>
 
 	@Override
 	public Vertex<E> next() {
-		return parent.getVertex(i++);
+		return parent.getVertex(list.get(i++));
 	}
 
 	@Override

@@ -1,17 +1,17 @@
 package trafficsim.screens;
 
 import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
+import static trafficsim.TrafficSimConstants.LANE_WIDTH;
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
 import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
 import graph.Graph;
 import graph.GraphFactory;
 import trafficsim.TrafficSimWorld;
-import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
-import trafficsim.components.SteeringComponent;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
+import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
@@ -49,19 +49,28 @@ public class SimulationScreen
 		world.setSystem(new PhysicsSystem());
 		world.setSystem(new InputSystem(camera));
 		world.setSystem(new PathFindingSystem());
+		world.setSystem(new DestinationSystem());
 
 		world.initialize();
 
-		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, -0, -0);
+		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
 		EntityFactory.populateWorld(world, graph);
+		// for (val edge : graph.getEdgeIterator()) {
+		// System.out.println(edge);
+		// }
+		// System.out.println(graph.getVertex(0).getData().getPointA());
+		// System.out.println(graph.getVertex(3).getData().getPointA());
 
 		// EntityFactory.createCar(world, new Vector2(-20, -20), 0f, 30, MathUtils.PI / 2, "car4").addToWorld();
 
-		Entity car = EntityFactory.createCar(world, new Vector2(-0, -0), 0f, 30, 0, "car4");
+		Entity car = EntityFactory.createCar(world, new Vector2(0, -LANE_WIDTH / 2), 1f, 30, 0, "car4");
 		car.addComponent(new RouteComponent(graph.getVertex(0), graph.getVertex(graph.getVertexCount() - 1)));
-		car.addComponent(new SteeringComponent(car.getComponent(PhysicsBodyComponent.class).getAngle(), false));
 		car.addToWorld();
 
+		// Entity car2 = EntityFactory.createCar( world, new Vector2(303, 240 + LANE_WIDTH / 2), 1f, 30, MathUtils.PI,
+		// "car4");
+		// car2.addComponent(new RouteComponent(graph.getVertex(graph.getVertexCount() - 1), graph.getVertex(0)));
+		// car2.addToWorld();
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class EdgeIterator<E>
 
 	@Override
 	public Edge<E> next() {
-		return parent.getEdge(i++);
+		return parent.getEdge(list.get(i++));
 	}
 
 	@Override

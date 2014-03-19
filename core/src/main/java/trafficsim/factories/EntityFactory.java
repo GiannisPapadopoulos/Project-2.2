@@ -4,11 +4,12 @@ import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.CAR_WIDTH;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
 import trafficsim.TrafficSimWorld;
-import trafficsim.components.AccelerationComponent;
 import trafficsim.components.DimensionComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.SpriteComponent;
+import trafficsim.components.SteeringComponent;
+import trafficsim.components.SteeringComponent.State;
 import trafficsim.roads.Road;
 
 import com.artemis.Entity;
@@ -17,7 +18,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
-import functions.GetLength;
+import functions.VectorUtils;
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
@@ -33,22 +34,23 @@ public class EntityFactory {
 	 * Creates a car with the given position and acceleration
 	 * 
 	 * @param position The position of the center of mass
-	 * @param angle The angle in ?
+	 * @param angleInRads The angle in radians
 	 * @param name Must be the same as the name of the texture file
 	 */
-	public static Entity createCar(TrafficSimWorld world, Vector2 position, float acceleration, float maxSpeed, float angle, String name) {
+	public static Entity createCar(TrafficSimWorld world, Vector2 position, float maxForce, float maxSpeed,
+			float angleInRads, String name) {
 		Entity car = world.createEntity();
 		// boxShape takes the half width/height as input
 		car.addComponent(new DimensionComponent(CAR_LENGTH, CAR_WIDTH));
 		/** @formatter:off */
 		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(CAR_LENGTH   / 2, CAR_WIDTH   / 2)
 																.density(1f)
-																.restitution(1.0f)
+																.restitution(0.1f)
 																.friction(0f);
 		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
 															.type(BodyType.DynamicBody)
 															.position(position)
-															.angle(angle)
+															.angle(angleInRads)
 															.build();
 		
 		/** @formatter:on */
@@ -58,10 +60,11 @@ public class EntityFactory {
 		SpriteComponent sprite = new SpriteComponent(name);
 		car.addComponent(sprite);
 
-		car.addComponent(new AccelerationComponent(acceleration));
+		// car.addComponent(new AccelerationComponent(acceleration));
 		car.addComponent(new MaxSpeedComponent(maxSpeed));
 		
-		
+		// TODO Steering is a magic constant, experiment with different cards
+		car.addComponent(new SteeringComponent(State.DEFAULT, maxForce, 350f));
 
 		return car;
 	}
@@ -112,9 +115,9 @@ public class EntityFactory {
 
 		// Vector2 vector = new GetVector().apply(data);
 		Vector2 position = new Vector2((data.getPointB().x + data.getPointA().x) / 2, (data.getPointB().y + data.getPointA().y) / 2);
-		float angle = new GetAngle().apply(data);
+		float angle = VectorUtils.getAngle(data);
 
-		float length = new GetLength().apply(data);
+		float length = VectorUtils.getLength(data);
 
 		// TODO Check number of lanes here
 		String name = "road1x1";

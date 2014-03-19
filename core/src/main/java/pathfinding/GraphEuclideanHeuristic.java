@@ -5,7 +5,7 @@ import search.HeuristicFunction;
 
 import com.badlogic.gdx.math.Vector2;
 
-import functions.GetMidPoint;
+import functions.VectorUtils;
 
 @AllArgsConstructor
 public class GraphEuclideanHeuristic
@@ -15,8 +15,8 @@ public class GraphEuclideanHeuristic
 
 	@Override
 	public double evaluate(GraphState s) {
-		Vector2 currentPos = new GetMidPoint().apply(s.getVertex().getData());
-		Vector2 targetPos = new GetMidPoint().apply(target.getVertex().getData());
+		Vector2 currentPos = VectorUtils.getMidPoint(s.getVertex().getData());
+		Vector2 targetPos = VectorUtils.getMidPoint(target.getVertex().getData());
 		// TODO calculate expected speed maybe ?
 		return currentPos.dst(targetPos);
 	}

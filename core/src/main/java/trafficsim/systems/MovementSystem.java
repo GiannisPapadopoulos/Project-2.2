@@ -59,6 +59,10 @@ public class MovementSystem
 					Vector2 force = physComp.getLinearVelocity().cpy().scl(-1).clamp(0, steeringComp.getMaxForce());
 					Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
 					physComp.setLinearVelocity(newVel);
+					if (newVel.len() < 0.1) {
+						entity.deleteFromWorld();
+						physComp.setActive(false);
+					}
 					continue;
 				}
 

@@ -1,6 +1,9 @@
 package trafficsim;
 
+import trafficsim.screens.EditorScreen;
+import trafficsim.screens.Screens;
 import trafficsim.screens.SimulationScreen;
+import trafficsim.screens.StatisticsScreen;
 
 import com.badlogic.gdx.Game;
 
@@ -10,7 +13,9 @@ public class TrafficSimulation
 
 	@Override
 	public void create() {
-		setScreen(new SimulationScreen());
+		Screens screens = new Screens();
+		screens = new Screens(this, new SimulationScreen(screens), new EditorScreen(screens), new StatisticsScreen(screens));
+		setScreen(screens.getSimulationScreen());
 	}
 
 

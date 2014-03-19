@@ -18,6 +18,7 @@ import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
+import trafficsim.systems.SpawnSystem;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
@@ -52,6 +53,7 @@ public class SimulationScreen
 		world.setSystem(new InputSystem(camera));
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
+		world.setSystem(new SpawnSystem());
 
 		world.initialize();
 
@@ -66,6 +68,8 @@ public class SimulationScreen
 												"car4");
 		car2.addComponent(new RouteComponent(graph.getVertex(graph.getVertexCount() - 1), graph.getVertex(0)));
 		car2.addToWorld();
+
+		GraphFactory.addSpawnPointsTest(world, graph);
 
 		TIMER.start();
 	}

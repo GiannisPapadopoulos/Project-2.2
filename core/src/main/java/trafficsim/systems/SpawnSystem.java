@@ -2,6 +2,7 @@ package trafficsim.systems;
 
 import static trafficsim.TrafficSimConstants.TIMER;
 import trafficsim.TrafficSimWorld;
+import trafficsim.components.RouteComponent;
 import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
 
@@ -36,8 +37,10 @@ public class SpawnSystem
 				if (canSpawn(spawnComp)) {
 					Vector2 position = VectorUtils.getMidPoint(spawnComp.getVertex().getData());
 					float angle = VectorUtils.getAngle(spawnComp.getVertex().getData());
-					EntityFactory.createCar((TrafficSimWorld) world, position, 1f, 40, angle, "car4");
-					// spawnComp.s
+					Entity car = EntityFactory.createCar((TrafficSimWorld) world, position, 1f, 40, angle, "car4");
+					car.addComponent(new RouteComponent(spawnComp.getVertex()));
+					car.addToWorld();
+					spawnComp.spawned(TIMER.getTime());
 				}
 			}
 		}

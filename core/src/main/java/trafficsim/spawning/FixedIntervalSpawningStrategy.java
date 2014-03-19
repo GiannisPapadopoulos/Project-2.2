@@ -21,4 +21,9 @@ public class FixedIntervalSpawningStrategy
 		return currentTime - lastSpawnTime >= interval;
 	}
 
+	@Override
+	public void spawned(float currentTime) {
+		this.lastSpawnTime = currentTime;
+	}
+
 }

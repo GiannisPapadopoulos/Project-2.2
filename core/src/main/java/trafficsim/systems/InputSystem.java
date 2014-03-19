@@ -18,7 +18,7 @@ public class InputSystem
 	
 	private static final double ZOOMING_FACTOR1 = 0.1f;
 	private static final double ZOOMING_FACTOR2 = 1f;
-	private static final float TRANSLATION_FACTOR = 1.0f;
+	private static final float TRANSLATION_FACTOR = 0.3f;
 
 	private float previousDragX;
 	private float previousDragY;
@@ -28,7 +28,7 @@ public class InputSystem
 	}
 
 	@Override
-	protected void initialize() {
+	public void initialize() {
 		Gdx.input.setInputProcessor(this);
 	}
 

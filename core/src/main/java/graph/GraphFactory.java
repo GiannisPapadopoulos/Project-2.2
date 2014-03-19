@@ -2,6 +2,7 @@ package graph;
 
 import static trafficsim.TrafficSimConstants.CITY_SPEED_LIMIT;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
@@ -15,6 +16,19 @@ import com.badlogic.gdx.math.Vector2;
 import functions.VectorUtils;
 
 public class GraphFactory {
+
+	public static void addTrafficLights(TrafficSimWorld world, Graph<Road> graph) {
+		for(Edge<Road> edge : graph.getEdgeIterator()) {
+			val iterator = edge.getAdjacentVertexIterator();
+			Vertex<Road> vertexA = iterator.next();
+			Vertex<Road> vertexB = iterator.next();
+			if (vertexA.getAdjacentVertices().size() > 1) {
+				edge.getData().getPointA();
+				Vector2 pos = edge.getData().getPointA().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(-5));
+				// EntityFactory.createTrafficLight(world, pos, 5, 2, 5, null, false, null)
+			}
+		}
+	}
 
 	public static void addSpawnPointsTest(TrafficSimWorld world, Graph<Road> graph) {
 		Vertex<Road> connection = graph.getVertex(0);

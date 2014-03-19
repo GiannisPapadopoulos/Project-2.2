@@ -20,9 +20,9 @@ import trafficsim.systems.RenderSystem;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
@@ -32,16 +32,18 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
  * @author Giannis Papadopoulos
  * 
  */
-public class SimulationScreen
-		implements Screen {
+public class SimulationScreen extends SuperScreen {
 
 	private TrafficSimWorld world;
 	private OrthographicCamera camera;
-	Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
+	Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false,
+			false, false, true, true);
 
-	public SimulationScreen() {
+	public SimulationScreen(Screens screens) {
+		super(screens);
 		world = new TrafficSimWorld();
-		camera = new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX, WINDOW_HEIGHT * WORLD_TO_BOX);
+		camera = new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX,
+				WINDOW_HEIGHT * WORLD_TO_BOX);
 
 		// Add systems
 		world.setSystem(new RenderSystem(camera));
@@ -61,16 +63,20 @@ public class SimulationScreen
 		// System.out.println(graph.getVertex(0).getData().getPointA());
 		// System.out.println(graph.getVertex(3).getData().getPointA());
 
-		// EntityFactory.createCar(world, new Vector2(-20, -20), 0f, 30, MathUtils.PI / 2, "car4").addToWorld();
+		// EntityFactory.createCar(world, new Vector2(-20, -20), 0f, 30,
+		// MathUtils.PI / 2, "car4").addToWorld();
 
-		Entity car = EntityFactory.createCar(world, new Vector2(0, -LANE_WIDTH / 2), 1f, 30, 0, "car4");
-		car.addComponent(new RouteComponent(graph.getVertex(0), graph.getVertex(graph.getVertexCount() - 1)));
+		Entity car = EntityFactory.createCar(world, new Vector2(0,
+				-LANE_WIDTH / 2), 1f, 30, MathUtils.PI, "car4");
+		car.addComponent(new RouteComponent(graph.getVertex(0), graph
+				.getVertex(graph.getVertexCount() - 1)));
 		car.addToWorld();
 
-		// Entity car2 = EntityFactory.createCar( world, new Vector2(303, 240 + LANE_WIDTH / 2), 1f, 30, MathUtils.PI,
-		// "car4");
-		// car2.addComponent(new RouteComponent(graph.getVertex(graph.getVertexCount() - 1), graph.getVertex(0)));
-		// car2.addToWorld();
+		Entity car2 = EntityFactory.createCar(world, new Vector2(303,
+				240 + LANE_WIDTH / 2), 1f, 30, MathUtils.PI, "car4");
+		car2.addComponent(new RouteComponent(graph.getVertex(graph
+				.getVertexCount() - 1), graph.getVertex(0)));
+		car2.addToWorld();
 	}
 
 	@Override
@@ -84,34 +90,6 @@ public class SimulationScreen
 			debugRenderer.render(world.getBox2dWorld(), camera.combined);
 	}
 
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-	}
 
-	@Override
-	public void show() {
-
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-	}
 
 }

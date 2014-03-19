@@ -20,16 +20,19 @@ public class TrafficLightComponent extends Component {
 	
 	private Status status;
 	
+	private boolean straight;
+
 	public enum Status{
 		GREEN, ORANGE, RED;
 	}
 	
 	
-	public TrafficLightComponent(float timerGreen, float timerOrange, float timerRed, Status status) {
+	public TrafficLightComponent(float timerGreen, float timerOrange, float timerRed, Status status, boolean straight) {
 		this.timerGreen = timerGreen;
 		this.timerOrange = timerOrange;
 		this.timerRed = timerRed;
 		this.status= status;
+		this.straight = straight;
 	}
 	
 	public float timer(){

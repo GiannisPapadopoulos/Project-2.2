@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
-			<version>0.9.9</version>
+			<version>${gdx.version}</version>
 		</dependency>
 		<dependency>
             <groupId>org.xerial</groupId>

@@ -23,8 +23,14 @@ public class RouteComponent
 	@NonNull
 	private Vertex<Road> source;
 
-	@NonNull
+	// @NonNull
 	private Vertex<Road> target;
+
+	public RouteComponent(Vertex<Road> source, Vertex<Road> target) {
+		super();
+		this.source = source;
+		this.target = target;
+	}
 
 	@Delegate
 	private Path<GraphState, GraphAction> path;

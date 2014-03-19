@@ -59,6 +59,10 @@ public class MovementSystem
 					Vector2 force = physComp.getLinearVelocity().cpy().scl(-1).clamp(0, steeringComp.getMaxForce());
 					Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
 					physComp.setLinearVelocity(newVel);
+					if (newVel.len() < 0.1) {
+						entity.deleteFromWorld();
+						physComp.setActive(false);
+					}
 					continue;
 				}
 
@@ -75,22 +79,7 @@ public class MovementSystem
 					else {
 						steeringComp.setState(State.ARRIVED);
 					}
-					System.out.println(VectorUtils.getAngle(routeComp.getCurrentEdge().getData()));
-					// boolean fromAtoB = routeComp.getCurrentVertex() == routeComp.getCurrentEdge()
-					// .getAdjacentVertexIterator()
-					// .next();
-					// System.out.println("changed " + routeComp.getEdgeIndex() + " "
-					// + routeComp.getCurrentEdge().getData().getPointA() + " "
-					// + routeComp.getCurrentEdge().getData().getPointB() + " "
-					// + routeComp.getCurrentVertex() + " " + routeComp.getNextVertex() + " "
-					// + fromAtoB + " next "
-					// + routeComp.getCurrentEdge().getAdjacentVertexIterator().next());
-					// System.out.println(fromAtoB + " " + routeComp.getCurrentVertex() + " n "
-					// + routeComp.getNextVertex());
-					// System.out.println(routeComp.getCurrentEdge().getAdjacentVertices() + " "
-					// + routeComp.getCurrentEdge().getAdjacentVertexIterator().next());
 				}
-				System.out.println(physComp.getAngle());
 
 				Vector2 force = SeekBehavior.getForce(physComp.getPosition(), target);
 				// TODO Define maxForce in relation to mass
@@ -121,12 +110,10 @@ public class MovementSystem
 																	.next();
 		Road road = routeComp.getCurrentEdge().getData();
 		Vector2 roadVector = VectorUtils.getVector(road);
-		if (fromAtoB) {
-			return roadVector.angle();
+		if (!fromAtoB) {
+			roadVector.scl(-1);
 		}
-		else {
-			return VectorUtils.getVector(road).scl(-1).angle() * MathUtils.degRad;
-		}
+		return roadVector.angle() * MathUtils.degRad;
 	}
 
 	public static Vector2 getTarget(RouteComponent routeComp) {

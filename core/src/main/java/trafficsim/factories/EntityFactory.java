@@ -10,6 +10,8 @@ import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.SpriteComponent;
 import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
+import trafficsim.components.TrafficLightComponent;
+import trafficsim.components.TrafficLightComponent.Status;
 import trafficsim.roads.Road;
 
 import com.artemis.Entity;
@@ -161,6 +163,21 @@ public class EntityFactory {
 		for (Vertex<Road> vertex : graph.getVertexIterator()) {
 			world.addEntity(createRoad(world, vertex.getData()));
 		}
+	}
+
+	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, int timerG, int timerO,
+			int timerR, Status status, boolean straight, String name) {
+		Entity trafficLight = world.createEntity();
+		PhysicsBodyComponent physComp = PhysicsBodyFactory.createTrafficLightPhys(world.getBox2dWorld(), position);
+		trafficLight.addComponent(physComp);
+
+		SpriteComponent sprite = new SpriteComponent(name);
+		trafficLight.addComponent(sprite);
+
+		TrafficLightComponent lightComp = new TrafficLightComponent(timerG, timerO, timerR, status, straight);
+		trafficLight.addComponent(lightComp);
+
+		return trafficLight;
 	}
 
 }

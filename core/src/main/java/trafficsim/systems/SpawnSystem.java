@@ -42,6 +42,8 @@ public class SpawnSystem
 					car.addToWorld();
 					spawnComp.spawned(TIMER.getTime());
 				}
+				else
+					System.out.println("cant");
 			}
 		}
 

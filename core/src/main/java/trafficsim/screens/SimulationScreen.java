@@ -8,6 +8,8 @@ import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
 import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
 import graph.Graph;
 import graph.GraphFactory;
+import lombok.Getter;
+import lombok.Setter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.RouteComponent;
 import trafficsim.factories.EntityFactory;
@@ -22,7 +24,6 @@ import trafficsim.systems.SpawnSystem;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
@@ -36,21 +37,34 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
  * 
  */
 public class SimulationScreen
-		implements Screen {
+		extends SuperScreen {
 
+	@Getter
+	// So it's accessible by EditorScreen
+	@Setter
+	// So it's mutable by EditorScreen
 	private TrafficSimWorld world;
-	private OrthographicCamera camera;
-	Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
 
-	public SimulationScreen() {
-		world = new TrafficSimWorld();
-		camera = new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX, WINDOW_HEIGHT * WORLD_TO_BOX);
+	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
+
+	public SimulationScreen(Screens screens) {
+		super(screens);
+
+	}
+
+	@Override
+	public void show() {
+
+		if (world == null)
+			world = new TrafficSimWorld();
+
+		setCamera(new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX, WINDOW_HEIGHT * WORLD_TO_BOX));
 
 		// Add systems
-		world.setSystem(new RenderSystem(camera));
+		world.setSystem(new RenderSystem(getCamera()));
 		world.setSystem(new MovementSystem());
 		world.setSystem(new PhysicsSystem());
-		world.setSystem(new InputSystem(camera));
+		world.setSystem(new InputSystem(getCamera()));
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
@@ -70,51 +84,18 @@ public class SimulationScreen
 		car2.addToWorld();
 
 		GraphFactory.addSpawnPointsTest(world, graph);
-
 		TIMER.start();
 	}
-
-
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		camera.update();
+		getCamera().update();
 		world.setDelta(delta);
 
 		world.process();
 		if (DEBUG_RENDER)
-			debugRenderer.render(world.getBox2dWorld(), camera.combined);
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void show() {
-
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
+			debugRenderer.render(world.getBox2dWorld(), getCamera().combined);
 	}
 
 }

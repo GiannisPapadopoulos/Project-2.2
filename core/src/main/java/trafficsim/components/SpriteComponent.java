@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import com.artemis.Component;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
  * Required for an entity to be rendererd by the renderSystem
@@ -23,9 +24,11 @@ public class SpriteComponent
 	/** The name of the texture file */
 	private final String name;
 	/** Scale on each axis */
-	private int scaleX;
-	private int scaleY;
+	private float scaleX;
+	private float scaleY;
 	/** Rotation with respect to bottom left corner */
 	private float rotation;
+	/** The actual sprite that will be drawn */
+	private Sprite sprite;
 
 }

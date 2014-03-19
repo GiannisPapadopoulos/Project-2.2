@@ -11,7 +11,6 @@ public class StatisticsScreen extends SuperScreen {
 
 	@Override
 	public void render(float arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

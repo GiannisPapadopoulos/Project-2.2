@@ -2,6 +2,8 @@ package trafficsim;
 
 import java.util.Random;
 
+import org.apache.commons.lang3.time.StopWatch;
+
 /** All constants used in the simulation are defined here */
 public final class TrafficSimConstants {
 
@@ -42,4 +44,5 @@ public final class TrafficSimConstants {
 	/** The random instance used throughout the traffic simulation */
 	public static final Random RANDOM = new Random();
 
+	public static final StopWatch TIMER = new StopWatch();
 }

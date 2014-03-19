@@ -75,22 +75,7 @@ public class MovementSystem
 					else {
 						steeringComp.setState(State.ARRIVED);
 					}
-					System.out.println(VectorUtils.getAngle(routeComp.getCurrentEdge().getData()));
-					// boolean fromAtoB = routeComp.getCurrentVertex() == routeComp.getCurrentEdge()
-					// .getAdjacentVertexIterator()
-					// .next();
-					// System.out.println("changed " + routeComp.getEdgeIndex() + " "
-					// + routeComp.getCurrentEdge().getData().getPointA() + " "
-					// + routeComp.getCurrentEdge().getData().getPointB() + " "
-					// + routeComp.getCurrentVertex() + " " + routeComp.getNextVertex() + " "
-					// + fromAtoB + " next "
-					// + routeComp.getCurrentEdge().getAdjacentVertexIterator().next());
-					// System.out.println(fromAtoB + " " + routeComp.getCurrentVertex() + " n "
-					// + routeComp.getNextVertex());
-					// System.out.println(routeComp.getCurrentEdge().getAdjacentVertices() + " "
-					// + routeComp.getCurrentEdge().getAdjacentVertexIterator().next());
 				}
-				System.out.println(physComp.getAngle());
 
 				Vector2 force = SeekBehavior.getForce(physComp.getPosition(), target);
 				// TODO Define maxForce in relation to mass
@@ -121,12 +106,10 @@ public class MovementSystem
 																	.next();
 		Road road = routeComp.getCurrentEdge().getData();
 		Vector2 roadVector = VectorUtils.getVector(road);
-		if (fromAtoB) {
-			return roadVector.angle();
+		if (!fromAtoB) {
+			roadVector.scl(-1);
 		}
-		else {
-			return VectorUtils.getVector(road).scl(-1).angle() * MathUtils.degRad;
-		}
+		return roadVector.angle() * MathUtils.degRad;
 	}
 
 	public static Vector2 getTarget(RouteComponent routeComp) {

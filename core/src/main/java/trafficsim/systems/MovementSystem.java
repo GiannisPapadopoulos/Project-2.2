@@ -1,6 +1,8 @@
 package trafficsim.systems;
 
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import functions.VectorUtils;
+import graph.Edge;
 import trafficsim.components.AccelerationComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
@@ -17,8 +19,6 @@ import com.artemis.annotations.Mapper;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-
-import functions.VectorUtils;
 
 /**
  * The movement system is responsible for updating the velocity of all entities
@@ -69,15 +69,20 @@ public class MovementSystem
 				Vector2 target = getTarget(routeComp);
 
 				float dst = target.dst(physComp.getPosition());
-				float threshold = 3;
-				if (dst < threshold) {
+				float leftTurnThreshold = 1.5f;
+				float rightTurnThreshold = 2.5f;
+				float arrivalThreshold = 0.5f;
 
-					if (routeComp.getEdgeIndex() < routeComp.getRoute().size() - 1) {
+				// If Last edge
+				if (routeComp.getEdgeIndex() >= routeComp.getRoute().size() - 1) {
+					if (dst < arrivalThreshold)
+						steeringComp.setState(State.ARRIVED);
+				}
+				else {
+					float thresHold = isRightTurn(routeComp) ? rightTurnThreshold : leftTurnThreshold;
+					if (dst < thresHold) {
 						routeComp.setCurrentVertex(routeComp.getNextVertex());
 						routeComp.setEdgeIndex(routeComp.getEdgeIndex() + 1);
-					}
-					else {
-						steeringComp.setState(State.ARRIVED);
 					}
 				}
 
@@ -89,7 +94,7 @@ public class MovementSystem
 											maxSpeedMapper.get(entity).getSpeed());
 				newVel.clamp(0, maxSpeed);
 				float deltaA = getAngleInRads(routeComp) - physComp.getAngle();
-				deltaA = constraintAngle(deltaA);
+				deltaA = constrainAngle(deltaA);
 				// TODO extract constant
 				if (Math.abs(deltaA) > 0.05) {
 					newVel.scl(0.9f);
@@ -102,6 +107,17 @@ public class MovementSystem
 				physComp.setLinearVelocity(newVel);
 			}
 		}
+	}
+
+	/** Returns true if the next turn is a right one */
+	private boolean isRightTurn(RouteComponent routeComp) {
+		if (routeComp.getEdgeIndex() >= routeComp.getRoute().size()) {
+			return false;
+		}
+		Edge<Road> nextEdge = routeComp.getPath().getRoute().get(routeComp.getEdgeIndex() + 1).getEdge();
+		float angle = constrainAngle(VectorUtils.getAngle(nextEdge.getData()))
+						- constrainAngle(VectorUtils.getAngle(routeComp.getCurrentEdge().getData()));
+		return angle < 0;
 	}
 
 	private float getAngleInRads(RouteComponent routeComp) {
@@ -132,7 +148,7 @@ public class MovementSystem
 		return target;
 	}
 
-	public static float constraintAngle(float angle) {
+	public static float constrainAngle(float angle) {
 		int factor = (int) (angle / MathUtils.PI2);
 		angle -= factor * MathUtils.PI2;
 		return angle;

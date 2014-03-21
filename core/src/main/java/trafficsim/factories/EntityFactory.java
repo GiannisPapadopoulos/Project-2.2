@@ -1,5 +1,6 @@
 package trafficsim.factories;
 
+import static functions.VectorUtils.getVector;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.CAR_WIDTH;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
@@ -166,12 +167,29 @@ public class EntityFactory {
 	public static void addTrafficLights(TrafficSimWorld world, Graph<Road> graph) {
 		for (Edge<Road> edge : graph.getEdgeIterator()) {
 			val iterator = edge.getAdjacentVertexIterator();
-			// Vertex<Road> vertexA = iterator.next();
+			// TODO single for loop
+			Vertex<Road> vertexA = iterator.next();
+			if (vertexA.getAdjacentVertices().size() > 1) {
+				Vector2 pos = edge.getData().getPointA().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(1f));
+				Vector2 corr = getVector(edge.getData()).nor().rotate(90);
+				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(2f)), 5, 2, 4, Status.GREEN,
+													true).addToWorld();
+				// TODO left light should always point at a 90 degree angle from the road
+				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(1f)), 5, 2, 4, Status.RED, false)
+								.addToWorld();
+			}
 			Vertex<Road> vertexB = iterator.next();
 			if (vertexB.getAdjacentVertices().size() > 1) {
-				edge.getData().getPointA();
-				Vector2 pos = edge.getData().getPointB().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(-5));
-				EntityFactory.createTrafficLight(world, pos, 5, 2, 4, null, false);
+				Vector2 pos = edge.getData()
+									.getPointB()
+									.cpy()
+									.add(VectorUtils.getVector(edge.getData()).nor().scl(-1f));
+				Vector2 corr = getVector(edge.getData()).nor().rotate(-90);
+				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(2f)), 5, 2, 4, Status.GREEN,
+													true).addToWorld();
+				// TODO left light should always point at a 90 degree angle from the road
+				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(1f)), 5, 2, 4, Status.RED, false)
+								.addToWorld();
 			}
 		}
 	}
@@ -179,14 +197,29 @@ public class EntityFactory {
 	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, int timerG, int timerO,
 			int timerR, Status status, boolean straight) {
 		Entity trafficLight = world.createEntity();
-		PhysicsBodyComponent physComp = PhysicsBodyFactory.createTrafficLightPhys(world.getBox2dWorld(), position);
-		trafficLight.addComponent(physComp);
+		float width = 0.5f;
+		float length = 0.5f;
+		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length, width)
+																.density(1.0f)
+																.restitution(1.0f)
+																.friction(0f)
+																.sensor(true)
+																// There should be a better way
+																.groupIndex((short) -1);
+		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
+															.type(BodyType.StaticBody)
+															.position(position)
+															.angle(0)
+															.build();
+		trafficLight.addComponent(new PhysicsBodyComponent(body));
+		trafficLight.addComponent(new DimensionComponent(length, width));
 
-		SpriteComponent sprite = new SpriteComponent(status.name());
-		trafficLight.addComponent(sprite);
 
 		TrafficLightComponent lightComp = new TrafficLightComponent(timerG, timerO, timerR, status, straight);
 		trafficLight.addComponent(lightComp);
+
+		SpriteComponent sprite = new SpriteComponent(lightComp.getTextureName());
+		trafficLight.addComponent(sprite);
 
 		return trafficLight;
 	}

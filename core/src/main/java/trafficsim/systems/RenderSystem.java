@@ -6,6 +6,7 @@ import trafficsim.components.DimensionComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.PositionComponent;
 import trafficsim.components.SpriteComponent;
+import trafficsim.components.TrafficLightComponent;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -86,12 +87,23 @@ public class RenderSystem
 		PhysicsBodyComponent physComp = physicsBodyMapper.get(e);
 		Vector2 position = getPosition(e);
 		if (position != null) {
-			SpriteComponent spriteComp = spriteMapper.get(e);
+			 SpriteComponent spriteComp = spriteMapper.get(e);
+			 
 			// if (physComp.getType() == BodyType.DynamicBody && Math.random() > 0.99) {
 			// int i = (int) (Math.random() * 7) + 1;
 			// spriteComp.setName("car" + i);
 			// inserted(e);
 			// }
+
+			if (e.getComponent(TrafficLightComponent.class) != null) {
+				TrafficLightComponent lightComp = e.getComponent(TrafficLightComponent.class);
+				// Means that the light was switched last step
+				if (lightComp.getTimeElapsed() == 0) {
+					spriteComp.setName(lightComp.getTextureName());
+					inserted(e);
+				}
+			}
+
 			Sprite sprite = spriteComp.getSprite();
 
 			float posX = position.x - sprite.getWidth() / 2;

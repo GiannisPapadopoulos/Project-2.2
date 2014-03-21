@@ -1,5 +1,6 @@
 package trafficsim.components;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,10 +24,15 @@ public class TrafficLightComponent
 
 	private boolean straight;
 
+	@AllArgsConstructor
+	@Getter
 	public enum Status {
-		GREEN,
-		ORANGE,
-		RED;
+		GREEN("light_green", "left_green"),
+		ORANGE("light_red", "left_red"),
+		RED("light_red", "left_red");
+
+		private String straightLightTexture;
+		private String leftLightTexture;
 	}
 
 	public TrafficLightComponent(float timerGreen, float timerOrange, float timerRed, Status status, boolean straight) {
@@ -65,4 +71,9 @@ public class TrafficLightComponent
 			}
 		}
 	}
+
+	public String getTextureName() {
+		return straight ? status.getStraightLightTexture() : status.getLeftLightTexture();
+	}
+
 }

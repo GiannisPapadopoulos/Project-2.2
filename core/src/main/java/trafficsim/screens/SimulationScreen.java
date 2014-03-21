@@ -1,6 +1,5 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
 import static trafficsim.TrafficSimConstants.TIMER;
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
@@ -71,7 +70,7 @@ public class SimulationScreen
 
 		world.initialize();
 
-		Graph<Road> graph = GraphFactory.createManhattanGraphOld(6, 5, 60, 0, 0);
+		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
 		EntityFactory.populateWorld(world, graph);
 
 		Entity car = EntityFactory.createCar(world, new Vector2(0, -LANE_WIDTH / 2), 1f, 30, 0, "car4");
@@ -83,7 +82,7 @@ public class SimulationScreen
 		car2.addComponent(new RouteComponent(graph.getVertex(graph.getVertexCount() - 1), graph.getVertex(0)));
 		car2.addToWorld();
 
-		GraphFactory.addSpawnPointsTest(world, graph);
+		// GraphFactory.addSpawnPointsTest(world, graph);
 		TIMER.start();
 	}
 
@@ -94,8 +93,8 @@ public class SimulationScreen
 		world.setDelta(delta);
 
 		world.process();
-		if (DEBUG_RENDER)
-			debugRenderer.render(world.getBox2dWorld(), getCamera().combined);
+		// if (DEBUG_RENDER)
+		// debugRenderer.render(world.getBox2dWorld(), getCamera().combined);
 	}
 
 }

@@ -34,8 +34,9 @@ public class Edge<E>
 	@Override
 	public EdgeIterator<E> getAdjacentEdgeIterator() {
 		TIntArrayList adjacentEdges = new TIntArrayList();
-		for (int vertex : adjacentVertices) {
-
+		for (int i = 0; i < adjacentVertices.size(); i++) {
+			Vertex<E> vertex = parent.getVertex(adjacentVertices.get(i));
+			adjacentEdges.addAll(vertex.adjacentEdges);
 		}
 		return new EdgeIterator<E>(parent, adjacentEdges);
 	}

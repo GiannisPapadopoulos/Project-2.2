@@ -1,5 +1,6 @@
 package graph;
 
+import gnu.trove.list.array.TIntArrayList;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +29,15 @@ public class Edge<E>
 		Vertex<E> v1 = parent.getVertex(getAdjacentVertices().get(0));
 		Vertex<E> v2 = parent.getVertex(getAdjacentVertices().get(1));
 		return v1 == vertex ? v2 : v1;
+	}
+
+	@Override
+	public EdgeIterator<E> getAdjacentEdgeIterator() {
+		TIntArrayList adjacentEdges = new TIntArrayList();
+		for (int vertex : adjacentVertices) {
+
+		}
+		return new EdgeIterator<E>(parent, adjacentEdges);
 	}
 
 	// Do we have to support this?

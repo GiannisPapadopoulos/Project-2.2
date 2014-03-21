@@ -71,7 +71,7 @@ public class SimulationScreen
 
 		world.initialize();
 
-		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
+		Graph<Road> graph = GraphFactory.createManhattanGraphOld(6, 5, 60, 0, 0);
 		EntityFactory.populateWorld(world, graph);
 
 		Entity car = EntityFactory.createCar(world, new Vector2(0, -LANE_WIDTH / 2), 1f, 30, 0, "car4");

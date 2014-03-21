@@ -23,7 +23,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import functions.VectorUtils;
 import graph.Edge;
 import graph.Graph;
-import graph.Vertex;
 
 /**
  * Contains methods to create the different entities used in the world and add the required components
@@ -160,9 +159,9 @@ public class EntityFactory {
 		for (Edge<Road> edge : graph.getEdgeIterator()) {
 			world.addEntity(createRoad(world, edge.getData()));
 		}
-		for (Vertex<Road> vertex : graph.getVertexIterator()) {
-			world.addEntity(createRoad(world, vertex.getData()));
-		}
+		// for (Vertex<Road> vertex : graph.getVertexIterator()) {
+		// world.addEntity(createRoad(world, vertex.getData()));
+		// }
 	}
 
 	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, int timerG, int timerO,

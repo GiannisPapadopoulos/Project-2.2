@@ -13,7 +13,7 @@ public class AstarTestCase {
 
 	@Test
 	public void test() {
-		Graph<Road> graph = GraphFactory.createManhattanGraph(1000, 1000, 60, -300, -200);
+		Graph<Road> graph = GraphFactory.createManhattanGraphOld(1000, 1000, 60, -300, -200);
 		GraphBasedAstar aStar = new GraphBasedAstar();
 		@SuppressWarnings("unused")
 		val path = aStar.findRoute(graph.getVertex(0), graph.getVertex(graph.getVertexCount() - 1));

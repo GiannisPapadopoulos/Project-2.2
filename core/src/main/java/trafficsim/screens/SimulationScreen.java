@@ -83,7 +83,7 @@ public class SimulationScreen
 		car2.addComponent(new RouteComponent(graph.getVertex(graph.getVertexCount() - 1), graph.getVertex(0)));
 		car2.addToWorld();
 
-		GraphFactory.addSpawnPointsTest(world, graph);
+		// GraphFactory.addSpawnPointsTest(world, graph);
 		TIMER.start();
 	}
 

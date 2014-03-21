@@ -1,7 +1,6 @@
 package trafficsim.screens;
 
 import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
 import static trafficsim.TrafficSimConstants.TIMER;
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
@@ -11,7 +10,6 @@ import graph.GraphFactory;
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
-import trafficsim.components.RouteComponent;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.systems.DestinationSystem;
@@ -22,12 +20,9 @@ import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.SpawnSystem;
 
-import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 /**
@@ -74,16 +69,20 @@ public class SimulationScreen
 		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
 		EntityFactory.populateWorld(world, graph);
 
-		Entity car = EntityFactory.createCar(world, new Vector2(0, -LANE_WIDTH / 2), 1f, 30, 0, "car4");
-		car.addComponent(new RouteComponent(graph.getVertex(0), graph.getVertex(graph.getVertexCount() - 1)));
-		car.addToWorld();
+		// Entity car = EntityFactory.createCar(world, new Vector2(0, -LANE_WIDTH / 2), 1f, 30, 0, "car4");
+		// car.addComponent(new RouteComponent(graph.getVertex(0), graph.getVertex(graph.getVertexCount() - 1)));
+		// car.addToWorld();
+		//
+		// Entity car2 = EntityFactory.createCar( world, new Vector2(303, 240 + LANE_WIDTH / 2), 1f, 30, MathUtils.PI,
+		// "car4");
+		// car2.addComponent(new RouteComponent(graph.getVertex(graph.getVertexCount() - 1), graph.getVertex(0)));
+		// car2.addToWorld();
 
-		Entity car2 = EntityFactory.createCar(	world, new Vector2(303, 240 + LANE_WIDTH / 2), 1f, 30, MathUtils.PI,
-												"car4");
-		car2.addComponent(new RouteComponent(graph.getVertex(graph.getVertexCount() - 1), graph.getVertex(0)));
-		car2.addToWorld();
+		// Entity car3 = EntityFactory.createCar(world, new Vector2(0, 240 - LANE_WIDTH / 2), 1f, 30, 0, "car4");
+		// car3.addComponent(new RouteComponent(graph.getVertex(4), graph.getVertex(25)));
+		// car3.addToWorld();
 
-		// GraphFactory.addSpawnPointsTest(world, graph);
+		GraphFactory.addSpawnPointsTest(world, graph);
 		TIMER.start();
 	}
 

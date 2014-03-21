@@ -1,6 +1,6 @@
 package trafficsim.systems;
 
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import static functions.VectorUtils.getVector;
 import functions.VectorUtils;
 import graph.Edge;
 import trafficsim.components.AccelerationComponent;
@@ -44,6 +44,8 @@ public class MovementSystem
 		super(Aspect.getAspectForAll(SteeringComponent.class, RouteComponent.class, PhysicsBodyComponent.class));
 	}
 
+	float maxAng = 0;
+
 	// TODO clean this up
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
@@ -69,8 +71,8 @@ public class MovementSystem
 				Vector2 target = getTarget(routeComp);
 
 				float dst = target.dst(physComp.getPosition());
-				float leftTurnThreshold = 1.5f;
-				float rightTurnThreshold = 2.5f;
+				float leftTurnThreshold = 0.5f;
+				float rightTurnThreshold = 1.0f;
 				float arrivalThreshold = 0.5f;
 
 				// If Last edge
@@ -95,16 +97,22 @@ public class MovementSystem
 				newVel.clamp(0, maxSpeed);
 				float deltaA = getAngleInRads(routeComp) - physComp.getAngle();
 				deltaA = constrainAngle(deltaA);
-				// TODO extract constant
+				// TODO extract constants, refactor
+				float angularThreshold = 6;
 				if (Math.abs(deltaA) > 0.05) {
-					newVel.scl(0.9f);
-					physComp.applyTorque(steeringComp.getMaxTorque() * deltaA, true);
+					if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
+						if (deltaA < 0) {
+							newVel.scl(0.9f);
+						}
+						physComp.applyTorque(steeringComp.getMaxTorque() * deltaA, true);
+					}
 				}
 				else {
 					physComp.setAngularVelocity(0);
 				}
 
 				physComp.setLinearVelocity(newVel);
+
 			}
 		}
 	}
@@ -120,28 +128,28 @@ public class MovementSystem
 		return angle < 0;
 	}
 
-	private float getAngleInRads(RouteComponent routeComp) {
-		boolean fromAtoB = routeComp.getCurrentVertex() == routeComp.getCurrentEdge()
-																	.getAdjacentVertexIterator()
-																	.next();
+	private static float getAngleInRads(RouteComponent routeComp) {
 		Road road = routeComp.getCurrentEdge().getData();
 		Vector2 roadVector = VectorUtils.getVector(road);
-		if (!fromAtoB) {
+		if (!fromAtoB(routeComp)) {
 			roadVector.scl(-1);
 		}
 		return roadVector.angle() * MathUtils.degRad;
 	}
 
-	public static Vector2 getTarget(RouteComponent routeComp) {
-		Vector2 target = VectorUtils.getMidPoint(routeComp.getNextVertex().getData());
-		Vector2 laneCorrection = VectorUtils.getUnitPerpendicularVector(target).scl(LANE_WIDTH / 2.0f);
-		// To reduce the chance of stepping on the lane
-		laneCorrection.scl(1.2f);
+	private static boolean fromAtoB(RouteComponent routeComp) {
+		return routeComp.getCurrentVertex() == routeComp.getCurrentEdge().getAdjacentVertexIterator().next();
+	}
 
-		boolean fromAtoB = routeComp.getCurrentVertex() == routeComp.getCurrentEdge()
-																	.getAdjacentVertexIterator()
-																	.next();
-		if (fromAtoB) {
+	public static Vector2 getTarget(RouteComponent routeComp) {
+		// Vector2 target = VectorUtils.getMidPoint(routeComp.getNextVertex().getData());
+		Vector2 target = fromAtoB(routeComp) ? routeComp.getCurrentEdge().getData().getPointB().cpy()
+											: routeComp.getCurrentEdge().getData().getPointA().cpy();
+		Vector2 laneCorrection = getVector(routeComp.getCurrentEdge().getData()).cpy().nor().rotate(90);
+		// To reduce the chance of stepping on the lane
+		laneCorrection.scl(1.1f);
+
+		if (fromAtoB(routeComp)) {
 			laneCorrection.scl(-1);
 		}
 		target.add(laneCorrection);
@@ -151,6 +159,9 @@ public class MovementSystem
 	public static float constrainAngle(float angle) {
 		int factor = (int) (angle / MathUtils.PI2);
 		angle -= factor * MathUtils.PI2;
+		if (Math.abs(angle) > MathUtils.PI) {
+			angle -= Math.signum(angle) * MathUtils.PI2;
+		}
 		return angle;
 	}
 

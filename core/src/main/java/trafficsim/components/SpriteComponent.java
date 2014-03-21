@@ -22,7 +22,7 @@ public class SpriteComponent
 		extends Component {
 
 	/** The name of the texture file */
-	private final String name;
+	private String name;
 	/** Scale on each axis */
 	private float scaleX;
 	private float scaleY;
@@ -30,5 +30,9 @@ public class SpriteComponent
 	private float rotation;
 	/** The actual sprite that will be drawn */
 	private Sprite sprite;
+
+	public SpriteComponent(String name) {
+		this.name = name;
+	}
 
 }

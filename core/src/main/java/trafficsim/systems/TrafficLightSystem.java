@@ -30,6 +30,7 @@ public class TrafficLightSystem extends EntitySystem{
 		for(int i = 0;i<entities.size();i++){
 			Entity entity = entities.get(i);
 			TrafficLightComponent lightComp = trafficLightMapper.get(entity);
+			lightComp.setTimeElapsed(lightComp.getTimeElapsed() + world.getDelta());
 			if(lightComp.getTimeElapsed()>=lightComp.timer()){
 				lightComp.setTimeElapsed(0);
 				int index = (lightComp.getStatus().ordinal() + 1) % Status.values().length;

@@ -43,7 +43,7 @@ public class PhysicsBodyFactory {
 		Body body = box2dWorld.createBody(bodyDef);
 
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(3f, 2f);
+		shape.setAsBox(.2f, .2f);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;

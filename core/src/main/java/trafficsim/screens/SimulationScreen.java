@@ -19,6 +19,7 @@ import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.SpawnSystem;
+import trafficsim.systems.TrafficLightSystem;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -63,6 +64,7 @@ public class SimulationScreen
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
+		world.setSystem(new TrafficLightSystem());
 
 		world.initialize();
 
@@ -82,8 +84,11 @@ public class SimulationScreen
 		// car3.addComponent(new RouteComponent(graph.getVertex(4), graph.getVertex(25)));
 		// car3.addToWorld();
 
+
 		GraphFactory.addSpawnPointsTest(world, graph);
+		EntityFactory.addTrafficLights(world, graph);
 		TIMER.start();
+
 	}
 
 	@Override

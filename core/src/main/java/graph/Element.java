@@ -31,7 +31,7 @@ public class Element<E> {
 	}
 
 	public EdgeIterator<E> getAdjacentEdgeIterator() {
-		return new EdgeIterator<E>(parent, adjacentVertices);
+		return new EdgeIterator<E>(parent, adjacentEdges);
 	}
 
 	// public ElementIterator<E, Edge<E>> getAdjacentEdgesIterator() {

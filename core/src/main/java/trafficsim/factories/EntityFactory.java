@@ -157,12 +157,13 @@ public class EntityFactory {
 	// }
 
 	public static void populateWorld(TrafficSimWorld world, Graph<Road> graph) {
-		for (Edge<Road> edge : graph.getEdgeIterator()) {
-			world.addEntity(createRoad(world, edge.getData()));
-		}
 		for (Vertex<Road> vertex : graph.getVertexIterator()) {
 			world.addEntity(createRoad(world, vertex.getData()));
 		}
+		for (Edge<Road> edge : graph.getEdgeIterator()) {
+			world.addEntity(createRoad(world, edge.getData()));
+		}
+
 	}
 
 	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, int timerG, int timerO,

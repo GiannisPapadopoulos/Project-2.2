@@ -2,7 +2,6 @@ package graph;
 
 import static trafficsim.TrafficSimConstants.CITY_SPEED_LIMIT;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
-import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
@@ -17,39 +16,49 @@ import functions.VectorUtils;
 
 public class GraphFactory {
 
-	public static void addTrafficLights(TrafficSimWorld world, Graph<Road> graph) {
-		for(Edge<Road> edge : graph.getEdgeIterator()) {
-			val iterator = edge.getAdjacentVertexIterator();
-			Vertex<Road> vertexA = iterator.next();
-			Vertex<Road> vertexB = iterator.next();
-			if (vertexA.getAdjacentVertices().size() > 1) {
-				edge.getData().getPointA();
-				Vector2 pos = edge.getData().getPointA().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(-5));
-				// EntityFactory.createTrafficLight(world, pos, 5, 2, 5, null, false, null)
-			}
-		}
+	public static void addSpawnPointsTest(TrafficSimWorld world, Graph<Road> graph) {
+
+		Vertex<Road> connection = graph.getVertex(0);
+		Vector2 edgeB = connection.getData().getPointA();
+		Vector2 edgeA = new Vector2(edgeB.x - 20, edgeB.y);
+		makeSpawnVertex(world, connection, graph, edgeA, edgeB, new Vector2(edgeA.x - 2 * LANE_WIDTH, edgeA.y), edgeA,
+						true);
+
+		Vertex<Road> connection2 = graph.getVertex(29);
+		Vector2 edgeA2 = connection2.getData().getPointB();
+		Vector2 edgeB2 = new Vector2(edgeA2.x + 20, edgeA2.y);
+		makeSpawnVertex(world, connection2, graph, edgeA2, edgeB2, edgeB2, new Vector2(edgeB2.x + 2 * LANE_WIDTH,
+																						edgeB2.y), false);
+
+		Vertex<Road> connection3 = graph.getVertex(4);
+		Vector2 edgeB3 = connection3.getData().getPointA();
+		Vector2 edgeA3 = new Vector2(edgeB3.x - 20, edgeB3.y);
+		makeSpawnVertex(world, connection3, graph, edgeA3, edgeB3, new Vector2(edgeA3.x - 2 * LANE_WIDTH, edgeA3.y),
+						edgeA3, true);
+
+		Vertex<Road> connection4 = graph.getVertex(25);
+		Vector2 edgeA4 = connection4.getData().getPointB();
+		Vector2 edgeB4 = new Vector2(edgeA4.x + 20, edgeA4.y);
+		makeSpawnVertex(world, connection4, graph, edgeA4, edgeB4, edgeB4, new Vector2(edgeB4.x + 2 * LANE_WIDTH,
+																						edgeB4.y), false);
 	}
 
-	public static void addSpawnPointsTest(TrafficSimWorld world, Graph<Road> graph) {
-		Vertex<Road> connection = graph.getVertex(0);
-		Vector2 pos = VectorUtils.getMidPoint(connection.getData());
-		float x = pos.x - 60;
-		float y = pos.y;
-		Vertex<Road> spawn1 = makeSpawnVertex(x, y, connection, graph);
-		Road edge = new Road(VectorUtils.getMidPoint(spawn1.getData()), VectorUtils.getMidPoint(connection.getData()),
-								1, Direction.BOTH, CITY_SPEED_LIMIT);
-		graph.addEdge(edge, spawn1, connection, false);
+	// TODO Refactor this mess
+	public static Vertex<Road> makeSpawnVertex(TrafficSimWorld world, Vertex<Road> connection, Graph<Road> graph,
+			Vector2 edgeA, Vector2 edgeB, Vector2 vertexA, Vector2 vertexB, boolean AtoB) {
+		Road intersection = new Road(vertexA, vertexB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
+		Vertex<Road> spawn1 = graph.addVertex(intersection);
+		Road edge = new Road(edgeA, edgeB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
+		// System.out.println(VectorUtils.getAngle(intersection) + " " + VectorUtils.getAngle(edge));
+		if (AtoB)
+			graph.addEdge(edge, spawn1, connection, false);
+		else
+			graph.addEdge(edge, connection, spawn1, false);
 		EntityFactory.createRoad(world, spawn1.getData()).addToWorld();
 		EntityFactory.createRoad(world, edge).addToWorld();
 		Entity spawnPoint = world.createEntity();
 		spawnPoint.addComponent(new SpawnComponent(spawn1, new FixedIntervalSpawningStrategy(2000)));
 		spawnPoint.addToWorld();
-	}
-
-	public static Vertex<Road> makeSpawnVertex(float x, float y, Vertex<Road> connection, Graph<Road> graph) {
-		float halfW = LANE_WIDTH;
-		Road road = new Road(new Vector2(x - halfW, y), new Vector2(x + halfW, y), 1, Direction.BOTH, CITY_SPEED_LIMIT);
-		Vertex<Road> spawn1 = graph.addVertex(road);
 		return spawn1;
 	}
 

@@ -23,11 +23,23 @@ public class VectorUtils {
 	}
 
 	public static Vector2 getVector(Vector2 pointA, Vector2 pointB) {
-		return pointA.sub(pointB);
+		return pointB.cpy().sub(pointA);
+	}
+
+	public static Vector2 getVector(Road roadA, Road roadB) {
+		return getVector(getMidPoint(roadA), getMidPoint(roadB));
 	}
 
 	public static float getAngle(Road road) {
 		return getVector(road).angle();
+	}
+
+	public static float getAngle(Vector2 pointA, Vector2 pointB) {
+		return getVector(pointA, pointB).angle();
+	}
+
+	public static float getAngle(Road roadA, Road roadB) {
+		return getAngle(getMidPoint(roadA), getMidPoint(roadB));
 	}
 
 	public static Vector2 getMidPoint(Road road) {
@@ -40,8 +52,8 @@ public class VectorUtils {
 		return new Vector2(xm, ym);
 	}
 
-	public static Vector2 getUnitPerpendicularVector(Vector2 vector) {
-		return new Vector2(vector).nor().rotate(90);
-	}
+	// public static Vector2 getUnitPerpendicularVector(Vector2 vector) {
+	// return new Vector2(vector).nor().rotate(90);
+	// }
 
 }

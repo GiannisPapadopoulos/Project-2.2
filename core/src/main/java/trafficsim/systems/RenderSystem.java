@@ -50,7 +50,6 @@ public class RenderSystem
 		textureAtlas = new TextureAtlas(Gdx.files.internal("assets/packed-textures/textures.pack"),
 										Gdx.files.internal("assets/packed-textures"));
 		for (AtlasRegion r : textureAtlas.getRegions()) {
-			// r.flip(true, false);
 			regions.put(r.name, r);
 		}
 
@@ -84,29 +83,20 @@ public class RenderSystem
 
 	@Override
 	protected void process(Entity e) {
+		PhysicsBodyComponent physComp = physicsBodyMapper.get(e);
 		Vector2 position = getPosition(e);
 		if (position != null) {
 			SpriteComponent spriteComp = spriteMapper.get(e);
+			// if (physComp.getType() == BodyType.DynamicBody && Math.random() > 0.99) {
+			// int i = (int) (Math.random() * 7) + 1;
+			// spriteComp.setName("car" + i);
+			// inserted(e);
+			// }
 			Sprite sprite = spriteComp.getSprite();
-
-			PhysicsBodyComponent physComp = physicsBodyMapper.get(e);
-			// AtlasRegion spriteRegion = regions.get(spriteComp.getName());
-			// float scaleX = (dimensionMapper.get(e).getLength() * BOX_TO_WORLD) / spriteRegion.getRegionWidth();
-			// float scaleY = (dimensionMapper.get(e).getWidth() * BOX_TO_WORLD) / spriteRegion.getRegionHeight();
-			// spriteComp.setScaleX(scaleX);
-			// spriteComp.setScaleY(scaleY);
-
-			// float posX = position.x - (spriteRegion.getRegionWidth() / 2 * spriteComp.getScaleX());
-			// float posY = position.y - (spriteRegion.getRegionHeight() / 2 * spriteComp.getScaleY());
 
 			float posX = position.x - sprite.getWidth() / 2;
 			float posY = position.y - sprite.getHeight() / 2;
 
-			// batch.draw( spriteRegion, posX, posY, 0, 0, spriteRegion.getRegionWidth(),
-			// spriteRegion.getRegionHeight(),
-			// spriteComp.getScaleX(), spriteComp.getScaleY(), spriteComp.getRotation());
-			// spriteComp.getSprite().setBounds(posX, posY, dimensionMapper.get(e).getLength() * BOX_TO_WORLD,
-			// dimensionMapper.get(e).getWidth() * BOX_TO_WORLD);
 			sprite.setPosition(posX, posY);
 			if (physicsBodyMapper.has(e))
 				sprite.setRotation(physComp.getAngle() * MathUtils.radDeg);

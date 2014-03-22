@@ -45,4 +45,6 @@ public final class TrafficSimConstants {
 	public static final Random RANDOM = new Random();
 
 	public static final StopWatch TIMER = new StopWatch();
+	
+	public static final boolean DEBUG_PRINT_LEVEL_0 = false;
 }

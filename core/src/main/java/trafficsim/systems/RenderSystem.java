@@ -24,7 +24,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class RenderSystem
 		extends EntityProcessingSystem {
-
+	@Mapper
+	ComponentMapper<TrafficLightComponent> trafficLightMapper;
 	@Mapper
 	ComponentMapper<PhysicsBodyComponent> physicsBodyMapper;
 	@Mapper
@@ -95,7 +96,8 @@ public class RenderSystem
 			// inserted(e);
 			// }
 
-			if (e.getComponent(TrafficLightComponent.class) != null) {
+			if (trafficLightMapper.has(e)) {
+				
 				TrafficLightComponent lightComp = e.getComponent(TrafficLightComponent.class);
 				// Means that the light was switched last step
 				if (lightComp.getTimeElapsed() == 0) {

@@ -239,9 +239,14 @@ public class EntityFactory {
 			int interval = 5;
 			
 			Entity entityStraight = EntityFactory.createTrafficLight(world, posB.cpy().add(corr.cpy().scl(2f)), (int) (interval-1), 1,(int) (interval*3), Status.RED, true);
+			entityStraight.addComponent(new LightToRoadMappingComponent(entityStraight.getId(),
+																		world.getEdgeToEntityMap().get(edge.getID())));
 			entityStraight.addToWorld();
 			// TODO left light should always point at a 90 degree angle from the road
 			Entity entityLeft = EntityFactory.createTrafficLight(world, posB.cpy().add(corr.cpy().scl(1f)), (int) (interval-1), 1,(int) (interval*3), Status.RED, false);
+			entityLeft.addComponent(new LightToRoadMappingComponent(entityStraight.getId(), world.getEdgeToEntityMap()
+																									.get(edge.getID())));
+			entityStraight.addToWorld();
 			entityLeft.addToWorld();
 			if(angleOfRoad < 45){
 				TrafficLightComponent flatLeftLeft = entityLeft.getComponent(TrafficLightComponent.class);
@@ -266,9 +271,13 @@ public class EntityFactory {
 			int interval = 5;
 			Entity entityStraight = EntityFactory.createTrafficLight(world, posA.cpy().add(corr.cpy().scl(2f)),  (int) (interval-1), 1,(int) (interval*3), Status.RED,
 												true);
+			entityStraight.addComponent(new LightToRoadMappingComponent(entityStraight.getId(),
+																		world.getEdgeToEntityMap().get(edge.getID())));
 			entityStraight.addToWorld();
 			//TODO left light should always point at a 90 degree angle from the road
 			Entity entityLeft = EntityFactory.createTrafficLight(world, posA.cpy().add(corr.cpy().scl(1f)),  (int) (interval-1), 1,(int) (interval*3), Status.RED, false);
+			entityLeft.addComponent(new LightToRoadMappingComponent(entityStraight.getId(), world.getEdgeToEntityMap()
+																									.get(edge.getID())));
 			entityLeft.addToWorld();
 			if(angleOfRoad < 45){
 				TrafficLightComponent flatRightLeft = entityLeft.getComponent(TrafficLightComponent.class);

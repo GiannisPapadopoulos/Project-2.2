@@ -50,12 +50,13 @@ public class GraphFactory {
 		Vertex<Road> spawn1 = graph.addVertex(intersection);
 		Road edge = new Road(edgeA, edgeB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
 		// System.out.println(VectorUtils.getAngle(intersection) + " " + VectorUtils.getAngle(edge));
+		Edge<Road> roadEdge;
 		if (AtoB)
-			graph.addEdge(edge, spawn1, connection, false);
+			roadEdge = graph.addEdge(edge, spawn1, connection, false);
 		else
-			graph.addEdge(edge, connection, spawn1, false);
-		EntityFactory.createRoad(world, spawn1.getData()).addToWorld();
-		EntityFactory.createRoad(world, edge).addToWorld();
+			roadEdge = graph.addEdge(edge, connection, spawn1, false);
+		EntityFactory.createRoad(world, spawn1).addToWorld();
+		EntityFactory.createRoad(world, roadEdge).addToWorld();
 		Entity spawnPoint = world.createEntity();
 		spawnPoint.addComponent(new SpawnComponent(spawn1, new FixedIntervalSpawningStrategy(2000)));
 		spawnPoint.addToWorld();

@@ -50,14 +50,16 @@ public class SimulationScreen
 
 	@Override
 	public void show() {
-		super.show();
-		world = new TrafficSimWorld();
+
+		if (world == null)
+			world = new TrafficSimWorld();
 
 
 		// Add systems
 		world.setSystem(new RenderSystem(getCamera()));
 		world.setSystem(new MovementSystem());
 		world.setSystem(new PhysicsSystem());
+		world.setSystem(new InputSystem(getCamera()));
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
@@ -66,6 +68,7 @@ public class SimulationScreen
 		world.initialize();
 
 		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
+		world.setGraph(graph);
 		EntityFactory.populateWorld(world, graph);
 
 		// Entity car = EntityFactory.createCar(world, new Vector2(0, -LANE_WIDTH / 2), 1f, 30, 0, "car4");
@@ -86,6 +89,8 @@ public class SimulationScreen
 		EntityFactory.addTrafficLights(world, graph);
 		if(!TIMER.isStarted())
 			TIMER.start();
+
+		world.process();
 
 	}
 

@@ -174,32 +174,111 @@ public class EntityFactory {
 	}
 
 	public static void addTrafficLights(TrafficSimWorld world, Graph<Road> graph) {
-		for (Edge<Road> edge : graph.getEdgeIterator()) {
+		/*for (Edge<Road> edge : graph.getEdgeIterator()) {
 			val iterator = edge.getAdjacentVertexIterator();
 			// TODO single for loop
 			Vertex<Road> vertexA = iterator.next();
 			if (vertexA.getAdjacentVertices().size() > 1) {
-				Vector2 pos = edge.getData().getPointA().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(1f));
+				Vector2 posA = edge.getData().getPointA().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(1f));
 				Vector2 corr = getVector(edge.getData()).nor().rotate(90);
-				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(2f)), 5, 2, 4, Status.GREEN,
+				EntityFactory.createTrafficLight(world, posA.cpy().add(corr.cpy().scl(2f)), 5, 2, 7, Status.GREEN,
 													true).addToWorld();
 				// TODO left light should always point at a 90 degree angle from the road
-				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(1f)), 5, 2, 4, Status.RED, false)
+				EntityFactory.createTrafficLight(world, posA.cpy().add(corr.cpy().scl(1f)), 5, 2, 7, Status.RED, false)
 								.addToWorld();
 			}
 			Vertex<Road> vertexB = iterator.next();
 			if (vertexB.getAdjacentVertices().size() > 1) {
-				Vector2 pos = edge.getData()
+				Vector2 posB = edge.getData()
 									.getPointB()
 									.cpy()
 									.add(VectorUtils.getVector(edge.getData()).nor().scl(-1f));
 				Vector2 corr = getVector(edge.getData()).nor().rotate(-90);
-				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(2f)), 5, 2, 4, Status.GREEN,
+				EntityFactory.createTrafficLight(world, posB.cpy().add(corr.cpy().scl(2f)), 5, 2, 7, Status.ORANGE,
 													true).addToWorld();
 				// TODO left light should always point at a 90 degree angle from the road
-				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(1f)), 5, 2, 4, Status.RED, false)
+				EntityFactory.createTrafficLight(world, posB.cpy().add(corr.cpy().scl(1f)), 5, 2, 7, Status.RED, false)
 								.addToWorld();
 			}
+		}
+		
+		*/
+		
+		 for (Vertex<Road> vertex : graph.getVertexIterator()) {
+			 val iterator = vertex.getAdjacentEdgeIterator();
+			 int edgesPerVertex = vertex.getAdjacentEdges().size();
+			 for(Edge<Road> edge : iterator){			 
+			
+				 val iterator2 = edge.getAdjacentVertexIterator();
+					// TODO single for loop
+				 	boolean pointAOrPointB = edge.getAdjacentVertices().get(0) == vertex.getID();
+				 	float angleOfRoad = VectorUtils.getAngle(edge.getData());
+				 	
+				 	if(pointAOrPointB) {
+				 		Vertex<Road> vertexA = iterator2.next();
+						addLightA(world, edge, vertexA, edgesPerVertex, angleOfRoad);
+				 	}
+				 	else {
+				 		Vertex<Road> vertexB = iterator2.next();
+						addLightB(world, edge, vertexB, edgesPerVertex, angleOfRoad);
+				 	}
+		 
+			 
+			 }
+		 }
+		 
+	}
+
+	private static void addLightB(TrafficSimWorld world, Edge<Road> edge,Vertex<Road> vertexB, int edgesPerVertex, float angleOfRoad) {
+		if (vertexB.getAdjacentVertices().size() > 1) {
+			Vector2 posB = edge.getData().getPointB().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(-1f));
+			Vector2 corr = getVector(edge.getData()).nor().rotate(-90);
+			int interval = 5;
+			
+			Entity entityStraight = EntityFactory.createTrafficLight(world, posB.cpy().add(corr.cpy().scl(2f)), (int) (interval-1), 1,(int) (interval*3), Status.RED, true);
+			entityStraight.addToWorld();
+			// TODO left light should always point at a 90 degree angle from the road
+			Entity entityLeft = EntityFactory.createTrafficLight(world, posB.cpy().add(corr.cpy().scl(1f)), (int) (interval-1), 1,(int) (interval*3), Status.RED, false);
+			entityLeft.addToWorld();
+			if(angleOfRoad < 45){
+				TrafficLightComponent flatLeftLeft = entityLeft.getComponent(TrafficLightComponent.class);
+				flatLeftLeft.setTimeElapsed(interval*2);
+				TrafficLightComponent flatLeftStraight = entityStraight.getComponent(TrafficLightComponent.class);
+				flatLeftStraight.setStatus(Status.GREEN);
+				
+			}
+			else{
+				TrafficLightComponent VerticalBotStraight = entityStraight.getComponent(TrafficLightComponent.class);
+				VerticalBotStraight.setTimeElapsed(interval);
+				
+			}
+							
+		}
+	}
+
+	private static void addLightA(TrafficSimWorld world, Edge<Road> edge, Vertex<Road> vertexA, int edgesPerVertex, float angleOfRoad) {
+		if (vertexA.getAdjacentVertices().size() > 1) {
+			Vector2 posA = edge.getData().getPointA().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(1f));
+			Vector2 corr = getVector(edge.getData()).nor().rotate(90);
+			int interval = 5;
+			Entity entityStraight = EntityFactory.createTrafficLight(world, posA.cpy().add(corr.cpy().scl(2f)),  (int) (interval-1), 1,(int) (interval*3), Status.RED,
+												true);
+			entityStraight.addToWorld();
+			//TODO left light should always point at a 90 degree angle from the road
+			Entity entityLeft = EntityFactory.createTrafficLight(world, posA.cpy().add(corr.cpy().scl(1f)),  (int) (interval-1), 1,(int) (interval*3), Status.RED, false);
+			entityLeft.addToWorld();
+			if(angleOfRoad < 45){
+				TrafficLightComponent flatRightLeft = entityLeft.getComponent(TrafficLightComponent.class);
+				flatRightLeft.setTimeElapsed(interval*2);
+				TrafficLightComponent flatRightStraight = entityStraight.getComponent(TrafficLightComponent.class);
+				flatRightStraight.setStatus(Status.GREEN);
+				
+			}
+			else{
+				TrafficLightComponent VerticalTopStraight = entityStraight.getComponent(TrafficLightComponent.class);
+				VerticalTopStraight.setTimeElapsed(interval);
+			}
+			
 		}
 	}
 

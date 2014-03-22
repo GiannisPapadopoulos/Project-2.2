@@ -123,20 +123,38 @@ public class MovementSystem
 				assert road != null;
 				if (attachedLightsMapper.has(road)) {
 					// System.out.println(attachedLightsMapper.get(road).getTrafficLightIDs());
+					// System.out.println(world.getEntity(attachedLightsMapper.get(road).getTrafficLightIDs().get(0)));
 				}
 			}
 		}
 	}
 
+
+	private Entity getRelevantLight(RouteComponent routeComp) {
+		int roadId = ((TrafficSimWorld) world).getEdgeToEntityMap().get(routeComp.getCurrentEdge().getID());
+		Entity road = world.getEntity(roadId);
+		if (attachedLightsMapper.has(road) && !routeComp.isLast()) {
+
+			int lightId = attachedLightsMapper.get(road).getTrafficLightIDs().get(0);
+			return world.getEntity(lightId);
+		}
+		return null;
+	}
+
 	/** Returns true if the next turn is a right one */
 	private boolean isRightTurn(RouteComponent routeComp) {
-		if (routeComp.getEdgeIndex() >= routeComp.getRoute().size()) {
+		if (routeComp.isLast()) {
 			return false;
 		}
+		return getDeltaAngle(routeComp) < 0;
+	}
+
+
+	private float getDeltaAngle(RouteComponent routeComp) {
 		Edge<Road> nextEdge = routeComp.getPath().getRoute().get(routeComp.getEdgeIndex() + 1).getEdge();
 		float angle = constrainAngle(VectorUtils.getAngle(nextEdge.getData()))
 						- constrainAngle(VectorUtils.getAngle(routeComp.getCurrentEdge().getData()));
-		return angle < 0;
+		return angle;
 	}
 
 	private static float getAngleInRads(RouteComponent routeComp) {

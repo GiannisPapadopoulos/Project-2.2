@@ -69,6 +69,7 @@ public class SimulationScreen
 		world.initialize();
 
 		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
+		world.setGraph(graph);
 		EntityFactory.populateWorld(world, graph);
 
 		// Entity car = EntityFactory.createCar(world, new Vector2(0, -LANE_WIDTH / 2), 1f, 30, 0, "car4");
@@ -84,10 +85,11 @@ public class SimulationScreen
 		// car3.addComponent(new RouteComponent(graph.getVertex(4), graph.getVertex(25)));
 		// car3.addToWorld();
 
-
 		GraphFactory.addSpawnPointsTest(world, graph);
 		EntityFactory.addTrafficLights(world, graph);
 		TIMER.start();
+
+		world.process();
 
 	}
 
@@ -100,6 +102,7 @@ public class SimulationScreen
 		world.process();
 		if (DEBUG_RENDER)
 			debugRenderer.render(world.getBox2dWorld(), getCamera().combined);
+
 	}
 
 }

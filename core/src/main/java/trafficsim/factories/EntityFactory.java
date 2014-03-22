@@ -4,6 +4,11 @@ import static functions.VectorUtils.getVector;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.CAR_WIDTH;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import functions.VectorUtils;
+import graph.Edge;
+import graph.Element;
+import graph.Graph;
+import graph.Vertex;
 import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.DimensionComponent;
@@ -21,11 +26,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-
-import functions.VectorUtils;
-import graph.Edge;
-import graph.Graph;
-import graph.Vertex;
 
 /**
  * Contains methods to create the different entities used in the world and add the required components
@@ -73,40 +73,41 @@ public class EntityFactory {
 		return car;
 	}
 
-	/**
-	 * Creates a road with the given parameters
-	 * 
-	 * @param angle The andgle in degrees
-	 * @param name Must be the same as the name of the texture file
-	 */
-	public static Entity createRoad(TrafficSimWorld world, Vector2 position, float length, float angle, String name) {
-		Entity road = world.createEntity();
-		// TODO Check number of lanes here
-		road.addComponent(new DimensionComponent(length, LANE_WIDTH * 2));
-		// else
-		// road.addComponent(new DimensionComponent(LANE_WIDTH * 2, length));
-		angle *= MathUtils.degRad;
-
-		// boxShape takes the half width/height as input
-		// TODO Check number of lanes here
-		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, LANE_WIDTH * 2 / 2)
-																.density(1.0f)
-																.restitution(1.0f)
-																.friction(0f)
-																.sensor(true) // There should be a better way 
-																.groupIndex((short) -1);
-		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
-															.type(BodyType.StaticBody)
-															.position(position)
-															.angle(angle)
-															.build();
-		road.addComponent(new PhysicsBodyComponent(body));
-		// road.addComponent(new PositionComponent(position));
-
-		SpriteComponent sprite = new SpriteComponent(name);
-		road.addComponent(sprite);
-		return road;
-	}
+	// /**
+	// * Creates a road with the given parameters
+	// *
+	// * @param angle The andgle in degrees
+	// * @param name Must be the same as the name of the texture file
+	// */
+	// public static Entity createRoad(TrafficSimWorld world, Vector2 position, float length, float angle, String name)
+	// {
+	// Entity road = world.createEntity();
+	// // TODO Check number of lanes here
+	// road.addComponent(new DimensionComponent(length, LANE_WIDTH * 2));
+	// // else
+	// // road.addComponent(new DimensionComponent(LANE_WIDTH * 2, length));
+	// angle *= MathUtils.degRad;
+	//
+	// // boxShape takes the half width/height as input
+	// // TODO Check number of lanes here
+	// FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, LANE_WIDTH * 2 / 2)
+	// .density(1.0f)
+	// .restitution(1.0f)
+	// .friction(0f)
+	// .sensor(true) // There should be a better way
+	// .groupIndex((short) -1);
+	// Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
+	// .type(BodyType.StaticBody)
+	// .position(position)
+	// .angle(angle)
+	// .build();
+	// road.addComponent(new PhysicsBodyComponent(body));
+	// // road.addComponent(new PositionComponent(position));
+	//
+	// SpriteComponent sprite = new SpriteComponent(name);
+	// road.addComponent(sprite);
+	// return road;
+	// }
 
 	/**
 	 * Creates a road with the given parameters
@@ -114,14 +115,21 @@ public class EntityFactory {
 	 * @param angle The angle in degrees
 	 * @param name Must be the same as the name of the texture file
 	 */
-	public static Entity createRoad(TrafficSimWorld world, Road data) {
+	public static Entity createRoad(TrafficSimWorld world, Element<Road> element) {
+		Road roadData = element.getData();
 		Entity road = world.createEntity();
+		if (element.getClass() == Vertex.class) {
+			world.getVertexToEntityMap().put(element.getID(), road.getId());
+		}
+		else {
+			world.getEdgeToEntityMap().put(element.getID(), road.getId());
+		}
+		
+		Vector2 position = new Vector2((roadData.getPointB().x + roadData.getPointA().x) / 2,
+										(roadData.getPointB().y + roadData.getPointA().y) / 2);
+		float angle = VectorUtils.getAngle(roadData);
 
-		// Vector2 vector = new GetVector().apply(data);
-		Vector2 position = new Vector2((data.getPointB().x + data.getPointA().x) / 2, (data.getPointB().y + data.getPointA().y) / 2);
-		float angle = VectorUtils.getAngle(data);
-
-		float length = VectorUtils.getLength(data);
+		float length = VectorUtils.getLength(roadData);
 
 		// TODO Check number of lanes here
 		String name = "road1x1";
@@ -156,10 +164,10 @@ public class EntityFactory {
 
 	public static void populateWorld(TrafficSimWorld world, Graph<Road> graph) {
 		for (Vertex<Road> vertex : graph.getVertexIterator()) {
-			world.addEntity(createRoad(world, vertex.getData()));
+			createRoad(world, vertex).addToWorld();
 		}
 		for (Edge<Road> edge : graph.getEdgeIterator()) {
-			world.addEntity(createRoad(world, edge.getData()));
+			createRoad(world, edge).addToWorld();
 		}
 
 	}

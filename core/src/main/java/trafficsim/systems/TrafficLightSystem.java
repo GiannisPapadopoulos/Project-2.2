@@ -27,6 +27,7 @@ public class TrafficLightSystem extends EntitySystem{
 
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
+		//System.out.println(entities.size());
 		for(int i = 0;i<entities.size();i++){
 			Entity entity = entities.get(i);
 			TrafficLightComponent lightComp = trafficLightMapper.get(entity);

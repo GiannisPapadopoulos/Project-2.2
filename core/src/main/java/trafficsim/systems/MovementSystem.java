@@ -121,13 +121,12 @@ public class MovementSystem
 				int roadId = ((TrafficSimWorld) world).getEdgeToEntityMap().get(routeComp.getCurrentEdge().getID());
 				Entity road = world.getEntity(roadId);
 				if (attachedLightsMapper.has(road)) {
-					System.out.println(attachedLightsMapper.get(road).getTrafficLightIDs());
+					// System.out.println(attachedLightsMapper.get(road).getTrafficLightIDs());
 					// System.out.println(world.getEntity(attachedLightsMapper.get(road).getTrafficLightIDs().get(0)));
 				}
 			}
 		}
 	}
-
 
 	private Entity getRelevantLight(RouteComponent routeComp) {
 		int roadId = ((TrafficSimWorld) world).getEdgeToEntityMap().get(routeComp.getCurrentEdge().getID());

@@ -11,7 +11,9 @@ import graph.Graph;
 import graph.Vertex;
 import lombok.val;
 import trafficsim.TrafficSimWorld;
+import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.DimensionComponent;
+import trafficsim.components.LightToRoadMappingComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.SpriteComponent;
@@ -123,6 +125,7 @@ public class EntityFactory {
 		}
 		else {
 			world.getEdgeToEntityMap().put(element.getID(), road.getId());
+			road.addComponent(new AttachedLightsComponent());
 		}
 		
 		Vector2 position = new Vector2((roadData.getPointB().x + roadData.getPointA().x) / 2,
@@ -182,10 +185,12 @@ public class EntityFactory {
 				Vector2 corr = getVector(edge.getData()).nor().rotate(90);
 				Entity light = EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(2f)), 5, 2, 4, Status.GREEN,
 													true);
+				light.addComponent(new LightToRoadMappingComponent(light.getId(), world.getEdgeToEntityMap().get(edge.getID())));
 				light.addToWorld();
 				// TODO left light should always point at a 90 degree angle from the road
 				Entity light2 = EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(1f)), 5, 2, 4,
 																	Status.RED, false);
+				light2.addComponent(new LightToRoadMappingComponent(light.getId(), world.getEdgeToEntityMap().get(edge.getID())));
 				light2.addToWorld();
 			}
 			Vertex<Road> vertexB = iterator.next();
@@ -197,10 +202,12 @@ public class EntityFactory {
 				Vector2 corr = getVector(edge.getData()).nor().rotate(-90);
 				Entity light = EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(2f)), 5, 2, 4,
 																Status.GREEN, true);
+				light.addComponent(new LightToRoadMappingComponent(light.getId(), world.getEdgeToEntityMap().get(edge.getID())));
 				light.addToWorld();
 				// TODO left light should always point at a 90 degree angle from the road
 				Entity light2 = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(1f)), 5, 2, 4,
 																	Status.RED, false);
+				light2.addComponent(new LightToRoadMappingComponent(light.getId(), world.getEdgeToEntityMap().get(edge.getID())));
 				light2.addToWorld();
 
 			}

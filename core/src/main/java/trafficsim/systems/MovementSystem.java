@@ -3,7 +3,9 @@ package trafficsim.systems;
 import static functions.VectorUtils.getVector;
 import functions.VectorUtils;
 import graph.Edge;
+import trafficsim.TrafficSimWorld;
 import trafficsim.components.AccelerationComponent;
+import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
@@ -38,6 +40,9 @@ public class MovementSystem
 	ComponentMapper<RouteComponent> routeComponentMapper;
 	@Mapper
 	ComponentMapper<SteeringComponent> steeringComponentMapper;
+
+	@Mapper
+	ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
 
 	@SuppressWarnings("unchecked")
 	public MovementSystem() {
@@ -113,6 +118,12 @@ public class MovementSystem
 
 				physComp.setLinearVelocity(newVel);
 
+				int roadId = ((TrafficSimWorld) world).getEdgeToEntityMap().get(routeComp.getCurrentEdge().getID());
+				Entity road = world.getEntity(roadId);
+				assert road != null;
+				if (attachedLightsMapper.has(road)) {
+					// System.out.println(attachedLightsMapper.get(road).getTrafficLightIDs());
+				}
 			}
 		}
 	}

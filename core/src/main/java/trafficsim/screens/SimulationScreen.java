@@ -32,8 +32,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
  * @author Giannis Papadopoulos
  * 
  */
-public class SimulationScreen
-		extends SuperScreen {
+public class SimulationScreen extends SuperScreen {
 
 	@Getter
 	// So it's accessible by EditorScreen
@@ -41,7 +40,8 @@ public class SimulationScreen
 	// So it's mutable by EditorScreen
 	private TrafficSimWorld world;
 
-	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
+	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true,
+			false, false, false, true, true);
 
 	public SimulationScreen(Screens screens) {
 		super(screens);
@@ -51,16 +51,12 @@ public class SimulationScreen
 	@Override
 	public void show() {
 
-		if (world == null)
-			world = new TrafficSimWorld();
-
-		setCamera(new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX, WINDOW_HEIGHT * WORLD_TO_BOX));
+		world = new TrafficSimWorld();
 
 		// Add systems
 		world.setSystem(new RenderSystem(getCamera()));
 		world.setSystem(new MovementSystem());
 		world.setSystem(new PhysicsSystem());
-		world.setSystem(new InputSystem(getCamera()));
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
@@ -69,25 +65,35 @@ public class SimulationScreen
 		world.initialize();
 
 		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
+		world.setGraph(graph);
 		EntityFactory.populateWorld(world, graph);
 
-		// Entity car = EntityFactory.createCar(world, new Vector2(0, -LANE_WIDTH / 2), 1f, 30, 0, "car4");
-		// car.addComponent(new RouteComponent(graph.getVertex(0), graph.getVertex(graph.getVertexCount() - 1)));
+		// Entity car = EntityFactory.createCar(world, new Vector2(0,
+		// -LANE_WIDTH / 2), 1f, 30, 0, "car4");
+		// car.addComponent(new RouteComponent(graph.getVertex(0),
+		// graph.getVertex(graph.getVertexCount() - 1)));
 		// car.addToWorld();
 		//
-		// Entity car2 = EntityFactory.createCar( world, new Vector2(303, 240 + LANE_WIDTH / 2), 1f, 30, MathUtils.PI,
+		// Entity car2 = EntityFactory.createCar( world, new Vector2(303, 240 +
+		// LANE_WIDTH / 2), 1f, 30, MathUtils.PI,
 		// "car4");
-		// car2.addComponent(new RouteComponent(graph.getVertex(graph.getVertexCount() - 1), graph.getVertex(0)));
+		// car2.addComponent(new
+		// RouteComponent(graph.getVertex(graph.getVertexCount() - 1),
+		// graph.getVertex(0)));
 		// car2.addToWorld();
 
-		// Entity car3 = EntityFactory.createCar(world, new Vector2(0, 240 - LANE_WIDTH / 2), 1f, 30, 0, "car4");
-		// car3.addComponent(new RouteComponent(graph.getVertex(4), graph.getVertex(25)));
+		// Entity car3 = EntityFactory.createCar(world, new Vector2(0, 240 -
+		// LANE_WIDTH / 2), 1f, 30, 0, "car4");
+		// car3.addComponent(new RouteComponent(graph.getVertex(4),
+		// graph.getVertex(25)));
 		// car3.addToWorld();
-
 
 		GraphFactory.addSpawnPointsTest(world, graph);
 		EntityFactory.addTrafficLights(world, graph);
-		TIMER.start();
+		if (!TIMER.isStarted())
+			TIMER.start();
+
+		world.process();
 
 	}
 
@@ -100,6 +106,22 @@ public class SimulationScreen
 		world.process();
 		if (DEBUG_RENDER)
 			debugRenderer.render(world.getBox2dWorld(), getCamera().combined);
+
+		getWorldLayer().act(delta);
+		getUILayer().act(delta);
+		getWorldLayer().draw();
+		getUILayer().draw();
+
+	}
+
+	@Override
+	public void populateUILayer() {
+
+	}
+
+	@Override
+	public void populateWorldLayer() {
+
 	}
 
 }

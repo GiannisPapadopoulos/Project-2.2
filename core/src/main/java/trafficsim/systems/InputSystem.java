@@ -10,12 +10,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 
 /** System to control the camera and other input commands we might define */
-public class InputSystem
-		extends VoidEntitySystem
-		implements InputProcessor {
-	
+public class InputSystem extends VoidEntitySystem implements InputProcessor {
+
 	private OrthographicCamera camera;
-	
+
 	private static final double ZOOMING_FACTOR1 = 0.1f;
 	private static final double ZOOMING_FACTOR2 = 1f;
 	private static final float TRANSLATION_FACTOR = 0.3f;
@@ -29,13 +27,13 @@ public class InputSystem
 
 	@Override
 	public void initialize() {
-		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
 	protected void processSystem() {
 		// The position of the mouse
-		// Vector3 mouseVector = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+		// Vector3 mouseVector = new Vector3(Gdx.input.getX(), Gdx.input.getY(),
+		// 0);
 	}
 
 	@Override
@@ -70,7 +68,8 @@ public class InputSystem
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		camera.translate((previousDragX - screenX) * TRANSLATION_FACTOR, -(previousDragY - screenY) * TRANSLATION_FACTOR);
+		camera.translate((previousDragX - screenX) * TRANSLATION_FACTOR,
+				-(previousDragY - screenY) * TRANSLATION_FACTOR);
 		previousDragX = screenX;
 		previousDragY = screenY;
 		return true;
@@ -78,7 +77,8 @@ public class InputSystem
 
 	@Override
 	public boolean scrolled(int amount) {
-		double ZOOMING_FACTOR = camera.zoom <= 1 ? ZOOMING_FACTOR1 : ZOOMING_FACTOR2;
+		double ZOOMING_FACTOR = camera.zoom <= 1 ? ZOOMING_FACTOR1
+				: ZOOMING_FACTOR2;
 		if (camera.zoom + amount * ZOOMING_FACTOR > 0.05) {
 			camera.zoom += amount * ZOOMING_FACTOR;
 		}
@@ -89,7 +89,5 @@ public class InputSystem
 	public boolean mouseMoved(int screenX, int screenY) {
 		return false;
 	}
-
-
 
 }

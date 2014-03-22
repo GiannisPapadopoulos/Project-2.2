@@ -23,8 +23,7 @@ public class TrafficSimulation extends Game {
 		screens.setStatisticsScreen(stas);
 		screens.setTrafficSimulation(this);
 		
-		setScreen(screens.getSimulationScreen());
-		//setScreen(screens.getEditorScreen());
+		sims.switchToScreen(sims);
 	}
 
 }

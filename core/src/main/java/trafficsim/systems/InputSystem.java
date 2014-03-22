@@ -29,7 +29,6 @@ public class InputSystem
 
 	@Override
 	public void initialize() {
-		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
@@ -78,6 +77,8 @@ public class InputSystem
 
 	@Override
 	public boolean scrolled(int amount) {
+		System.out.println("yes");
+
 		double ZOOMING_FACTOR = camera.zoom <= 1 ? ZOOMING_FACTOR1 : ZOOMING_FACTOR2;
 		if (camera.zoom + amount * ZOOMING_FACTOR > 0.05) {
 			camera.zoom += amount * ZOOMING_FACTOR;

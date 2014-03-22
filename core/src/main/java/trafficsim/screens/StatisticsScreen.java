@@ -10,8 +10,23 @@ public class StatisticsScreen extends SuperScreen {
 
 
 	@Override
-	public void render(float arg0) {
+	public void render(float delta) {
+		getWorldLayer().act(delta);
+		getUILayer().act(delta);
+		getWorldLayer().draw();
+		getUILayer().draw();
+	}
 
+
+	@Override
+	public void populateUILayer() {
+		
+	}
+
+
+	@Override
+	public void populateWorldLayer() {
+		
 	}
 
 }

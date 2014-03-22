@@ -50,17 +50,14 @@ public class SimulationScreen
 
 	@Override
 	public void show() {
+		super.show();
+		world = new TrafficSimWorld();
 
-		if (world == null)
-			world = new TrafficSimWorld();
-
-		setCamera(new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX, WINDOW_HEIGHT * WORLD_TO_BOX));
 
 		// Add systems
 		world.setSystem(new RenderSystem(getCamera()));
 		world.setSystem(new MovementSystem());
 		world.setSystem(new PhysicsSystem());
-		world.setSystem(new InputSystem(getCamera()));
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
@@ -87,7 +84,8 @@ public class SimulationScreen
 
 		GraphFactory.addSpawnPointsTest(world, graph);
 		EntityFactory.addTrafficLights(world, graph);
-		TIMER.start();
+		if(!TIMER.isStarted())
+			TIMER.start();
 
 	}
 
@@ -100,6 +98,22 @@ public class SimulationScreen
 		world.process();
 		if (DEBUG_RENDER)
 			debugRenderer.render(world.getBox2dWorld(), getCamera().combined);
+		
+		getWorldLayer().act(delta);
+		getUILayer().act(delta);
+		getWorldLayer().draw();
+		getUILayer().draw();
+
+	}
+
+	@Override
+	public void populateUILayer() {
+		
+	}
+
+	@Override
+	public void populateWorldLayer() {
+		
 	}
 
 }

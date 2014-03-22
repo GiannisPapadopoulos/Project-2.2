@@ -180,11 +180,13 @@ public class EntityFactory {
 			if (vertexA.getAdjacentVertices().size() > 1) {
 				Vector2 pos = edge.getData().getPointA().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(1f));
 				Vector2 corr = getVector(edge.getData()).nor().rotate(90);
-				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(2f)), 5, 2, 4, Status.GREEN,
-													true).addToWorld();
+				Entity light = EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(2f)), 5, 2, 4, Status.GREEN,
+													true);
+				light.addToWorld();
 				// TODO left light should always point at a 90 degree angle from the road
-				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(1f)), 5, 2, 4, Status.RED, false)
-								.addToWorld();
+				Entity light2 = EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(1f)), 5, 2, 4,
+																	Status.RED, false);
+				light2.addToWorld();
 			}
 			Vertex<Road> vertexB = iterator.next();
 			if (vertexB.getAdjacentVertices().size() > 1) {
@@ -193,11 +195,14 @@ public class EntityFactory {
 									.cpy()
 									.add(VectorUtils.getVector(edge.getData()).nor().scl(-1f));
 				Vector2 corr = getVector(edge.getData()).nor().rotate(-90);
-				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(2f)), 5, 2, 4, Status.GREEN,
-													true).addToWorld();
+				Entity light = EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(2f)), 5, 2, 4,
+																Status.GREEN, true);
+				light.addToWorld();
 				// TODO left light should always point at a 90 degree angle from the road
-				EntityFactory.createTrafficLight(world, pos.cpy().add(corr.cpy().scl(1f)), 5, 2, 4, Status.RED, false)
-								.addToWorld();
+				Entity light2 = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(1f)), 5, 2, 4,
+																	Status.RED, false);
+				light2.addToWorld();
+
 			}
 		}
 	}

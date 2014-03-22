@@ -24,7 +24,6 @@ public class TrafficSimulation extends Game {
 		screens.setTrafficSimulation(this);
 		
 		sims.switchToScreen(sims);
-		sims.switchToScreen(edis);
 	}
 
 }

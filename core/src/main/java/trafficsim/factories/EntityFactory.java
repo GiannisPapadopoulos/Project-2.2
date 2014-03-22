@@ -163,6 +163,7 @@ public class EntityFactory {
 	}
 
 	public static void populateWorld(TrafficSimWorld world, Graph<Road> graph) {
+		world.setGraph(graph);
 		for (Vertex<Road> vertex : graph.getVertexIterator()) {
 			createRoad(world, vertex).addToWorld();
 		}

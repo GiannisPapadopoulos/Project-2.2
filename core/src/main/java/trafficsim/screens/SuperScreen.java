@@ -23,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import editor.MousePosition;
+
 @Getter
 @Setter
 public abstract class SuperScreen implements Screen {
@@ -39,6 +41,9 @@ public abstract class SuperScreen implements Screen {
 
 	@Getter
 	InputMultiplexer multiplexer;
+	
+	@Getter
+	MousePosition mousePosition;
 
 	public SuperScreen(Screens screens) {
 		this.screens = screens;
@@ -48,6 +53,7 @@ public abstract class SuperScreen implements Screen {
 		this.multiplexer = new InputMultiplexer(UILayer, worldLayer);
 		this.multiplexer.addProcessor(new InputSystem(getCamera()));
 		populateCommonLayers();
+		this.mousePosition = new MousePosition(100, 100);
 	}
 
 	@Override

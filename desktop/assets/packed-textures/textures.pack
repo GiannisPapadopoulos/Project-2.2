@@ -59,9 +59,16 @@ left_green
   orig: 73, 60
   offset: 0, 0
   index: -1
+left_orange
+  rotate: false
+  xy: 903, 253
+  size: 73, 60
+  orig: 73, 60
+  offset: 0, 0
+  index: -1
 left_red
   rotate: false
-  xy: 903, 347
+  xy: 77, 2
   size: 73, 60
   orig: 73, 60
   offset: 0, 0
@@ -73,9 +80,16 @@ light_green
   orig: 97, 92
   offset: 0, 0
   index: -1
-light_red
+light_orange
   rotate: false
   xy: 679, 13
+  size: 97, 92
+  orig: 97, 92
+  offset: 0, 0
+  index: -1
+light_red
+  rotate: false
+  xy: 903, 315
   size: 97, 92
   orig: 97, 92
   offset: 0, 0

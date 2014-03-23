@@ -9,6 +9,9 @@ public class EditorData {
 	private int width;
 	private int h_shift;
 	private int w_shift;
+	
+	private PointsOfInterest.PointOfInterest firstClick;
+	private PointsOfInterest.PointOfInterest secondClick;
 
 	public EditorData(int height, int width, int h_shift, int w_shift) {
 		this.height = height;

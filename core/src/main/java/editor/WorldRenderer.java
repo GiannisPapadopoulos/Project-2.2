@@ -60,4 +60,19 @@ public class WorldRenderer {
 		gridRenderer.end();
 	}
 
+	public void renderPOI(OrthographicCamera cam, PointsOfInterest POI,
+			PointsOfInterest.PointOfInterest closestPOI) {
+		gridRenderer.setProjectionMatrix(cam.combined);
+		gridRenderer.begin(ShapeType.Filled);
+		gridRenderer.setColor(Color.BLUE);
+		for (int i = 0; i < POI.getPOI().size(); i++) {
+			if (closestPOI!=null && closestPOI == POI.getPOI().get(i))
+				gridRenderer.setColor(Color.PINK);
+			gridRenderer.rect(POI.getPOI().get(i).getPosition().x - 0.5f, POI
+					.getPOI().get(i).getPosition().y - 0.5f, 1f, 1f);
+			gridRenderer.setColor(Color.BLUE);
+		}
+		gridRenderer.end();
+	}
+
 }

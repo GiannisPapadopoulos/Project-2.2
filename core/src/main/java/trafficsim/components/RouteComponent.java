@@ -51,8 +51,8 @@ public class RouteComponent
 		return currentVertex == target ? currentVertex : currentVertex.getNeighbor(getCurrentEdge());
 	}
 
-	public boolean isLast() {
-		return edgeIndex < path.getRoute().size() - 1;
+	public boolean isLastEdge() {
+		return edgeIndex >= path.getRoute().size() - 1;
 	}
 
 }

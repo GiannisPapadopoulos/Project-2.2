@@ -214,47 +214,43 @@ public class EntityFactory {
 
 				val iterator2 = edge.getAdjacentVertexIterator();
 				// TODO single for loop
-				boolean pointAOrPointB = edge.getAdjacentVertices().get(0) == vertex.getID();
+				boolean onPointA = edge.getAdjacentVertices().get(0) == vertex.getID();
 				float angleOfRoad = VectorUtils.getAngle(edge.getData());
 
-				if (pointAOrPointB) {
+				if (onPointA) {
 					Vertex<Road> vertexA = iterator2.next();
 					// addLightA(world, edge, vertexA, edgesPerVertex, angleOfRoad);
-					addLight(world, edge, vertexA, edgesPerVertex, angleOfRoad, pointAOrPointB);
+					addLight(world, edge, vertexA, edgesPerVertex, angleOfRoad, onPointA);
 				}
 				else {
-					assert !pointAOrPointB;
 					Vertex<Road> vertexB = iterator2.next();
 					// addLightB(world, edge, vertexB, edgesPerVertex, angleOfRoad);
-					addLight(world, edge, vertexB, edgesPerVertex, angleOfRoad, pointAOrPointB);
+					addLight(world, edge, vertexB, edgesPerVertex, angleOfRoad, onPointA);
 				}
-
 			}
 		}
 	}
 
-
-
 	private static void addLight(TrafficSimWorld world, Edge<Road> edge, Vertex<Road> vertex, int edgesPerVertex,
-			float angleOfRoad, boolean pointAorPointB) {
+			float angleOfRoad, boolean onPointA) {
 		if (vertex.getAdjacentVertices().size() > 1) {
 
-			Vector2 pos = pointAorPointB ? edge.getData().getPointA().cpy() : edge.getData().getPointB().cpy();
-			int direction = pointAorPointB ? 1 : -1;
+			Vector2 pos = onPointA ? edge.getData().getPointA().cpy() : edge.getData().getPointB().cpy();
+			int direction = onPointA ? 1 : -1;
 			pos.add(VectorUtils.getVector(edge.getData()).nor().scl(direction));
 			// Vector2 pos = edge.getData().getPointA().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(1f));
 			Vector2 corr = getVector(edge.getData()).nor().rotate(90 * direction);
-			int interval = 5;
+			int interval = 3;
 			Entity entityStraight = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(2f)),
 																		(int) (interval - 1), 1, (int) (interval * 3),
-																		Status.RED, true);
+																		Status.RED, true, onPointA);
 			entityStraight.addComponent(new LightToRoadMappingComponent(entityStraight.getId(),
 																		world.getEdgeToEntityMap().get(edge.getID())));
 			entityStraight.addToWorld();
 			// TODO left light should always point at a 90 degree angle from the road
 			Entity entityLeft = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(1f)),
 																	(int) (interval - 1), 1, (int) (interval * 3),
-																	Status.RED, false);
+																	Status.RED, false, onPointA);
 			entityLeft.addComponent(new LightToRoadMappingComponent(entityStraight.getId(), world.getEdgeToEntityMap()
 																									.get(edge.getID())));
 			entityLeft.addToWorld();
@@ -274,7 +270,7 @@ public class EntityFactory {
 	}
 
 	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, int timerG, int timerO,
-			int timerR, Status status, boolean straight) {
+			int timerR, Status status, boolean straight, boolean OnPointA) {
 		Entity trafficLight = world.createEntity();
 		float width = 0.5f;
 		float length = 0.5f;
@@ -294,7 +290,7 @@ public class EntityFactory {
 		trafficLight.addComponent(new DimensionComponent(length, width));
 
 
-		TrafficLightComponent lightComp = new TrafficLightComponent(timerG, timerO, timerR, status, straight);
+		TrafficLightComponent lightComp = new TrafficLightComponent(timerG, timerO, timerR, status, !straight, OnPointA);
 		trafficLight.addComponent(lightComp);
 
 		SpriteComponent sprite = new SpriteComponent(lightComp.getTextureName());

@@ -1,13 +1,17 @@
 package trafficsim.systems;
 
 import static com.badlogic.gdx.math.MathUtils.PI;
+import static com.badlogic.gdx.math.MathUtils.cos;
 import static com.badlogic.gdx.math.MathUtils.degRad;
+import static com.badlogic.gdx.math.MathUtils.sin;
 import static functions.VectorUtils.getAngle;
 import static functions.VectorUtils.getVector;
+import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import functions.VectorUtils;
 import gnu.trove.list.TIntList;
 import graph.Edge;
 import graph.Vertex;
+import lombok.Getter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.AccelerationComponent;
 import trafficsim.components.AttachedLightsComponent;
@@ -30,6 +34,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
+import com.badlogic.gdx.physics.box2d.World;
 
 /**
  * The movement system is responsible for updating the velocity of all entities
@@ -59,8 +64,6 @@ public class MovementSystem
 		super(Aspect.getAspectForAll(SteeringComponent.class, RouteComponent.class, PhysicsBodyComponent.class));
 	}
 
-	float maxAng = 0;
-
 	// TODO clean this up
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
@@ -83,21 +86,38 @@ public class MovementSystem
 					continue;
 				}
 
-				Entity trafficLight = getRelevantLight(routeComp);
 				float brakingThreshold = 5f;
 
 				float leftTurnThreshold = 0.5f;
 				float rightTurnThreshold = 1.0f;
 				float arrivalThreshold = 0.5f;
+
+				float carInFrontThreshold = CAR_LENGTH * 1.6f;
+
+				World box2dWorld = ((TrafficSimWorld) world).getBox2dWorld();
+				Vector2 position = physComp.getPosition();
+				Vector2 angleAdjustment = new Vector2(cos(physComp.getAngle()), sin(physComp.getAngle()));
+				float rayLength = 3 * CAR_LENGTH;
+				TrafficRayCastCallback rayCallBack = new TrafficRayCastCallback();
+				// System.out.println(position + " " + position.cpy().add(position.cpy().nor().scl(rayLength)));
+				box2dWorld.rayCast(rayCallBack, position,
+									position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
+
+				if (rayCallBack.getClosestId() != -1) {
+					Entity otherCar = world.getEntity(rayCallBack.getClosestId());
+					float distance = physicsBodyMapper.get(otherCar).getPosition().dst(position);
+					if (steeringComponentMapper.get(otherCar).getState() != State.DEFAULT
+						&& distance < carInFrontThreshold) {
+						slowDown(steeringComp, physComp);
+						continue;
+					}
+				}
+
+				Entity trafficLight = getRelevantLight(routeComp);
+
 				if (trafficLight != null && trafficLightsMapper.get(trafficLight).getStatus() != Status.GREEN
 					&& distance(car, trafficLight) < brakingThreshold) {
-					Vector2 force = physComp.getLinearVelocity().cpy().scl(-1).clamp(0, steeringComp.getMaxForce());
-					Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
-					physComp.setLinearVelocity(newVel);
-					steeringComp.setState(State.STOPPING);
-					if (newVel.len() < 0.1) {
-						steeringComp.setState(State.STOPPED);
-					}
+					slowDown(steeringComp, physComp);
 				}
 				else {
 					steeringComp.setState(State.DEFAULT);
@@ -132,7 +152,7 @@ public class MovementSystem
 				deltaA = constrainAngle(deltaA);
 				// TODO extract constants, refactor
 				float angularThreshold = 6;
-				if (Math.abs(deltaA) > 0.01) {
+				if (Math.abs(deltaA) > 0.05) {
 					if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
 						if (deltaA < 0) {
 							newVel.scl(0.9f);
@@ -147,6 +167,16 @@ public class MovementSystem
 				physComp.setLinearVelocity(newVel);
 
 			}
+		}
+	}
+
+	private void slowDown(SteeringComponent steeringComp, PhysicsBodyComponent physComp) {
+		Vector2 force = physComp.getLinearVelocity().cpy().scl(-1).clamp(0, steeringComp.getMaxForce());
+		Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
+		physComp.setLinearVelocity(newVel);
+		steeringComp.setState(State.STOPPING);
+		if (newVel.len() < 0.1) {
+			steeringComp.setState(State.STOPPED);
 		}
 	}
 
@@ -242,13 +272,23 @@ public class MovementSystem
 		return true;
 	}
 
+	@Getter
 	class TrafficRayCastCallback
 			implements RayCastCallback {
 
+		private int closestId = -1;
+
 		@Override
 		public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-			// TODO Auto-generated method stub
-			return 0;
+			Object userData = fixture.getBody().getUserData();
+			if (userData != null && userData.getClass() == Integer.class) {
+				// System.out.println(fraction + " " + fixture.getBody().getUserData() + " " +
+				// fixture.getBody().getType());
+				closestId = (Integer) userData;
+				return fraction;
+			}
+			else
+				return -1;
 		}
 
 	}

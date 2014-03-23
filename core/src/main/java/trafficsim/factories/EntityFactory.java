@@ -273,9 +273,9 @@ public class EntityFactory {
 	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, int timerG, int timerO,
 			int timerR, Status status, boolean straight, boolean OnPointA) {
 		Entity trafficLight = world.createEntity();
-		float width = 0.5f;
-		float length = 0.5f;
-		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length, width)
+		float width = 1f;
+		float length = 1f;
+		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, width / 2)
 																.density(1.0f)
 																.restitution(1.0f)
 																.friction(0f)

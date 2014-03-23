@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import pathfinding.GraphAction;
 import pathfinding.GraphState;
 import search.Path;
@@ -17,6 +18,7 @@ import com.artemis.Component;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@ToString
 public class RouteComponent
 		extends Component {
 

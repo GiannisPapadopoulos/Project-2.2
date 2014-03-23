@@ -75,7 +75,7 @@ public class PointsOfInterest {
 	}
 	
 	public Graph<Road> createGraphObject(PointOfInterest poi1, PointOfInterest poi2) {
-		graph.addVertex(new Road(poi1.position, poi2.position, 1, Direction.BOTH, TrafficSimConstants.CITY_SPEED_LIMIT));
+		graph.addEdge(new Road(poi1.position, poi2.position,1, Direction.BOTH, TrafficSimConstants.CITY_SPEED_LIMIT),poi1.getVertices().get(0),poi2.getVertices().get(0),false);
 		return graph;
 	}
 }

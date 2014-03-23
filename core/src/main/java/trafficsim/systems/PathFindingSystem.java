@@ -40,7 +40,7 @@ public class PathFindingSystem
 				if (!routeComp.isSet() && routeComp.getSource() != null && routeComp.getTarget() != null) {
 					Path<GraphState, GraphAction> path = new GraphBasedAstar().findRoute(	routeComp.getSource(),
 																							routeComp.getTarget());
-					assert path.isValidPath() : " No valid path found!";
+					assert path.isValidPath() : " No valid path found!"+routeComp;
 					routeComp.setPath(path);
 					routeComp.setSet(true);
 					routeComp.setCurrentVertex(routeComp.getSource());

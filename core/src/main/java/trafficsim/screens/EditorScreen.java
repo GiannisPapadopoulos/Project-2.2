@@ -1,5 +1,6 @@
 package trafficsim.screens;
 
+import lombok.Getter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
@@ -11,13 +12,13 @@ import com.badlogic.gdx.math.Vector2;
 
 import editor.EditorData;
 import editor.PointsOfInterest;
-import editor.PointsOfInterest.PointOfInterest;
 import editor.WorldRenderer;
 import graph.Graph;
 
 public class EditorScreen extends SuperScreen {
 
-	private TrafficSimWorld w;
+	@Getter
+	private TrafficSimWorld world;
 
 	private WorldRenderer wr;
 	private EditorData ed;
@@ -30,14 +31,14 @@ public class EditorScreen extends SuperScreen {
 
 	@Override
 	public void show() {
-		w = new TrafficSimWorld();
-		w.setSystem(new RenderSystem(getCamera()));
-		w.initialize();
-		EntityFactory.populateWorld(w, getScreens().getSimulationScreen()
+		world = new TrafficSimWorld();
+		world.setSystem(new RenderSystem(getCamera()));
+		world.initialize();
+		EntityFactory.populateWorld(world, getScreens().getSimulationScreen()
 				.getWorld().getGraph());
 		ed = new EditorData(1000, 1000, -100, -100);
 		wr = new WorldRenderer(ed);
-		updatePOI(w.getGraph());
+		updatePOI(world.getGraph());
 	}
 
 	private void updatePOI(Graph<Road> graph) {
@@ -53,8 +54,8 @@ public class EditorScreen extends SuperScreen {
 
 		getCamera().update();
 
-		w.setDelta(delta);
-		w.process();
+		world.setDelta(delta);
+		world.process();
 
 		wr.renderGrid(getCamera());
 		wr.renderGridUnderMouse(getCamera(), mousePosition.getGrid().getX(),
@@ -113,7 +114,7 @@ public class EditorScreen extends SuperScreen {
 
 		if (ed.getFirstClick() != null && ed.getSecondClick() != null) {
 			EntityFactory.populateWorld(
-					w,
+					world,
 					POI.createGraphObject(ed.getFirstClick(),
 							ed.getSecondClick()));
 			ed.setFirstClick(null);

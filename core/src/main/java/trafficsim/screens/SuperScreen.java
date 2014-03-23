@@ -59,7 +59,7 @@ public abstract class SuperScreen implements Screen {
 			this.multiplexer.addProcessor(new InputEditorSystem(getCamera(),
 					(EditorScreen) this));
 		else
-			this.multiplexer.addProcessor(new InputSystem(getCamera()));
+			this.multiplexer.addProcessor(new InputSystem(this));
 		
 		populateCommonLayers();
 		this.mousePosition = new MousePosition(100, 100);

@@ -2,6 +2,7 @@ package trafficsim.systems;
 
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
+import trafficsim.screens.SuperScreen;
 
 import com.artemis.systems.VoidEntitySystem;
 import com.badlogic.gdx.InputProcessor;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.math.Vector3;
 /** System to control the camera and other input commands we might define */
 public class InputSystem extends VoidEntitySystem implements InputProcessor {
 
+	private SuperScreen superScreen;
 	private OrthographicCamera camera;
 
 	private static final double ZOOMING_FACTOR1 = 0.1f;
@@ -20,8 +22,9 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 	protected float previousDragX;
 	protected float previousDragY;
 
-	public InputSystem(OrthographicCamera camera) {
-		this.camera = camera;
+	public InputSystem(SuperScreen superScreen) {
+		this.superScreen = superScreen;
+		this.camera = superScreen.getCamera();
 	}
 
 	@Override
@@ -54,6 +57,8 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		previousDragX = screenX;
 		previousDragY = screenY;
+		superScreen.getMousePosition().update(camera);
+		// System.out.println(superScreen.getMousePosition().getAbsolute());
 		return true;
 	}
 

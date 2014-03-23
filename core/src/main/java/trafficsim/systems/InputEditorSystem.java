@@ -13,7 +13,7 @@ public class InputEditorSystem extends InputSystem {
 
 	public InputEditorSystem(OrthographicCamera camera,
 			EditorScreen editorScreen) {
-		super(camera);
+		super(editorScreen);
 		this.editorScreen = editorScreen;
 	}
 

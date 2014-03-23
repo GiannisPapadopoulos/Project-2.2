@@ -25,4 +25,8 @@ public class TrafficRayCastCallBack
 			return -1;
 	}
 
+	public boolean foundSomething() {
+		return closestId != -1;
+	}
+
 }

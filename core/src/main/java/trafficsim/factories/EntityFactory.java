@@ -76,41 +76,6 @@ public class EntityFactory {
 		return car;
 	}
 
-	// /**
-	// * Creates a road with the given parameters
-	// *
-	// * @param angle The andgle in degrees
-	// * @param name Must be the same as the name of the texture file
-	// */
-	// public static Entity createRoad(TrafficSimWorld world, Vector2 position, float length, float angle, String name)
-	// {
-	// Entity road = world.createEntity();
-	// // TODO Check number of lanes here
-	// road.addComponent(new DimensionComponent(length, LANE_WIDTH * 2));
-	// // else
-	// // road.addComponent(new DimensionComponent(LANE_WIDTH * 2, length));
-	// angle *= MathUtils.degRad;
-	//
-	// // boxShape takes the half width/height as input
-	// // TODO Check number of lanes here
-	// FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, LANE_WIDTH * 2 / 2)
-	// .density(1.0f)
-	// .restitution(1.0f)
-	// .friction(0f)
-	// .sensor(true) // There should be a better way
-	// .groupIndex((short) -1);
-	// Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
-	// .type(BodyType.StaticBody)
-	// .position(position)
-	// .angle(angle)
-	// .build();
-	// road.addComponent(new PhysicsBodyComponent(body));
-	// // road.addComponent(new PositionComponent(position));
-	//
-	// SpriteComponent sprite = new SpriteComponent(name);
-	// road.addComponent(sprite);
-	// return road;
-	// }
 
 	/**
 	 * Creates a road with the given parameters
@@ -316,75 +281,5 @@ public class EntityFactory {
 		return trafficLight;
 	}
 
-	// private static void addLightA(TrafficSimWorld world, Edge<Road> edge, Vertex<Road> vertexA, int edgesPerVertex,
-	// float angleOfRoad) {
-	// if (vertexA.getAdjacentVertices().size() > 1) {
-	// Vector2 posA = edge.getData().getPointA().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(1f));
-	// Vector2 corr = getVector(edge.getData()).nor().rotate(90);
-	// int interval = 5;
-	// Entity entityStraight = EntityFactory.createTrafficLight( world, posA.cpy().add(corr.cpy().scl(2f)),
-	// (int) (interval - 1), 1, (int) (interval * 3),
-	// Status.RED, true);
-	// entityStraight.addComponent(new LightToRoadMappingComponent(entityStraight.getId(),
-	// world.getEdgeToEntityMap().get(edge.getID())));
-	// entityStraight.addToWorld();
-	// // TODO left light should always point at a 90 degree angle from the road
-	// Entity entityLeft = EntityFactory.createTrafficLight( world, posA.cpy().add(corr.cpy().scl(1f)),
-	// (int) (interval - 1), 1, (int) (interval * 3),
-	// Status.RED, false);
-	// entityLeft.addComponent(new LightToRoadMappingComponent(entityStraight.getId(), world.getEdgeToEntityMap()
-	// .get(edge.getID())));
-	// entityLeft.addToWorld();
-	// if (angleOfRoad < 45) {
-	// TrafficLightComponent flatRightLeft = entityLeft.getComponent(TrafficLightComponent.class);
-	// flatRightLeft.setTimeElapsed(interval * 2);
-	// TrafficLightComponent flatRightStraight = entityStraight.getComponent(TrafficLightComponent.class);
-	// flatRightStraight.setStatus(Status.GREEN);
-	//
-	// }
-	// else {
-	// TrafficLightComponent VerticalTopStraight = entityStraight.getComponent(TrafficLightComponent.class);
-	// VerticalTopStraight.setTimeElapsed(interval);
-	// }
-	//
-	// }
-	// }
-	//
-	// private static void addLightB(TrafficSimWorld world, Edge<Road> edge, Vertex<Road> vertexB, int edgesPerVertex,
-	// float angleOfRoad) {
-	// if (vertexB.getAdjacentVertices().size() > 1) {
-	// Vector2 posB = edge.getData().getPointB().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(-1f));
-	// Vector2 corr = getVector(edge.getData()).nor().rotate(-90);
-	// int interval = 5;
-	//
-	// Entity entityStraight = EntityFactory.createTrafficLight( world, posB.cpy().add(corr.cpy().scl(2f)),
-	// (int) (interval - 1), 1, (int) (interval * 3),
-	// Status.RED, true);
-	// entityStraight.addComponent(new LightToRoadMappingComponent(entityStraight.getId(),
-	// world.getEdgeToEntityMap().get(edge.getID())));
-	// entityStraight.addToWorld();
-	// // TODO left light should always point at a 90 degree angle from the road
-	// Entity entityLeft = EntityFactory.createTrafficLight( world, posB.cpy().add(corr.cpy().scl(1f)),
-	// (int) (interval - 1), 1, (int) (interval * 3),
-	// Status.RED, false);
-	// entityLeft.addComponent(new LightToRoadMappingComponent(entityStraight.getId(), world.getEdgeToEntityMap()
-	// .get(edge.getID())));
-	// entityStraight.addToWorld();
-	// entityLeft.addToWorld();
-	// if (angleOfRoad < 45) {
-	// TrafficLightComponent flatLeftLeft = entityLeft.getComponent(TrafficLightComponent.class);
-	// flatLeftLeft.setTimeElapsed(interval * 2);
-	// TrafficLightComponent flatLeftStraight = entityStraight.getComponent(TrafficLightComponent.class);
-	// flatLeftStraight.setStatus(Status.GREEN);
-	//
-	// }
-	// else {
-	// TrafficLightComponent VerticalBotStraight = entityStraight.getComponent(TrafficLightComponent.class);
-	// VerticalBotStraight.setTimeElapsed(interval);
-	//
-	// }
-	//
-	// }
-	// }
 
 }

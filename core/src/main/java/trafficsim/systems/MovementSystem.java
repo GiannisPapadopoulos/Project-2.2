@@ -111,10 +111,13 @@ public class MovementSystem
 					}
 				}
 
+				Vector2 target = getTarget(routeComp);
+				float distanceToTarget = target.dst(physComp.getPosition());
+
 				Entity trafficLight = getRelevantLight(routeComp);
 
 				if (trafficLight != null && trafficLightsMapper.get(trafficLight).getStatus() != Status.GREEN
-					&& distance(car, trafficLight) < brakingThreshold) {
+					&& distance(car, trafficLight) < brakingThreshold && distance(car, trafficLight) < distanceToTarget) {
 					slowDown(steeringComp, physComp);
 				}
 				else {
@@ -125,15 +128,15 @@ public class MovementSystem
 					continue;
 				}
 
-				Vector2 target = getTarget(routeComp);
-				float dst = target.dst(physComp.getPosition());
 
-				if (routeComp.isLastEdge() && steeringComp.getState() == State.DEFAULT && dst < arrivalThreshold) {
+
+				if (routeComp.isLastEdge() && steeringComp.getState() == State.DEFAULT
+					&& distanceToTarget < arrivalThreshold) {
 					steeringComp.setState(State.ARRIVED);
 				}
 				else {
 					float thresHold = isRightTurn(routeComp) ? rightTurnThreshold : leftTurnThreshold;
-					if (dst < thresHold) {
+					if (distanceToTarget < thresHold) {
 						routeComp.setCurrentVertex(routeComp.getNextVertex());
 						routeComp.setEdgeIndex(routeComp.getEdgeIndex() + 1);
 					}
@@ -226,6 +229,11 @@ public class MovementSystem
 	private float distance(Entity entityA, Entity entityB) {
 		assert physicsBodyMapper.has(entityA) && physicsBodyMapper.has(entityB);
 		return physicsBodyMapper.get(entityA).getPosition().dst(physicsBodyMapper.get(entityB).getPosition());
+	}
+
+	private Vector2 vector(Entity entityA, Entity entityB) {
+		assert physicsBodyMapper.has(entityA) && physicsBodyMapper.has(entityB);
+		return physicsBodyMapper.get(entityB).getPosition().cpy().sub(physicsBodyMapper.get(entityA).getPosition());
 	}
 
 	private static float getAngleOfCurrentEdgeInRads(RouteComponent routeComp) {

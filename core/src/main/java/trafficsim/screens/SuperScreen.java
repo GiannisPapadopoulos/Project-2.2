@@ -11,6 +11,8 @@ import lombok.Setter;
 import lombok.val;
 import trafficsim.systems.InputEditorSystem;
 import trafficsim.systems.InputSystem;
+import ui.tables.SidePanels;
+import ui.tables.SpeedSettings;
 import utils.Assets;
 
 import com.badlogic.gdx.Gdx;
@@ -106,7 +108,10 @@ public abstract class SuperScreen implements Screen {
 	public abstract void populateWorldLayer();
 
 	private void populateCommonLayers() {
+		
+		Table sidePanels = new SidePanels();
 		Table t = new Table();
+		Table settings = new SpeedSettings();
 		ArrayList<TextButton> buttons = new ArrayList<TextButton>();
 
 		TextButton simButton = new TextButton("Simulation", Assets.skin);
@@ -128,8 +133,11 @@ public abstract class SuperScreen implements Screen {
 		t.align(Align.top);
 
 		t.setFillParent(true);
-
-		getUILayer().addActor(t);
+		
+		
+		
+		getUILayer().addActor(sidePanels);
+		getUILayer().addActor(settings);
 
 		for (val button : buttons)
 			button.addListener(new ChangeListener() {

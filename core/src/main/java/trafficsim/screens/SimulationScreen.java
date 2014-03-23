@@ -1,10 +1,8 @@
 package trafficsim.screens;
 
+import static trafficsim.TrafficSimConstants.DEBUG_FPS;
 import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
 import static trafficsim.TrafficSimConstants.TIMER;
-import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
-import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
-import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
 import graph.Graph;
 import graph.GraphFactory;
 import lombok.Getter;
@@ -13,7 +11,6 @@ import trafficsim.TrafficSimWorld;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.systems.DestinationSystem;
-import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
@@ -23,7 +20,6 @@ import trafficsim.systems.TrafficLightSystem;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 /**
@@ -99,6 +95,9 @@ public class SimulationScreen extends SuperScreen {
 
 	@Override
 	public void render(float delta) {
+		long start;
+		if(DEBUG_FPS)
+			start = TIMER.getTime();
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		getCamera().update();
 		world.setDelta(delta);
@@ -111,6 +110,9 @@ public class SimulationScreen extends SuperScreen {
 		getUILayer().act(delta);
 		getWorldLayer().draw();
 		getUILayer().draw();
+
+		if (DEBUG_FPS)
+			System.out.println(TIMER.getTime() - start + " milliseconds ");
 
 	}
 

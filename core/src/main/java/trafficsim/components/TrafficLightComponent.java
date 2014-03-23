@@ -31,7 +31,7 @@ public class TrafficLightComponent
 	@Getter
 	public enum Status {
 		GREEN("light_green", "left_green"),
-		ORANGE("light_red", "left_red"),
+		ORANGE("light_orange", "left_orange"),
 		RED("light_red", "left_red");
 
 		private String straightLightTexture;

@@ -1,5 +1,6 @@
 package trafficsim.screens;
 
+import static trafficsim.TrafficSimConstants.DEBUG_FPS;
 import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
 import static trafficsim.TrafficSimConstants.TIMER;
 import graph.Graph;
@@ -81,6 +82,9 @@ public class SimulationScreen extends SuperScreen {
 
 	@Override
 	public void render(float delta) {
+		long start;
+		if(DEBUG_FPS)
+			start = TIMER.getTime();
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		getCamera().update();
 		world.setDelta(delta);
@@ -93,6 +97,9 @@ public class SimulationScreen extends SuperScreen {
 		getUILayer().act(delta);
 		getWorldLayer().draw();
 		getUILayer().draw();
+
+		if (DEBUG_FPS)
+			System.out.println(TIMER.getTime() - start + " milliseconds ");
 
 	}
 

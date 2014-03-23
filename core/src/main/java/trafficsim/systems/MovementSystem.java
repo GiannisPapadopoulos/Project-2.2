@@ -11,8 +11,8 @@ import functions.VectorUtils;
 import gnu.trove.list.TIntList;
 import graph.Edge;
 import graph.Vertex;
-import lombok.Getter;
 import trafficsim.TrafficSimWorld;
+import trafficsim.callbacks.TrafficRayCastCallBack;
 import trafficsim.components.AccelerationComponent;
 import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.MaxSpeedComponent;
@@ -32,8 +32,6 @@ import com.artemis.annotations.Mapper;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
@@ -98,12 +96,12 @@ public class MovementSystem
 				Vector2 position = physComp.getPosition();
 				Vector2 angleAdjustment = new Vector2(cos(physComp.getAngle()), sin(physComp.getAngle()));
 				float rayLength = 3 * CAR_LENGTH;
-				TrafficRayCastCallback rayCallBack = new TrafficRayCastCallback();
+				TrafficRayCastCallBack rayCallBack = new TrafficRayCastCallBack();
 				// System.out.println(position + " " + position.cpy().add(position.cpy().nor().scl(rayLength)));
 				box2dWorld.rayCast(rayCallBack, position,
 									position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
 
-				if (rayCallBack.getClosestId() != -1) {
+				if (rayCallBack.foundSomething()) {
 					Entity otherCar = world.getEntity(rayCallBack.getClosestId());
 					float distance = physicsBodyMapper.get(otherCar).getPosition().dst(position);
 					if (steeringComponentMapper.get(otherCar).getState() != State.DEFAULT
@@ -272,25 +270,5 @@ public class MovementSystem
 		return true;
 	}
 
-	@Getter
-	class TrafficRayCastCallback
-			implements RayCastCallback {
-
-		private int closestId = -1;
-
-		@Override
-		public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-			Object userData = fixture.getBody().getUserData();
-			if (userData != null && userData.getClass() == Integer.class) {
-				// System.out.println(fraction + " " + fixture.getBody().getUserData() + " " +
-				// fixture.getBody().getType());
-				closestId = (Integer) userData;
-				return fraction;
-			}
-			else
-				return -1;
-		}
-
-	}
 
 }

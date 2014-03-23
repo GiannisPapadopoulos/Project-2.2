@@ -13,6 +13,12 @@ public final class TrafficSimConstants {
 	/** Frames per second */
 	public static final int FPS = 60;
 
+	/** Set to true to print the time each frame takes */
+	public static final boolean DEBUG_FPS = false;
+
+	/** Whether to do box2d debug rendering */
+	public static boolean DEBUG_RENDER = true;
+
 	/** Constant used by world.step() in box2d. Higher values mean higher accuracy, 8 is standard */
 	public static final int VELOCITY_ITERATIONS = 8;
 	/** Constant used by world.step() in box2d. Higher values mean higher accuracy, 3 is standard */
@@ -37,9 +43,6 @@ public final class TrafficSimConstants {
 
 	/** Speed limit for simple (1-lane) roads in meters per second */
 	public static final float CITY_SPEED_LIMIT = 50 / 3.6f;
-
-	/** Whether to do box2d debug rendering */
-	public static boolean DEBUG_RENDER = true;
 
 	/** The random instance used throughout the traffic simulation */
 	public static final Random RANDOM = new Random(0);

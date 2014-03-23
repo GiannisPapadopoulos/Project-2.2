@@ -2,6 +2,7 @@ package functions;
 
 import trafficsim.roads.Road;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class VectorUtils {
@@ -50,6 +51,11 @@ public class VectorUtils {
 		float xm = (pointA.x + pointB.x) / 2;
 		float ym = (pointA.y + pointB.y) / 2;
 		return new Vector2(xm, ym);
+	}
+
+	public static Vector2 getUnitVector(float angle) {
+		return new Vector2(MathUtils.cos(angle * MathUtils.degreesToRadians),
+				MathUtils.sin(angle * MathUtils.degreesToRadians));
 	}
 
 	// public static Vector2 getUnitPerpendicularVector(Vector2 vector) {

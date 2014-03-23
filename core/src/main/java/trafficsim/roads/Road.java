@@ -6,6 +6,8 @@ import lombok.ToString;
 
 import com.badlogic.gdx.math.Vector2;
 
+import functions.VectorUtils;
+
 /**
  * Class that holds data related to a road
  * 
@@ -27,6 +29,38 @@ public class Road {
 	private Vector2 pointA;
 	/** The right point */
 	private Vector2 pointB;
+	
+	public Vector2 getPointC() {
+		Vector2 v = VectorUtils.getMidPoint(pointA, pointB);
+		
+		float angle = VectorUtils.getAngle(pointA, pointB);
+		angle+= 90.0;
+		
+		Vector2 vAdd = VectorUtils.getUnitVector(angle);
+		vAdd.x *= VectorUtils.getLength(pointA, pointB)/2;
+		vAdd.y *= VectorUtils.getLength(pointA, pointB)/2;
+		
+		v.add(vAdd);
+		
+		return v;
+		
+		
+		}
+	
+	public Vector2 getPointD() {
+		Vector2 v = VectorUtils.getMidPoint(pointA, pointB);
+		
+		float angle = VectorUtils.getAngle(pointA, pointB);
+		angle-= 90.0;
+		
+		Vector2 vAdd = VectorUtils.getUnitVector(angle);
+		vAdd.x *= VectorUtils.getLength(pointA, pointB)/2;
+		vAdd.y *= VectorUtils.getLength(pointA, pointB)/2;
+		
+		v.add(vAdd);
+		
+		return v;
+	}
 
 	//@formatter:off
 	/*

@@ -64,7 +64,7 @@ public class SimulationScreen extends SuperScreen {
 
 		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
 		world.setGraph(graph);
-		if (firstTimeSimulationRun)
+		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
 			EntityFactory.populateWorld(world, graph);
 		else
 			EntityFactory.populateWorld(world, getScreens()

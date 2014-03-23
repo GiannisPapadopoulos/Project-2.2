@@ -5,49 +5,49 @@ filter: Nearest,Nearest
 repeat: none
 car1
   rotate: false
-  xy: 804, 904
+  xy: 804, 917
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car2
   rotate: false
-  xy: 804, 805
+  xy: 804, 818
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car3
   rotate: false
-  xy: 804, 706
+  xy: 804, 719
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car4
   rotate: false
-  xy: 804, 607
+  xy: 804, 620
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car5
   rotate: false
-  xy: 804, 508
+  xy: 804, 521
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car6
   rotate: false
-  xy: 804, 409
+  xy: 804, 422
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car7
   rotate: false
-  xy: 804, 219
+  xy: 804, 232
   size: 97, 188
   orig: 97, 188
   offset: 0, 0
@@ -55,48 +55,48 @@ car7
 left_green
   rotate: false
   xy: 2, 2
-  size: 73, 60
-  orig: 73, 60
+  size: 60, 73
+  orig: 60, 73
   offset: 0, 0
   index: -1
 left_red
   rotate: false
   xy: 903, 347
-  size: 73, 60
-  orig: 73, 60
+  size: 60, 73
+  orig: 60, 73
   offset: 0, 0
   index: -1
 light_green
   rotate: false
-  xy: 679, 107
+  xy: 679, 120
   size: 97, 92
   orig: 97, 92
   offset: 0, 0
   index: -1
 light_red
   rotate: false
-  xy: 679, 13
+  xy: 679, 26
   size: 97, 92
   orig: 97, 92
   offset: 0, 0
   index: -1
 parking
   rotate: false
-  xy: 396, 20
+  xy: 396, 33
   size: 281, 179
   orig: 281, 179
   offset: 0, 0
   index: -1
 red-car
   rotate: false
-  xy: 2, 64
+  xy: 2, 77
   size: 392, 135
   orig: 392, 135
   offset: 0, 0
   index: -1
 road2x2
   rotate: false
-  xy: 2, 201
+  xy: 2, 214
   size: 800, 800
   orig: 800, 800
   offset: 0, 0

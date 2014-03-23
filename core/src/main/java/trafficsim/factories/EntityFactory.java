@@ -1,5 +1,6 @@
 package trafficsim.factories;
 
+import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getVector;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.CAR_WIDTH;
@@ -241,16 +242,21 @@ public class EntityFactory {
 			// Vector2 pos = edge.getData().getPointA().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(1f));
 			Vector2 corr = getVector(edge.getData()).nor().rotate(90 * direction);
 			int interval = 3;
+			Vector2 roadVector = getVector(edge.getData());
+			if (onPointA)
+				roadVector.scl(-1);
+			float angle = roadVector.angle() * degRad;
+
 			Entity entityStraight = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(2f)),
 																		(int) (interval - 1), 1, (int) (interval * 3),
-																		Status.RED, true, onPointA);
+																		Status.RED, true, onPointA, angle);
 			entityStraight.addComponent(new LightToRoadMappingComponent(entityStraight.getId(),
 																		world.getEdgeToEntityMap().get(edge.getID())));
 			entityStraight.addToWorld();
 			// TODO left light should always point at a 90 degree angle from the road
 			Entity entityLeft = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(1f)),
 																	(int) (interval - 1), 1, (int) (interval * 3),
-																	Status.RED, false, onPointA);
+																	Status.RED, false, onPointA, angle);
 			entityLeft.addComponent(new LightToRoadMappingComponent(entityStraight.getId(), world.getEdgeToEntityMap()
 																									.get(edge.getID())));
 			entityLeft.addToWorld();
@@ -270,7 +276,7 @@ public class EntityFactory {
 	}
 
 	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, int timerG, int timerO,
-			int timerR, Status status, boolean straight, boolean OnPointA) {
+			int timerR, Status status, boolean straight, boolean OnPointA, float angleInRads) {
 		Entity trafficLight = world.createEntity();
 		float width = 0.5f;
 		float length = 0.5f;
@@ -284,7 +290,7 @@ public class EntityFactory {
 		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
 															.type(BodyType.StaticBody)
 															.position(position)
-															.angle(0)
+															.angle(angleInRads)
 															.build();
 		trafficLight.addComponent(new PhysicsBodyComponent(body));
 		trafficLight.addComponent(new DimensionComponent(length, width));

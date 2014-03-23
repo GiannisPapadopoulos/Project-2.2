@@ -42,7 +42,7 @@ public final class TrafficSimConstants {
 	public static boolean DEBUG_RENDER = true;
 
 	/** The random instance used throughout the traffic simulation */
-	public static final Random RANDOM = new Random();
+	public static final Random RANDOM = new Random(0);
 
 	public static final StopWatch TIMER = new StopWatch();
 	

@@ -73,7 +73,7 @@ public abstract class SuperScreen implements Screen {
 
 	@Override
 	public void show() {
-		System.out.println(multiplexer.getProcessors());
+		// System.out.println(multiplexer.getProcessors());
 	}
 
 	@Override

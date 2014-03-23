@@ -18,7 +18,7 @@ public class FixedIntervalSpawningStrategy
 
 	@Override
 	public boolean shouldSpawn(float currentTime) {
-		return currentTime - lastSpawnTime >= interval;
+		return currentTime - lastSpawnTime >= interval || lastSpawnTime == 0;
 	}
 
 	@Override

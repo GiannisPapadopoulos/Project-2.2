@@ -1,14 +1,23 @@
 package trafficsim.systems;
 
+import static com.badlogic.gdx.math.MathUtils.PI;
+import static com.badlogic.gdx.math.MathUtils.degRad;
+import static functions.VectorUtils.getAngle;
 import static functions.VectorUtils.getVector;
 import functions.VectorUtils;
+import gnu.trove.list.TIntList;
 import graph.Edge;
+import graph.Vertex;
+import trafficsim.TrafficSimWorld;
 import trafficsim.components.AccelerationComponent;
+import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
 import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
+import trafficsim.components.TrafficLightComponent;
+import trafficsim.components.TrafficLightComponent.Status;
 import trafficsim.roads.Road;
 
 import com.artemis.Aspect;
@@ -19,6 +28,8 @@ import com.artemis.annotations.Mapper;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 /**
  * The movement system is responsible for updating the velocity of all entities
@@ -38,6 +49,10 @@ public class MovementSystem
 	ComponentMapper<RouteComponent> routeComponentMapper;
 	@Mapper
 	ComponentMapper<SteeringComponent> steeringComponentMapper;
+	@Mapper
+	ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
+	@Mapper
+	ComponentMapper<TrafficLightComponent> trafficLightsMapper;
 
 	@SuppressWarnings("unchecked")
 	public MovementSystem() {
@@ -50,35 +65,53 @@ public class MovementSystem
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
 		for (int i = 0; i < entities.size(); i++) {
-			Entity entity = entities.get(i);
-			if (routeComponentMapper.has(entity) && steeringComponentMapper.has(entity)
-				&& routeComponentMapper.get(entity).isSet()) {
-				RouteComponent routeComp = routeComponentMapper.get(entity);
-				SteeringComponent steeringComp = steeringComponentMapper.get(entity);
-				PhysicsBodyComponent physComp = physicsBodyMapper.get(entity);
+			Entity car = entities.get(i);
+			if (routeComponentMapper.has(car) && steeringComponentMapper.has(car)
+				&& routeComponentMapper.get(car).isSet()) {
+				RouteComponent routeComp = routeComponentMapper.get(car);
+				SteeringComponent steeringComp = steeringComponentMapper.get(car);
+				PhysicsBodyComponent physComp = physicsBodyMapper.get(car);
 
 				if (steeringComp.getState() == State.ARRIVED) {
 					Vector2 force = physComp.getLinearVelocity().cpy().scl(-1).clamp(0, steeringComp.getMaxForce());
 					Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
 					physComp.setLinearVelocity(newVel);
 					if (newVel.len() < 0.1) {
-						entity.deleteFromWorld();
+						car.deleteFromWorld();
 						physComp.setActive(false);
 					}
 					continue;
 				}
 
-				Vector2 target = getTarget(routeComp);
+				Entity trafficLight = getRelevantLight(routeComp);
+				float brakingThreshold = 5f;
 
-				float dst = target.dst(physComp.getPosition());
 				float leftTurnThreshold = 0.5f;
 				float rightTurnThreshold = 1.0f;
 				float arrivalThreshold = 0.5f;
+				if (trafficLight != null && trafficLightsMapper.get(trafficLight).getStatus() != Status.GREEN
+					&& distance(car, trafficLight) < brakingThreshold) {
+					Vector2 force = physComp.getLinearVelocity().cpy().scl(-1).clamp(0, steeringComp.getMaxForce());
+					Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
+					physComp.setLinearVelocity(newVel);
+					steeringComp.setState(State.STOPPING);
+					if (newVel.len() < 0.1) {
+						steeringComp.setState(State.STOPPED);
+					}
+				}
+				else {
+					steeringComp.setState(State.DEFAULT);
+				}
 
-				// If Last edge
-				if (routeComp.getEdgeIndex() >= routeComp.getRoute().size() - 1) {
-					if (dst < arrivalThreshold)
-						steeringComp.setState(State.ARRIVED);
+				if (steeringComp.getState() != State.DEFAULT) {
+					continue;
+				}
+
+				Vector2 target = getTarget(routeComp);
+				float dst = target.dst(physComp.getPosition());
+
+				if (routeComp.isLastEdge() && steeringComp.getState() == State.DEFAULT && dst < arrivalThreshold) {
+					steeringComp.setState(State.ARRIVED);
 				}
 				else {
 					float thresHold = isRightTurn(routeComp) ? rightTurnThreshold : leftTurnThreshold;
@@ -93,13 +126,13 @@ public class MovementSystem
 				force.clamp(0, steeringComp.getMaxForce());
 				Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
 				float maxSpeed = Math.min(	routeComp.getCurrentEdge().getData().getSpeedLimit(),
-											maxSpeedMapper.get(entity).getSpeed());
+											maxSpeedMapper.get(car).getSpeed());
 				newVel.clamp(0, maxSpeed);
-				float deltaA = getAngleInRads(routeComp) - physComp.getAngle();
+				float deltaA = getAngleOfCurrentEdgeInRads(routeComp) - physComp.getAngle();
 				deltaA = constrainAngle(deltaA);
 				// TODO extract constants, refactor
 				float angularThreshold = 6;
-				if (Math.abs(deltaA) > 0.05) {
+				if (Math.abs(deltaA) > 0.01) {
 					if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
 						if (deltaA < 0) {
 							newVel.scl(0.9f);
@@ -117,18 +150,57 @@ public class MovementSystem
 		}
 	}
 
-	/** Returns true if the next turn is a right one */
-	private boolean isRightTurn(RouteComponent routeComp) {
-		if (routeComp.getEdgeIndex() >= routeComp.getRoute().size()) {
-			return false;
+	private Entity getRelevantLight(RouteComponent routeComp) {
+		int roadId = ((TrafficSimWorld) world).getEdgeToEntityMap().get(routeComp.getCurrentEdge().getID());
+		Entity road = world.getEntity(roadId);
+		boolean fromAtoB = fromAtoB(routeComp);
+		float angle = getDeltaAngle(routeComp) * degRad;
+		// 0.001 is for floating point accuracy
+		boolean leftTurn = angle < -0.001 || angle > PI + 0.001;
+
+		if (attachedLightsMapper.has(road)) {// && !routeComp.isLast()) {
+			TIntList trafficLights = attachedLightsMapper.get(road).getTrafficLightIDs();
+			for (int i = 0; i < trafficLights.size(); i++) {
+				Entity light = world.getEntity(trafficLights.get(i));
+				TrafficLightComponent lightComp = trafficLightsMapper.get(light);
+				if (fromAtoB != lightComp.isOnPointA() && lightComp.isLeft() == leftTurn) {
+					// System.out.println("angle  " + angle + " " + routeComp.getEdgeIndex() + " light "
+					// + physicsBodyMapper.get(light).getPosition() + " n "
+					// + getMidPoint(routeComp.getNextVertex().getData()) + " s " + lightComp.isLeft()
+					// + " turn " + leftTurn);
+					return light;
+				}
+			}
 		}
-		Edge<Road> nextEdge = routeComp.getPath().getRoute().get(routeComp.getEdgeIndex() + 1).getEdge();
-		float angle = constrainAngle(VectorUtils.getAngle(nextEdge.getData()))
-						- constrainAngle(VectorUtils.getAngle(routeComp.getCurrentEdge().getData()));
-		return angle < 0;
+		return null;
 	}
 
-	private static float getAngleInRads(RouteComponent routeComp) {
+	/** Returns true if the next turn is a right one */
+	private boolean isRightTurn(RouteComponent routeComp) {
+		if (routeComp.isLastEdge()) {
+			return false;
+		}
+		return getDeltaAngle(routeComp) < 0;
+	}
+
+	private float getDeltaAngle(RouteComponent routeComp) {
+		if (routeComp.isLastEdge()) {
+			return 0;
+		}
+		Edge<Road> nextEdge = routeComp.getPath().getRoute().get(routeComp.getEdgeIndex() + 1).getEdge();
+		// float angle = VectorUtils.getAngle(nextEdge.getData())
+		// - VectorUtils.getAngle(routeComp.getCurrentEdge().getData());
+		Vertex<Road> vertex1 = routeComp.getNextVertex();
+		Vertex<Road> vertex2 = routeComp.getNextVertex().getNeighbor(nextEdge);
+		return getAngle(vertex1.getData(), vertex2.getData());
+	}
+
+	private float distance(Entity entityA, Entity entityB) {
+		assert physicsBodyMapper.has(entityA) && physicsBodyMapper.has(entityB);
+		return physicsBodyMapper.get(entityA).getPosition().dst(physicsBodyMapper.get(entityB).getPosition());
+	}
+
+	private static float getAngleOfCurrentEdgeInRads(RouteComponent routeComp) {
 		Road road = routeComp.getCurrentEdge().getData();
 		Vector2 roadVector = VectorUtils.getVector(road);
 		if (!fromAtoB(routeComp)) {
@@ -168,6 +240,17 @@ public class MovementSystem
 	@Override
 	protected boolean checkProcessing() {
 		return true;
+	}
+
+	class TrafficRayCastCallback
+			implements RayCastCallback {
+
+		@Override
+		public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
 	}
 
 }

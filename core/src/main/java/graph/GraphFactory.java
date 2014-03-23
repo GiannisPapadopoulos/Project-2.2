@@ -58,7 +58,7 @@ public class GraphFactory {
 		EntityFactory.createRoad(world, spawn1).addToWorld();
 		EntityFactory.createRoad(world, roadEdge).addToWorld();
 		Entity spawnPoint = world.createEntity();
-		spawnPoint.addComponent(new SpawnComponent(spawn1, new FixedIntervalSpawningStrategy(2000)));
+		spawnPoint.addComponent(new SpawnComponent(spawn1, new FixedIntervalSpawningStrategy(150000)));
 		spawnPoint.addToWorld();
 		return spawn1;
 	}

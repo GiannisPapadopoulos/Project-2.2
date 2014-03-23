@@ -10,6 +10,7 @@ import com.artemis.Component;
 @Setter
 public class TrafficLightComponent
 		extends Component {
+
 	// The time the light is green
 	private float timerGreen;
 
@@ -22,7 +23,9 @@ public class TrafficLightComponent
 
 	private Status status;
 
-	private boolean straight;
+	private boolean left;
+
+	private boolean OnPointA;
 
 	@AllArgsConstructor
 	@Getter
@@ -35,12 +38,14 @@ public class TrafficLightComponent
 		private String leftLightTexture;
 	}
 
-	public TrafficLightComponent(float timerGreen, float timerOrange, float timerRed, Status status, boolean straight) {
+	public TrafficLightComponent(float timerGreen, float timerOrange, float timerRed, Status status, boolean left,
+									boolean OnPointA) {
 		this.timerGreen = timerGreen;
 		this.timerOrange = timerOrange;
 		this.timerRed = timerRed;
 		this.status = status;
-		this.straight = straight;
+		this.left = left;
+		this.OnPointA = OnPointA;
 	}
 
 	public float timer() {
@@ -73,7 +78,12 @@ public class TrafficLightComponent
 	}
 
 	public String getTextureName() {
-		return straight ? status.getStraightLightTexture() : status.getLeftLightTexture();
+		return left ? status.getLeftLightTexture() : status.getStraightLightTexture();
+	}
+
+	@Override
+	public String toString() {
+		return "TrafficLightComponent [status=" + status + ", straight=" + left + ", OnPointA=" + OnPointA + "]";
 	}
 
 }

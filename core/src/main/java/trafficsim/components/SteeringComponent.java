@@ -16,6 +16,7 @@ public class SteeringComponent
 		DEFAULT,
 		TURNING,
 		STOPPING,
+		STOPPED,
 		ARRIVED;
 	}
 

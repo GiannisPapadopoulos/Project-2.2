@@ -1,13 +1,17 @@
 package trafficsim.systems;
 
+import static com.badlogic.gdx.math.MathUtils.cos;
 import static com.badlogic.gdx.math.MathUtils.degRad;
+import static com.badlogic.gdx.math.MathUtils.sin;
 import static functions.VectorUtils.getAngle;
 import static functions.VectorUtils.getVector;
+import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
 import static trafficsim.TrafficSimConstants.TIMER;
 import functions.VectorUtils;
 import graph.Vertex;
 import trafficsim.TrafficSimWorld;
+import trafficsim.callbacks.TrafficRayCastCallBack;
 import trafficsim.components.RouteComponent;
 import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
@@ -20,6 +24,7 @@ import com.artemis.EntitySystem;
 import com.artemis.annotations.Mapper;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class SpawnSystem
 		extends EntitySystem {
@@ -38,17 +43,18 @@ public class SpawnSystem
 			Entity entity = entities.get(i);
 			SpawnComponent spawnComp = spawnComponentMapper.get(entity);
 			if (spawnComp.shouldSpawn(TIMER.getTime())) {
-				// TODO AABB query to check if another car is already there
-				if (canSpawn(spawnComp)) {
-					Vertex<Road> spawnVertex = spawnComp.getVertex();
-					Vertex<Road> connection = spawnVertex.getParent().getVertex(spawnVertex.getAdjacentVertices()
-																							.get(0));
-					Vector2 position = VectorUtils.getMidPoint(spawnVertex.getData());
-					Vector2 laneCorrection = getVector(spawnVertex.getData(), connection.getData()).nor()
-																									.rotate(-90)
-																									.scl(LANE_WIDTH / 2);
-					position.add(laneCorrection);
-					float angle = getAngle(spawnVertex.getData(), connection.getData()) * degRad;
+				Vertex<Road> spawnVertex = spawnComp.getVertex();
+				Vertex<Road> connection = spawnVertex.getParent().getVertex(spawnVertex.getAdjacentVertices().get(0));
+				float angle = getAngle(spawnVertex.getData(), connection.getData()) * degRad;
+				
+				Vector2 position = VectorUtils.getMidPoint(spawnVertex.getData());
+				Vector2 laneCorrection = getVector(spawnVertex.getData(), connection.getData()).nor()
+																								.rotate(-90)
+																								.scl(LANE_WIDTH / 2);
+				position.add(laneCorrection);
+				if (canSpawn(spawnComp, position, angle)) {
+					
+
 					Entity car = EntityFactory.createCar((TrafficSimWorld) world, position, 1f, 40, angle, "car4");
 					car.addComponent(new RouteComponent(spawnComp.getVertex()));
 					car.addToWorld();
@@ -59,9 +65,23 @@ public class SpawnSystem
 
 	}
 
-	// TODO AABB query to check if another car is already there
-	private boolean canSpawn(SpawnComponent spawnComp) {
-		return true;
+	/**
+	 * @param position
+	 * @param angle the car will be spawned at
+	 * @return If it's legal to spawn i.e. there is no other car there
+	 */
+	private boolean canSpawn(SpawnComponent spawnComp, Vector2 position, float angle) {
+		World box2dWorld = ((TrafficSimWorld) world).getBox2dWorld();
+		// Vector2 position = getMidPoint(spawnComp.getVertex().getData());
+		Vector2 angleAdjustment = new Vector2(cos(angle), sin(angle));
+
+		// If there is a car within this distance we will not spawn
+		float rayLength = 1.5f * CAR_LENGTH;
+
+		TrafficRayCastCallBack rayCallBack = new TrafficRayCastCallBack();
+		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
+
+		return rayCallBack.foundSomething() ? false : true;
 	}
 
 	@Override

@@ -101,7 +101,7 @@ public class MovementSystem
 				box2dWorld.rayCast(rayCallBack, position,
 									position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
 
-				if (rayCallBack.getClosestId() != -1) {
+				if (rayCallBack.foundSomething()) {
 					Entity otherCar = world.getEntity(rayCallBack.getClosestId());
 					float distance = physicsBodyMapper.get(otherCar).getPosition().dst(position);
 					if (steeringComponentMapper.get(otherCar).getState() != State.DEFAULT

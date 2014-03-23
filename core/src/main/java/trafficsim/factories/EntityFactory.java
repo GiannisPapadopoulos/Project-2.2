@@ -57,6 +57,7 @@ public class EntityFactory {
 															.type(BodyType.DynamicBody)
 															.position(position)
 															.angle(angleInRads)
+															.userData(car.getId())
 															.build();
 		
 		/** @formatter:on */

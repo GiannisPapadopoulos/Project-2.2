@@ -4,7 +4,6 @@ import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
 
 import com.artemis.systems.VoidEntitySystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
@@ -18,8 +17,8 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 	private static final double ZOOMING_FACTOR2 = 1f;
 	private static final float TRANSLATION_FACTOR = 0.3f;
 
-	private float previousDragX;
-	private float previousDragY;
+	protected float previousDragX;
+	protected float previousDragY;
 
 	public InputSystem(OrthographicCamera camera) {
 		this.camera = camera;
@@ -62,7 +61,7 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		Vector3 vec = new Vector3(screenX, screenY, 0);
 		camera.unproject(vec, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-		// System.out.println(screenX + " " + screenY + " v " + vec);
+		//System.out.println(screenX + " " + screenY + " v " + vec);
 		return false;
 	}
 

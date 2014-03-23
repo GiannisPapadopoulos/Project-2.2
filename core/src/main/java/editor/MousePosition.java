@@ -5,6 +5,7 @@ import trafficsim.TrafficSimConstants;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 @Data
@@ -29,6 +30,11 @@ public class MousePosition {
 	 * - horizontal
 	 */
 	private Coordinates grid;
+
+	/**
+	 * For the needs of editor
+	 */
+	private PointsOfInterest.PointOfInterest closestPOI;
 
 	private Status inOutGridStatus;
 
@@ -131,4 +137,29 @@ public class MousePosition {
 		}
 	}
 
+	private double euclidianMetric(Vector2 v1, Vector2 v2) {
+		return Math.sqrt(Math.pow(v1.x - v2.x, 2) + Math.pow(v1.y - v2.y, 2));
+	}
+
+	public PointsOfInterest.PointOfInterest updateClosestPOI(
+			PointsOfInterest POI) {
+		double minDistance = 0;
+
+		if (!POI.getPOI().isEmpty()) {
+			Vector2 mouseVec = new Vector2(absolute.x, absolute.y);
+
+			closestPOI = POI.getPOI().get(0);
+			minDistance = euclidianMetric(closestPOI.getPosition(), mouseVec);
+
+			for (int i = 0; i < POI.getPOI().size(); i++)
+				if (euclidianMetric(POI.getPOI().get(i).getPosition(), mouseVec) < minDistance) {
+					closestPOI = POI.getPOI().get(i);
+					minDistance = euclidianMetric(POI.getPOI().get(i)
+							.getPosition(), mouseVec);
+				}
+		}
+		if (minDistance > 5.0)
+			closestPOI = null;
+		return closestPOI;
+	}
 }

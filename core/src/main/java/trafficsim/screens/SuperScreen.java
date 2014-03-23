@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
+import trafficsim.systems.InputEditorSystem;
 import trafficsim.systems.InputSystem;
 import utils.Assets;
 
@@ -41,7 +42,7 @@ public abstract class SuperScreen implements Screen {
 
 	@Getter
 	InputMultiplexer multiplexer;
-	
+
 	@Getter
 	MousePosition mousePosition;
 
@@ -49,9 +50,17 @@ public abstract class SuperScreen implements Screen {
 		this.screens = screens;
 		this.UILayer = new Stage();
 		this.worldLayer = new Stage();
-		setCamera(new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX, WINDOW_HEIGHT * WORLD_TO_BOX));
+		setCamera(new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX,
+				WINDOW_HEIGHT * WORLD_TO_BOX));
+		
 		this.multiplexer = new InputMultiplexer(UILayer, worldLayer);
-		this.multiplexer.addProcessor(new InputSystem(getCamera()));
+		
+		if (this instanceof EditorScreen)
+			this.multiplexer.addProcessor(new InputEditorSystem(getCamera(),
+					(EditorScreen) this));
+		else
+			this.multiplexer.addProcessor(new InputSystem(getCamera()));
+		
 		populateCommonLayers();
 		this.mousePosition = new MousePosition(100, 100);
 	}

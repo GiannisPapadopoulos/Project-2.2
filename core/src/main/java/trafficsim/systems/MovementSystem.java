@@ -132,7 +132,7 @@ public class MovementSystem
 				deltaA = constrainAngle(deltaA);
 				// TODO extract constants, refactor
 				float angularThreshold = 6;
-				if (Math.abs(deltaA) > 0.05) {
+				if (Math.abs(deltaA) > 0.01) {
 					if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
 						if (deltaA < 0) {
 							newVel.scl(0.9f);
@@ -172,7 +172,6 @@ public class MovementSystem
 				}
 			}
 		}
-		System.out.println("return null");
 		return null;
 	}
 

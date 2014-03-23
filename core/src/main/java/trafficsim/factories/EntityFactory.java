@@ -241,7 +241,10 @@ public class EntityFactory {
 			pos.add(VectorUtils.getVector(edge.getData()).nor().scl(direction));
 			// Vector2 pos = edge.getData().getPointA().cpy().add(VectorUtils.getVector(edge.getData()).nor().scl(1f));
 			Vector2 corr = getVector(edge.getData()).nor().rotate(90 * direction);
+			
+			//int for changing speed of lights
 			int interval = 3;
+			
 			Entity entityStraight = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(2f)),
 																		(int) (interval - 1), 1, (int) (interval * 3),
 																		Status.RED, true, onPointA);
@@ -256,15 +259,28 @@ public class EntityFactory {
 																									.get(edge.getID())));
 			entityLeft.addToWorld();
 			if (angleOfRoad < 45) {
+				if(onPointA){
 				TrafficLightComponent flatRightLeft = entityLeft.getComponent(TrafficLightComponent.class);
-				flatRightLeft.setTimeElapsed(interval * 2);
+				flatRightLeft.setStatus(Status.GREEN);
 				TrafficLightComponent flatRightStraight = entityStraight.getComponent(TrafficLightComponent.class);
 				flatRightStraight.setStatus(Status.GREEN);
+				}
+				else {
+					TrafficLightComponent flatLeftLeft = entityLeft.getComponent(TrafficLightComponent.class);
+					flatLeftLeft.setTimeElapsed(interval*2);
+					TrafficLightComponent flatLeftStraight = entityStraight.getComponent(TrafficLightComponent.class);
+					flatLeftStraight.setTimeElapsed(interval*2);
+				}
 
 			}
 			else {
-				TrafficLightComponent VerticalTopStraight = entityStraight.getComponent(TrafficLightComponent.class);
-				VerticalTopStraight.setTimeElapsed(interval);
+				if(onPointA){
+					TrafficLightComponent verticalTopLeft = entityLeft.getComponent(TrafficLightComponent.class);
+					verticalTopLeft.setTimeElapsed(interval);
+					TrafficLightComponent verticalTopStraight = entityStraight.getComponent(TrafficLightComponent.class);
+					verticalTopStraight.setTimeElapsed(interval);
+				}
+					
 			}
 
 		}

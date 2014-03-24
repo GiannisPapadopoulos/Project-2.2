@@ -62,21 +62,27 @@ public class SimulationScreen extends SuperScreen {
 
 		world.initialize();
 
-		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
-		world.setGraph(graph);
+		System.out.println();
+		Graph<Road> graph;
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
-			EntityFactory.populateWorld(world, graph);
+			graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
 		else
-			EntityFactory.populateWorld(world, getScreens()
-					.getEditorScreen().getWorld().getGraph());
+			graph = getScreens().getEditorScreen().getWorld().getGraph();
+		world.setGraph(graph);
+		EntityFactory.populateWorld(world, graph);
+		
 		firstTimeSimulationRun = false;
 
-		GraphFactory.addSpawnPointsTest(world, world.getGraph());
+		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		EntityFactory.addTrafficLights(world, world.getGraph());
-		if (!TIMER.isStarted())
-			TIMER.start();
+
+
+		if (TIMER.isStarted())
+			TIMER.reset();
+		TIMER.start();
 
 		world.process();
+		EntityFactory.addSpawnPoints(world, graph);
 
 	}
 

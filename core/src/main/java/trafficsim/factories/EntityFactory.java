@@ -16,12 +16,14 @@ import trafficsim.components.DimensionComponent;
 import trafficsim.components.LightToRoadMappingComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
+import trafficsim.components.SpawnComponent;
 import trafficsim.components.SpriteComponent;
 import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
 import trafficsim.roads.Road;
+import trafficsim.spawning.FixedIntervalSpawningStrategy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.MathUtils;
@@ -174,9 +176,8 @@ public class EntityFactory {
 		 */
 
 		for (Vertex<Road> vertex : graph.getVertexIterator()) {
-			val iterator = vertex.getAdjacentEdgeIterator();
 			int edgesPerVertex = vertex.getAdjacentEdges().size();
-			for (Edge<Road> edge : iterator) {
+			for (Edge<Road> edge : vertex.getAdjacentEdgeIterator()) {
 
 				val iterator2 = edge.getAdjacentVertexIterator();
 				// TODO single for loop
@@ -279,6 +280,17 @@ public class EntityFactory {
 		trafficLight.addComponent(sprite);
 
 		return trafficLight;
+	}
+
+	public static void addSpawnPoints(TrafficSimWorld world, Graph<Road> graph) {
+		for (Vertex<Road> vertex : graph.getVertexIterator()) {
+			if (vertex.getAdjacentVertices().size() == 1) {
+				Entity vertexEntity = world.getEntity(world.getVertexToEntityMap().get(vertex.getID()));
+				float interval = 2000;
+				vertexEntity.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(interval)));
+				world.changedEntity(vertexEntity);
+			}
+		}
 	}
 
 

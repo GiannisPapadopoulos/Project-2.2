@@ -9,7 +9,6 @@ import graph.Edge;
 import graph.Element;
 import graph.Graph;
 import graph.Vertex;
-import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.DimensionComponent;
@@ -179,18 +178,17 @@ public class EntityFactory {
 			int edgesPerVertex = vertex.getAdjacentEdges().size();
 			for (Edge<Road> edge : vertex.getAdjacentEdgeIterator()) {
 
-				val iterator2 = edge.getAdjacentVertexIterator();
-				// TODO single for loop
+				// val iterator2 = edge.getAdjacentVertexIterator();
 				boolean onPointA = edge.getAdjacentVertices().get(0) == vertex.getID();
 				float angleOfRoad = VectorUtils.getAngle(edge.getData());
 
 				if (onPointA) {
-					Vertex<Road> vertexA = iterator2.next();
+					Vertex<Road> vertexA = graph.getVertex(edge.getAdjacentVertices().get(0));
 					// addLightA(world, edge, vertexA, edgesPerVertex, angleOfRoad);
 					addLight(world, edge, vertexA, edgesPerVertex, angleOfRoad, onPointA);
 				}
 				else {
-					Vertex<Road> vertexB = iterator2.next();
+					Vertex<Road> vertexB = graph.getVertex(edge.getAdjacentVertices().get(1));
 					// addLightB(world, edge, vertexB, edgesPerVertex, angleOfRoad);
 					addLight(world, edge, vertexB, edgesPerVertex, angleOfRoad, onPointA);
 				}

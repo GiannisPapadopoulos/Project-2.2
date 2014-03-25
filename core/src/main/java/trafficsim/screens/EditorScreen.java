@@ -1,5 +1,6 @@
 package trafficsim.screens;
 
+import static trafficsim.TrafficSimConstants.DEBUG_TABLES;
 import lombok.Getter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.factories.EntityFactory;
@@ -68,7 +69,8 @@ public class EditorScreen extends SuperScreen {
 		getUILayer().act(delta);
 		getWorldLayer().draw();
 		getUILayer().draw();
-		Table.drawDebug(getUILayer());
+		if (DEBUG_TABLES)
+			Table.drawDebug(getUILayer());
 
 	}
 

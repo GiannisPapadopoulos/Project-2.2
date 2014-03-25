@@ -2,6 +2,7 @@ package trafficsim.screens;
 
 import static trafficsim.TrafficSimConstants.DEBUG_FPS;
 import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
+import static trafficsim.TrafficSimConstants.DEBUG_TABLES;
 import static trafficsim.TrafficSimConstants.TIMER;
 import graph.Graph;
 import graph.GraphFactory;
@@ -99,7 +100,8 @@ public class SimulationScreen extends SuperScreen {
 		getWorldLayer().draw();
 		getUILayer().draw();
 		
-		Table.drawDebug(getUILayer());
+		if (DEBUG_TABLES)
+			Table.drawDebug(getUILayer());
 
 		if (DEBUG_FPS)
 			System.out.println(TIMER.getTime() - start + " milliseconds ");

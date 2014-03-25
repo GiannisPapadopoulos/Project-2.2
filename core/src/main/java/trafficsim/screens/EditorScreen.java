@@ -4,6 +4,7 @@ import lombok.Getter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
+import trafficsim.systems.InputEditorSystem;
 import trafficsim.systems.RenderSystem;
 
 import com.badlogic.gdx.Gdx;
@@ -33,6 +34,12 @@ public class EditorScreen extends SuperScreen {
 	public void show() {
 		world = new TrafficSimWorld();
 		world.setSystem(new RenderSystem(getCamera()));
+
+		InputEditorSystem inputEditorSystem = new InputEditorSystem(getCamera(), this);
+		initMultiplexer();
+		getMultiplexer().addProcessor(inputEditorSystem);
+		world.setSystem(inputEditorSystem, true);
+
 		world.initialize();
 		EntityFactory.populateWorld(world, getScreens().getSimulationScreen()
 				.getWorld().getGraph());

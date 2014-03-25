@@ -3,151 +3,143 @@ textures.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+background
+  rotate: false
+  xy: 2, 1102
+  size: 2835, 2835
+  orig: 2835, 2835
+  offset: 0, 0
+  index: -1
+blue-car
+  rotate: false
+  xy: 2839, 2695
+  size: 600, 600
+  orig: 600, 600
+  offset: 0, 0
+  index: -1
 car1
   rotate: false
-  xy: 804, 904
+  xy: 804, 361
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car2
   rotate: false
-  xy: 804, 805
+  xy: 1446, 1003
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car3
   rotate: false
-  xy: 804, 706
+  xy: 2839, 2596
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car4
   rotate: false
-  xy: 804, 607
+  xy: 2, 64
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car5
   rotate: false
-  xy: 804, 508
+  xy: 396, 201
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car6
   rotate: false
-  xy: 804, 409
+  xy: 3481, 3659
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car7
   rotate: false
-  xy: 804, 219
-  size: 97, 188
-  orig: 97, 188
+  xy: 3764, 3840
+  size: 188, 97
+  orig: 188, 97
   offset: 0, 0
   index: -1
 left_green
   rotate: false
-  xy: 2, 2
+  xy: 2839, 2534
   size: 73, 60
   orig: 73, 60
   offset: 0, 0
   index: -1
 left_orange
   rotate: false
-  xy: 903, 253
+  xy: 3029, 2633
   size: 73, 60
   orig: 73, 60
   offset: 0, 0
   index: -1
 left_red
   rotate: false
-  xy: 77, 2
+  xy: 2, 2
   size: 73, 60
   orig: 73, 60
   offset: 0, 0
   index: -1
 light_green
   rotate: false
-  xy: 679, 107
+  xy: 994, 366
   size: 97, 92
   orig: 97, 92
   offset: 0, 0
   index: -1
 light_orange
   rotate: false
-  xy: 679, 13
+  xy: 1446, 909
   size: 97, 92
   orig: 97, 92
   offset: 0, 0
   index: -1
 light_red
   rotate: false
-  xy: 903, 315
+  xy: 1636, 1008
   size: 97, 92
   orig: 97, 92
   offset: 0, 0
   index: -1
 parking
   rotate: false
-  xy: 396, 20
+  xy: 3481, 3758
   size: 281, 179
   orig: 281, 179
   offset: 0, 0
   index: -1
 red-car
   rotate: false
-  xy: 2, 64
+  xy: 2, 163
   size: 392, 135
   orig: 392, 135
   offset: 0, 0
   index: -1
-road2x2
-  rotate: false
-  xy: 2, 201
-  size: 800, 800
-  orig: 800, 800
-  offset: 0, 0
-  index: -1
-
-textures2.png
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
 road1x1
   rotate: false
-  xy: 2, 2
+  xy: 2839, 3297
   size: 640, 640
   orig: 640, 640
   offset: 0, 0
   index: -1
-
-textures3.png
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
 road1x1v
   rotate: false
-  xy: 2, 2
+  xy: 804, 460
   size: 640, 640
   orig: 640, 640
   offset: 0, 0
   index: -1
-
-textures4.png
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-blue-car
+road2x2
   rotate: false
-  xy: 2, 2
-  size: 600, 600
-  orig: 600, 600
+  xy: 2, 300
+  size: 800, 800
+  orig: 800, 800
   offset: 0, 0
   index: -1

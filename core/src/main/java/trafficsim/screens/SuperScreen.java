@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
-import trafficsim.systems.InputEditorSystem;
-import trafficsim.systems.InputSystem;
 import utils.Assets;
 
 import com.badlogic.gdx.Gdx;
@@ -53,16 +51,19 @@ public abstract class SuperScreen implements Screen {
 		setCamera(new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX,
 				WINDOW_HEIGHT * WORLD_TO_BOX));
 		
-		this.multiplexer = new InputMultiplexer(UILayer, worldLayer);
+		initMultiplexer();
 		
-		if (this instanceof EditorScreen)
-			this.multiplexer.addProcessor(new InputEditorSystem(getCamera(),
-					(EditorScreen) this));
-		else
-			this.multiplexer.addProcessor(new InputSystem(this));
+		// if (this instanceof EditorScreen)
+		// this.multiplexer.addProcessor(new InputEditorSystem(getCamera(), (EditorScreen) this));
+		// else
+		// this.multiplexer.addProcessor(new InputSystem(this));
 		
 		populateCommonLayers();
 		this.mousePosition = new MousePosition(100, 100);
+	}
+
+	protected void initMultiplexer() {
+		this.multiplexer = new InputMultiplexer(UILayer, worldLayer);
 	}
 
 	@Override

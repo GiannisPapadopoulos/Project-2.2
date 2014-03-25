@@ -1,6 +1,5 @@
 package trafficsim.roads;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -13,7 +12,6 @@ import functions.VectorUtils;
  * 
  * @author Giannis Papadopoulos
  */
-@AllArgsConstructor
 @Getter
 @ToString
 public class Road {
@@ -30,6 +28,41 @@ public class Road {
 	/** The right point */
 	private Vector2 pointB;
 	
+	//@formatter:off
+		/*
+		 * Given a road, points A and B are:
+		 *   ########################
+		 * -A#----------------------#-B
+		 *   ########################
+		 */
+		//@formatter:on
+
+	/** Number of lanes in each direction */
+	private int numLanes;
+	/** The direction of the road */
+	private Direction direction;
+
+	private float speedLimit;
+
+	public Road(Vector2 pointA, Vector2 pointB, int numLanes, Direction direction, float speedLimit) {
+		// float angle = VectorUtils.getAngle(pointA, pointB);
+		// System.out.println(angle);
+		// if (angle < 180) {
+		// this.pointA = pointA;
+		// this.pointB = pointB;
+		// }
+		// else {
+		// // swap
+		// this.pointA = pointB;
+		// this.pointB = pointA;
+		// }
+		this.pointA = pointA;
+		this.pointB = pointB;
+		this.numLanes = numLanes;
+		this.direction = direction;
+		this.speedLimit = speedLimit;
+	}
+
 	public Vector2 getPointC() {
 		Vector2 v = VectorUtils.getMidPoint(pointA, pointB);
 		
@@ -62,20 +95,7 @@ public class Road {
 		return v;
 	}
 
-	//@formatter:off
-	/*
-	 * Given a road, points A and B are:
-	 *   ########################
-	 * -A#----------------------#-B
-	 *   ########################
-	 */
-	//@formatter:on
 
-	/** Number of lanes in each direction */
-	private int numLanes;
-	/** The direction of the road */
-	private Direction direction;
 
-	private float speedLimit;
 
 }

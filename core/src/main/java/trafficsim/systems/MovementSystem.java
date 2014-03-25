@@ -210,7 +210,7 @@ public class MovementSystem
 		// float deltaA = getDeltaAngle(routeComp) - physComp.getAngle();
 		deltaA = constrainAngle(deltaA);
 		// TODO extract constants, refactor
-		float angularThreshold = 6;
+		float angularThreshold = 7;
 		float turningSpeed = 8;
 		if (Math.abs(deltaA) > 0.05) {
 			if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {

@@ -12,7 +12,7 @@ background
   index: -1
 blue-car
   rotate: false
-  xy: 2839, 2695
+  xy: 3481, 3337
   size: 600, 600
   orig: 600, 600
   offset: 0, 0
@@ -26,14 +26,14 @@ car1
   index: -1
 car2
   rotate: false
-  xy: 1446, 1003
+  xy: 2839, 2556
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car3
   rotate: false
-  xy: 2839, 2596
+  xy: 3481, 3238
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
@@ -54,28 +54,35 @@ car5
   index: -1
 car6
   rotate: false
-  xy: 3481, 3659
+  xy: 1446, 822
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car7
   rotate: false
-  xy: 3764, 3840
+  xy: 1729, 1003
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
+intersection
+  rotate: false
+  xy: 2839, 3297
+  size: 640, 640
+  orig: 640, 640
+  offset: 0, 0
+  index: -1
 left_green
   rotate: false
-  xy: 2839, 2534
+  xy: 3481, 3176
   size: 73, 60
   orig: 73, 60
   offset: 0, 0
   index: -1
 left_orange
   rotate: false
-  xy: 3029, 2633
+  xy: 3671, 3275
   size: 73, 60
   orig: 73, 60
   offset: 0, 0
@@ -96,21 +103,21 @@ light_green
   index: -1
 light_orange
   rotate: false
-  xy: 1446, 909
+  xy: 2839, 2462
   size: 97, 92
   orig: 97, 92
   offset: 0, 0
   index: -1
 light_red
   rotate: false
-  xy: 1636, 1008
+  xy: 3029, 2561
   size: 97, 92
   orig: 97, 92
   offset: 0, 0
   index: -1
 parking
   rotate: false
-  xy: 3481, 3758
+  xy: 1446, 921
   size: 281, 179
   orig: 281, 179
   offset: 0, 0
@@ -124,14 +131,14 @@ red-car
   index: -1
 road1x1
   rotate: false
-  xy: 2839, 3297
+  xy: 804, 460
   size: 640, 640
   orig: 640, 640
   offset: 0, 0
   index: -1
 road1x1v
   rotate: false
-  xy: 804, 460
+  xy: 2839, 2655
   size: 640, 640
   orig: 640, 640
   offset: 0, 0

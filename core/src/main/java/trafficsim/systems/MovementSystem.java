@@ -207,12 +207,14 @@ public class MovementSystem
 		float maxSpeed = Math.min(routeComp.getCurrentEdge().getData().getSpeedLimit(), maxSpeedComp.getSpeed());
 		newVel.clamp(0, maxSpeed);
 		float deltaA = getAngleOfCurrentEdgeInRads(routeComp) - physComp.getAngle();
+		// float deltaA = getDeltaAngle(routeComp) - physComp.getAngle();
 		deltaA = constrainAngle(deltaA);
 		// TODO extract constants, refactor
 		float angularThreshold = 6;
 		float turningSpeed = 8;
 		if (Math.abs(deltaA) > 0.05) {
 			if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
+				// deltaA < 0 &&
 				if (deltaA < 0 && newVel.len() > turningSpeed) {
 					newVel.scl(0.9f);
 				}

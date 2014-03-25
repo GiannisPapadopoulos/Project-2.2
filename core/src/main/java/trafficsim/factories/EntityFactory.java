@@ -85,13 +85,16 @@ public class EntityFactory {
 	 */
 	public static Entity createRoad(TrafficSimWorld world, Element<Road> element) {
 		Road roadData = element.getData();
+		String name;
 		Entity road = world.createEntity();
 		if (element.getClass() == Vertex.class) {
 			world.getVertexToEntityMap().put(element.getID(), road.getId());
+			name = "intersection";
 		}
 		else {
 			world.getEdgeToEntityMap().put(element.getID(), road.getId());
 			road.addComponent(new AttachedLightsComponent());
+			name = "road1x1";
 		}
 		
 		Vector2 position = new Vector2((roadData.getPointB().x + roadData.getPointA().x) / 2,
@@ -101,7 +104,6 @@ public class EntityFactory {
 		float length = VectorUtils.getLength(roadData);
 
 		// TODO Check number of lanes here
-		String name = "road1x1";
 		road.addComponent(new DimensionComponent(length, LANE_WIDTH * 2));
 		angle *= MathUtils.degRad;
 
@@ -206,7 +208,7 @@ public class EntityFactory {
 			Vector2 corr = getVector(edge.getData()).nor().rotate(90 * direction);
 			
 			//int for changing speed of lights
-			int interval = 6;
+			int interval = 3;
 			
 			Entity entityStraight = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(2f)),
 																		(interval - 1), 1, (interval * 3),

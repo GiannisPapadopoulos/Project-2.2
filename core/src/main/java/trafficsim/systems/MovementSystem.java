@@ -196,16 +196,9 @@ public class MovementSystem
 			) {
 		Vector2 target = getTarget(routeComp);
 		float distanceToTarget = target.dst(physComp.getPosition());
-		if (routeComp.isLastEdge() && steeringComp.getState() == State.DEFAULT && distanceToTarget < arrivalThreshold) {
-			steeringComp.setState(State.ARRIVED);
-		}
-		else {
-			float thresHold = isRightTurn(routeComp) ? rightTurnThreshold : leftTurnThreshold;
-			if (distanceToTarget < thresHold) {
-				routeComp.setCurrentVertex(routeComp.getNextVertex());
-				routeComp.setEdgeIndex(routeComp.getEdgeIndex() + 1);
-			}
-		}
+
+		//
+		updatePath(routeComp, steeringComp, distanceToTarget);
 
 		Vector2 force = SeekBehavior.getForce(physComp.getPosition(), target);
 		// TODO Define maxForce in relation to mass
@@ -217,9 +210,10 @@ public class MovementSystem
 		deltaA = constrainAngle(deltaA);
 		// TODO extract constants, refactor
 		float angularThreshold = 6;
+		float turningSpeed = 8;
 		if (Math.abs(deltaA) > 0.05) {
 			if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
-				if (deltaA < 0) {
+				if (deltaA < 0 && newVel.len() > turningSpeed) {
 					newVel.scl(0.9f);
 				}
 				physComp.applyTorque(steeringComp.getMaxTorque() * deltaA, true);
@@ -230,6 +224,20 @@ public class MovementSystem
 		}
 
 		physComp.setLinearVelocity(newVel);
+	}
+
+	private void updatePath(RouteComponent routeComp, SteeringComponent steeringComp, float distanceToTarget) {
+		if (routeComp.isLastEdge() && steeringComp.getState() == State.DEFAULT && distanceToTarget < arrivalThreshold) {
+			steeringComp.setState(State.ARRIVED);
+		}
+		else {
+			float thresHold = isRightTurn(routeComp) ? rightTurnThreshold : leftTurnThreshold;
+			if (distanceToTarget < thresHold) {
+				routeComp.update();
+				// routeComp.setCurrentVertex(routeComp.getNextVertex());
+				// routeComp.setEdgeIndex(routeComp.getEdgeIndex() + 1);
+			}
+		}
 	}
 
 	private Vector2 getPosition(Entity entity) {

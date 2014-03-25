@@ -2,12 +2,21 @@ package trafficsim.systems;
 
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
+import trafficsim.TrafficSimWorld;
+import trafficsim.callbacks.FindBodyQueryCallback;
+import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.screens.SuperScreen;
 
+import com.artemis.Entity;
 import com.artemis.systems.VoidEntitySystem;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.World;
+
+import editor.MousePosition.Coordinates;
 
 /** System to control the camera and other input commands we might define */
 public class InputSystem extends VoidEntitySystem implements InputProcessor {
@@ -15,9 +24,9 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 	private SuperScreen superScreen;
 	private OrthographicCamera camera;
 
-	private static final double ZOOMING_FACTOR1 = 0.1f;
-	private static final double ZOOMING_FACTOR2 = 1f;
-	private static final float TRANSLATION_FACTOR = 0.3f;
+	private static final double ZOOMING_FACTOR1 = 0.05f;
+	private static final double ZOOMING_FACTOR2 = .5f;
+	private static final float TRANSLATION_FACTOR = 0.15f;
 
 	protected float previousDragX;
 	protected float previousDragY;
@@ -28,14 +37,8 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 	}
 
 	@Override
-	public void initialize() {
-	}
-
-	@Override
 	protected void processSystem() {
-		// The position of the mouse
-		// Vector3 mouseVector = new Vector3(Gdx.input.getX(), Gdx.input.getY(),
-		// 0);
+
 	}
 
 	@Override
@@ -55,10 +58,27 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
 		previousDragX = screenX;
 		previousDragY = screenY;
-		superScreen.getMousePosition().update(camera);
-		// System.out.println(superScreen.getMousePosition().getAbsolute());
+		if (button == Buttons.RIGHT) {
+			superScreen.getMousePosition().update(camera);
+			World box2dWorld = ((TrafficSimWorld) world).getBox2dWorld();
+			Coordinates coords = superScreen.getMousePosition().getAbsolute();
+
+			float boxSize = 1f;
+
+			FindBodyQueryCallback callBack = new FindBodyQueryCallback(new Vector2(coords.getX(), coords.getY()));
+			box2dWorld.QueryAABB(	callBack, coords.getX() - boxSize, coords.getY() - boxSize,
+									coords.getX() + boxSize,
+									coords.getY() + boxSize);
+			if (callBack.foundSomething()) {
+				Entity car = world.getEntity(callBack.getClosestId());
+				PhysicsBodyComponent physComp = car.getComponent(PhysicsBodyComponent.class);
+				System.out.println("Found something " + car + " id " + callBack.getClosestId() + " "
+									+ physComp.getPosition() + "\n");
+			}
+		}
 		return true;
 	}
 

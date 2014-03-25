@@ -39,6 +39,9 @@ public class RouteComponent
 	/** If false, path will be recomputed */
 	private boolean set;
 
+	// /** */
+	// private boolean first = true;
+
 	public RouteComponent(Vertex<Road> source, Vertex<Road> target) {
 		super();
 		this.source = source;
@@ -51,6 +54,18 @@ public class RouteComponent
 
 	public Vertex<Road> getNextVertex() {
 		return currentVertex == target ? currentVertex : currentVertex.getNeighbor(getCurrentEdge());
+	}
+
+	public void update() {
+		assert !isLastEdge();
+		// if (first) {
+		// first = false;
+		// }
+		// else {
+		setCurrentVertex(getNextVertex());
+		setEdgeIndex(getEdgeIndex() + 1);
+		// first = true;
+		// }
 	}
 
 	public boolean isLastEdge() {

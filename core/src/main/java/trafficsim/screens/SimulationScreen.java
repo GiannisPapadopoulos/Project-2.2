@@ -11,6 +11,7 @@ import trafficsim.TrafficSimWorld;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.systems.DestinationSystem;
+import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
@@ -18,6 +19,7 @@ import trafficsim.systems.RenderSystem;
 import trafficsim.systems.SpawnSystem;
 import trafficsim.systems.TrafficLightSystem;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -36,8 +38,7 @@ public class SimulationScreen extends SuperScreen {
 	// So it's mutable by EditorScreen
 	private TrafficSimWorld world;
 
-	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true,
-			false, false, false, true, true);
+	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
 
 	private boolean firstTimeSimulationRun = true;
 
@@ -46,9 +47,13 @@ public class SimulationScreen extends SuperScreen {
 
 	}
 
+	Entity car = null;
+
 	@Override
 	public void show() {
 
+		if (world != null)
+			world.dispose();
 		world = new TrafficSimWorld();
 
 		// Add systems
@@ -60,9 +65,15 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new SpawnSystem());
 		world.setSystem(new TrafficLightSystem());
 
+		InputSystem inputSystem = new InputSystem(this);
+		initMultiplexer();
+		getMultiplexer().addProcessor(inputSystem);
+		world.setSystem(inputSystem, true);
+
 		world.initialize();
 
-		System.out.println();
+		EntityFactory.createBackground(world, "background").addToWorld();
+
 		Graph<Road> graph;
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
 			graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
@@ -73,7 +84,7 @@ public class SimulationScreen extends SuperScreen {
 		
 		firstTimeSimulationRun = false;
 
-		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
+		GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		EntityFactory.addTrafficLights(world, world.getGraph());
 
 
@@ -82,9 +93,10 @@ public class SimulationScreen extends SuperScreen {
 		TIMER.start();
 
 		world.process();
-		EntityFactory.addSpawnPoints(world, graph);
+		// EntityFactory.addSpawnPoints(world, graph);
 
 	}
+
 
 	@Override
 	public void render(float delta) {

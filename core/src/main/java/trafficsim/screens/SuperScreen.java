@@ -18,6 +18,7 @@ import utils.Assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -53,8 +54,10 @@ public abstract class SuperScreen implements Screen {
 
 	public SuperScreen(Screens screens) {
 		this.screens = screens;
-		this.UILayer = new Stage();
+		
 		this.worldLayer = new Stage();
+		
+		this.UILayer = new Stage(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(),false, worldLayer.getSpriteBatch());
 		setCamera(new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX,
 				WINDOW_HEIGHT * WORLD_TO_BOX));
 		
@@ -69,13 +72,18 @@ public abstract class SuperScreen implements Screen {
 		populateCommonLayers();
 		this.mousePosition = new MousePosition(100, 100);
 	}
-
+	
+	@Override
+	public void render(float delta) {
+	
+		}
+	
 	@Override
 	public void resize(int width, int height) {
 		getUILayer().setViewport(width, height, true);
 		getWorldLayer().setViewport(width, height, true);
 	}
-
+	
 	@Override
 	public void show() {
 		// System.out.println(multiplexer.getProcessors());
@@ -110,36 +118,12 @@ public abstract class SuperScreen implements Screen {
 
 	public abstract void populateWorldLayer();
 
+
 	private void populateCommonLayers() {
 		
 		SidePanels sidePanels = new SidePanels();
-		Table t = new Table();
-		TransitionButtons settings = new TransitionButtons();
-		ArrayList<TextButton> buttons = new ArrayList<TextButton>();
-
-		TextButton simButton = new TextButton("Simulation", Assets.skin);
-		buttons.add(simButton);
-		simButton.setName("Simulation");
-		TextButton ediButton = new TextButton("Editor", Assets.skin);
-		buttons.add(ediButton);
-
-		ediButton.setVisible(true);
-		ediButton.setName("Editor");
-		TextButton staButton = new TextButton("Statistics", Assets.skin);
-		buttons.add(staButton);
-		staButton.setName("Statistics");
-
-		t.add(simButton).top().left();
-		t.add(ediButton).top().left();
-		t.add(staButton).top().left();
-
-		t.align(Align.top);
-
-		t.setFillParent(true);
 		
 		getUILayer().addActor(sidePanels);
-		getUILayer().addActor(settings);
-	
 			
 			for (val button : sidePanels.getTransitionButtons().getButtons())
 				button.addListener(new ChangeListener() {
@@ -154,7 +138,6 @@ public abstract class SuperScreen implements Screen {
 					}
 				});
 		
-
 		populateUILayer();
 		populateWorldLayer();
 	}

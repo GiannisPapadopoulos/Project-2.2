@@ -21,6 +21,7 @@ import trafficsim.systems.TrafficLightSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 /**
  * The main screen of the simulation
@@ -97,11 +98,14 @@ public class SimulationScreen extends SuperScreen {
 		getUILayer().act(delta);
 		getWorldLayer().draw();
 		getUILayer().draw();
+		
+		Table.drawDebug(getUILayer());
 
 		if (DEBUG_FPS)
 			System.out.println(TIMER.getTime() - start + " milliseconds ");
 
 	}
+	
 
 	@Override
 	public void populateUILayer() {

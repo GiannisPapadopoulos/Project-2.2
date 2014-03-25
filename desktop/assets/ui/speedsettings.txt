@@ -1,0 +1,60 @@
+speedsettings.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+edit_hover
+  rotate: false
+  xy: 7, 7
+  size: 97, 92
+  orig: 97, 92
+  offset: 0, 0
+  index: -1
+edit_normal
+  rotate: false
+  xy: 107, 7
+  size: 97, 92
+  orig: 97, 92
+  offset: 0, 0
+  index: -1
+edit_pressed
+  rotate: false
+  xy: 207, 7
+  size: 97, 92
+  orig: 97, 92
+  offset: 0, 0
+  index: -1
+panelicon_hover
+  rotate: false
+  xy: 307, 7
+  size: 97, 92
+  orig: 97, 92
+  offset: 0, 0
+  index: -1
+panelicon_normal
+  rotate: false
+  xy: 407, 7
+  size: 97, 92
+  orig: 97, 92
+  offset: 0, 0
+  index: -1
+play_hover
+  rotate: false
+  xy: 507, 7
+  size: 97, 92
+  orig: 97, 92
+  offset: 0, 0
+  index: -1
+play_normal
+  rotate: false
+  xy: 607, 7
+  size: 97, 92
+  orig: 97, 92
+  offset: 0, 0
+  index: -1
+play_pressed
+  rotate: false
+  xy: 707, 7
+  size: 97, 92
+  orig: 97, 92
+  offset: 0, 0
+  index: -1

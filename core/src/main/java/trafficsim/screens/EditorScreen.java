@@ -9,6 +9,7 @@ import trafficsim.systems.RenderSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import editor.EditorData;
 import editor.PointsOfInterest;
@@ -67,6 +68,7 @@ public class EditorScreen extends SuperScreen {
 		getUILayer().act(delta);
 		getWorldLayer().draw();
 		getUILayer().draw();
+		Table.drawDebug(getUILayer());
 
 	}
 

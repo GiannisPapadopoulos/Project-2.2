@@ -12,7 +12,9 @@ import graph.Graph;
 import graph.Vertex;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.AttachedLightsComponent;
+import trafficsim.components.DataComponent;
 import trafficsim.components.DimensionComponent;
+import trafficsim.components.ExpiryComponent;
 import trafficsim.components.LightToRoadMappingComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
@@ -73,6 +75,11 @@ public class EntityFactory {
 		
 		// TODO Steering is a magic constant, experiment with different cars
 		car.addComponent(new SteeringComponent(State.DEFAULT, maxForce, 350f));
+
+		// Data
+		car.addComponent(new DataComponent());
+		// So that it can be properly erased when it reaches the destination
+		car.addComponent(new ExpiryComponent());
 
 		return car;
 	}
@@ -323,7 +330,7 @@ public class EntityFactory {
 																.friction(0f)
 																.sensor(true)
 																// There should be a better way
-																.groupIndex((short) -1);
+																.groupIndex((short) -2);
 		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
 															.type(BodyType.StaticBody)
 															.position(position)

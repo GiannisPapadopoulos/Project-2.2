@@ -10,6 +10,7 @@ import trafficsim.screens.SuperScreen;
 import com.artemis.Entity;
 import com.artemis.systems.VoidEntitySystem;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
@@ -43,6 +44,10 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
+		if (keycode == Keys.P) {
+			System.out.println(((TrafficSimWorld) world).getDataGatherer());
+			return true;
+		}
 		return false;
 	}
 

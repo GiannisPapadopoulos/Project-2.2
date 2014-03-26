@@ -8,9 +8,11 @@ import graph.GraphFactory;
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
+import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.systems.DestinationSystem;
+import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
@@ -57,6 +59,7 @@ public class SimulationScreen extends SuperScreen {
 		world = new TrafficSimWorld();
 
 		// Add systems
+		world.setSystem(new DataSystem());
 		world.setSystem(new RenderSystem(getCamera()));
 		world.setSystem(new MovementSystem());
 		world.setSystem(new PhysicsSystem());
@@ -64,6 +67,10 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
 		world.setSystem(new TrafficLightSystem());
+		world.setSystem(new ExpirySystem());
+
+		// Temporary hack
+		// world.setSystem(new CollisionDisablingSystem());
 
 		InputSystem inputSystem = new InputSystem(this);
 		initMultiplexer();
@@ -84,16 +91,17 @@ public class SimulationScreen extends SuperScreen {
 		
 		firstTimeSimulationRun = false;
 
-		GraphFactory.addSpawnPointsTest(world, world.getGraph());
+
 		EntityFactory.addTrafficLights(world, world.getGraph());
 
 
 		if (TIMER.isStarted())
 			TIMER.reset();
 		TIMER.start();
-
+		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		world.process();
-		// EntityFactory.addSpawnPoints(world, graph);
+
+		EntityFactory.addSpawnPoints(world, graph);
 
 	}
 
@@ -118,7 +126,6 @@ public class SimulationScreen extends SuperScreen {
 
 		if (DEBUG_FPS)
 			System.out.println(TIMER.getTime() - start + " milliseconds ");
-
 	}
 
 	@Override

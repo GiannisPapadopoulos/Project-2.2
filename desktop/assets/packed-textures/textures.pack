@@ -19,7 +19,14 @@ blue-car
   index: -1
 car
   rotate: false
-  xy: 2839, 2405
+  xy: 1446, 780
+  size: 188, 97
+  orig: 188, 97
+  offset: 0, 0
+  index: 1
+car
+  rotate: false
+  xy: 2140, 1145
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
@@ -33,49 +40,63 @@ car
   index: 7
 car1
   rotate: false
-  xy: 1950, 1145
-  size: 188, 97
-  orig: 188, 97
+  xy: 3481, 3308
+  size: 327, 169
+  orig: 327, 169
+  offset: 0, 0
+  index: -1
+lambo2
+  rotate: false
+  xy: 3481, 3308
+  size: 327, 169
+  orig: 327, 169
   offset: 0, 0
   index: -1
 car2
   rotate: false
-  xy: 2839, 2504
+  xy: 1950, 1145
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car3
   rotate: false
-  xy: 1198, 503
+  xy: 2839, 2504
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car4
   rotate: false
-  xy: 3481, 3209
+  xy: 1198, 503
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car5
   rotate: false
-  xy: 3810, 3380
-  size: 188, 97
-  orig: 188, 97
+  xy: 2, 77
+  size: 327, 169
+  orig: 327, 169
+  offset: 0, 0
+  index: -1
+lambo
+  rotate: false
+  xy: 2, 77
+  size: 327, 169
+  orig: 327, 169
   offset: 0, 0
   index: -1
 car6
   rotate: false
-  xy: 1446, 780
+  xy: 3481, 3209
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car7
   rotate: false
-  xy: 2140, 1145
+  xy: 3810, 3380
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
@@ -87,21 +108,7 @@ intersection
   orig: 640, 640
   offset: 0, 0
   index: -1
-lambo
-  rotate: false
-  xy: 3481, 3308
-  size: 327, 169
-  orig: 327, 169
-  offset: 0, 0
-  index: 2
-lambo
-  rotate: false
-  xy: 2, 77
-  size: 327, 169
-  orig: 327, 169
-  offset: 0, 0
-  index: 3
-lambo_orange
+lambo3
   rotate: false
   xy: 1446, 879
   size: 327, 169
@@ -155,6 +162,13 @@ parking
   xy: 506, 261
   size: 281, 179
   orig: 281, 179
+  offset: 0, 0
+  index: -1
+police
+  rotate: false
+  xy: 2839, 2405
+  size: 188, 97
+  orig: 188, 97
   offset: 0, 0
   index: -1
 red-car

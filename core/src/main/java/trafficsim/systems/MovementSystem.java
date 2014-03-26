@@ -17,6 +17,7 @@ import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.TrafficRayCastCallBack;
 import trafficsim.components.AccelerationComponent;
 import trafficsim.components.AttachedLightsComponent;
+import trafficsim.components.ExpiryComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
@@ -59,6 +60,8 @@ public class MovementSystem
 	ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
 	@Mapper
 	ComponentMapper<TrafficLightComponent> trafficLightsMapper;
+	@Mapper
+	ComponentMapper<ExpiryComponent> expiryMapper;
 
 	@SuppressWarnings("unchecked")
 	public MovementSystem() {
@@ -94,8 +97,9 @@ public class MovementSystem
 					Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
 					physComp.setLinearVelocity(newVel);
 					if (newVel.len() < 0.1) {
-						car.deleteFromWorld();
-						physComp.setActive(false);
+//						car.deleteFromWorld();
+//						physComp.setActive(false);
+						expiryMapper.get(car).setExpired(true);
 					}
 					continue;
 				}

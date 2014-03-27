@@ -120,9 +120,58 @@ textures2.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+editor_normal
+  rotate: false
+  xy: 2, 68
+  size: 236, 234
+  orig: 236, 234
+  offset: 0, 0
+  index: -1
+editor_pressed
+  rotate: false
+  xy: 644, 710
+  size: 236, 234
+  orig: 236, 234
+  offset: 0, 0
+  index: -1
+panelicon_normal
+  rotate: false
+  xy: 240, 68
+  size: 236, 234
+  orig: 236, 234
+  offset: 0, 0
+  index: -1
+panelicon_pressed
+  rotate: false
+  xy: 644, 474
+  size: 236, 234
+  orig: 236, 234
+  offset: 0, 0
+  index: -1
+play_hover
+  rotate: false
+  xy: 644, 238
+  size: 236, 234
+  orig: 236, 234
+  offset: 0, 0
+  index: -1
+play_hover2
+  rotate: false
+  xy: 478, 2
+  size: 236, 234
+  orig: 236, 234
+  offset: 0, 0
+  index: -1
+play_normal
+  rotate: false
+  xy: 716, 2
+  size: 236, 234
+  orig: 236, 234
+  offset: 0, 0
+  index: -1
 road1x1
   rotate: false
-  xy: 2, 2
+  xy: 2, 304
   size: 640, 640
   orig: 640, 640
   offset: 0, 0
@@ -132,9 +181,16 @@ textures3.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-road1x1v
+play_pressed
   rotate: false
   xy: 2, 2
+  size: 236, 234
+  orig: 236, 234
+  offset: 0, 0
+  index: -1
+road1x1v
+  rotate: false
+  xy: 2, 238
   size: 640, 640
   orig: 640, 640
   offset: 0, 0
@@ -149,5 +205,17 @@ blue-car
   xy: 2, 2
   size: 600, 600
   orig: 600, 600
+  offset: 0, 0
+  index: -1
+
+textures5.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+.picasaoriginals/road1x1
+  rotate: false
+  xy: 2, 2
+  size: 640, 640
+  orig: 640, 640
   offset: 0, 0
   index: -1

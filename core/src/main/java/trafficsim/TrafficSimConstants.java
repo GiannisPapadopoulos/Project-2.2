@@ -8,7 +8,7 @@ import org.apache.commons.lang3.time.StopWatch;
 public final class TrafficSimConstants {
 
 	/** Whether textures should be re-packed. Set to true if anything is changed */
-	public static final boolean PACK = false;
+	public static final boolean PACK = true;
 
 	/** Frames per second */
 	public static final int FPS = 60;

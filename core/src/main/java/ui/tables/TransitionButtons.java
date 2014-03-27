@@ -24,11 +24,11 @@ public TransitionButtons(){
 	buttons = new ArrayList<Button>();
 	
 	
-	atlas = new TextureAtlas("assets/ui/speedsettings.txt");
+	atlas = new TextureAtlas("assets/packed-textures/textures.pack");
 
 	panelicon = createButton("panelicon");
 	play = createButton("play");
-	edit = createButton("edit");
+	edit = createButton("editor");
 	
 	panelicon.setName("Simulation");
 	play.setName("TimeControl");
@@ -52,13 +52,13 @@ public TransitionButtons(){
 private Button createButton(String name){
 
 	Drawable up = new TextureRegionDrawable( atlas.findRegion(name + "_normal"));
-	Drawable hover = new TextureRegionDrawable( atlas.findRegion(name + "_hover"));
+	Drawable hover = new TextureRegionDrawable( atlas.findRegion(name + "_pressed"));
 	
 	ButtonStyle style = new ButtonStyle();
 	
 	style.over = hover;
 	style.up = up;
-	style.checked = hover;
+	//style.checked = hover;
 
 	return new Button(style);
 	

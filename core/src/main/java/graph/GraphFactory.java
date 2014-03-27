@@ -18,27 +18,29 @@ public class GraphFactory {
 
 	public static void addSpawnPointsTest(TrafficSimWorld world, Graph<Road> graph) {
 
+		float length = 60;
+
 		Vertex<Road> connection = graph.getVertex(0);
 		Vector2 edgeB = connection.getData().getPointA();
-		Vector2 edgeA = new Vector2(edgeB.x - 20, edgeB.y);
+		Vector2 edgeA = new Vector2(edgeB.x - length, edgeB.y);
 		makeSpawnVertex(world, connection, graph, edgeA, edgeB, new Vector2(edgeA.x - 2 * LANE_WIDTH, edgeA.y), edgeA,
 						true);
 
 		Vertex<Road> connection2 = graph.getVertex(29);
 		Vector2 edgeA2 = connection2.getData().getPointB();
-		Vector2 edgeB2 = new Vector2(edgeA2.x + 20, edgeA2.y);
+		Vector2 edgeB2 = new Vector2(edgeA2.x + length, edgeA2.y);
 		makeSpawnVertex(world, connection2, graph, edgeA2, edgeB2, edgeB2, new Vector2(edgeB2.x + 2 * LANE_WIDTH,
 																						edgeB2.y), false);
 
 		Vertex<Road> connection3 = graph.getVertex(4);
 		Vector2 edgeB3 = connection3.getData().getPointA();
-		Vector2 edgeA3 = new Vector2(edgeB3.x - 20, edgeB3.y);
+		Vector2 edgeA3 = new Vector2(edgeB3.x - length, edgeB3.y);
 		makeSpawnVertex(world, connection3, graph, edgeA3, edgeB3, new Vector2(edgeA3.x - 2 * LANE_WIDTH, edgeA3.y),
 						edgeA3, true);
 
 		Vertex<Road> connection4 = graph.getVertex(25);
 		Vector2 edgeA4 = connection4.getData().getPointB();
-		Vector2 edgeB4 = new Vector2(edgeA4.x + 20, edgeA4.y);
+		Vector2 edgeB4 = new Vector2(edgeA4.x + length, edgeA4.y);
 		makeSpawnVertex(world, connection4, graph, edgeA4, edgeB4, edgeB4, new Vector2(edgeB4.x + 2 * LANE_WIDTH,
 																						edgeB4.y), false);
 	}

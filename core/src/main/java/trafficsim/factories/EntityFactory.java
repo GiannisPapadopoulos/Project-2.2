@@ -216,7 +216,7 @@ public class EntityFactory {
 			Vector2 corr = getVector(edge.getData()).nor().rotate(90 * direction);
 			
 			//int for changing speed of lights
-			int interval = 3;
+			float interval = 3f;
 			
 			Vector2 roadVector = getVector(edge.getData());
 			if (onPointA)
@@ -224,32 +224,30 @@ public class EntityFactory {
 			float angle = roadVector.angle() * degRad;
 
 			Entity entityStraight = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(2f)),
-																		(interval - 1), 1, (interval * 3),
- Status.RED,
+																		(interval - 1), 1, (interval * 3), Status.RED,
 																		true, onPointA, angle);
 			entityStraight.addComponent(new LightToRoadMappingComponent(entityStraight.getId(),
 																		world.getEdgeToEntityMap().get(edge.getID())));
 			entityStraight.addToWorld();
 			// TODO left light should always point at a 90 degree angle from the road
 			Entity entityLeft = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(1f)),
-																	(interval - 1), 1, (interval * 3),
- Status.RED,
+																	(interval - 1), 1, (interval * 3), Status.RED,
 																	false, onPointA, angle);
 			entityLeft.addComponent(new LightToRoadMappingComponent(entityStraight.getId(), world.getEdgeToEntityMap()
 																									.get(edge.getID())));
 			entityLeft.addToWorld();
 			if (angleOfRoad < 45) {
-				if(onPointA){
-				TrafficLightComponent flatRightLeft = entityLeft.getComponent(TrafficLightComponent.class);
-				flatRightLeft.setStatus(Status.GREEN);
-				TrafficLightComponent flatRightStraight = entityStraight.getComponent(TrafficLightComponent.class);
-				flatRightStraight.setStatus(Status.GREEN);
+				if (onPointA) {
+					TrafficLightComponent flatRightLeft = entityLeft.getComponent(TrafficLightComponent.class);
+					flatRightLeft.setStatus(Status.GREEN);
+					TrafficLightComponent flatRightStraight = entityStraight.getComponent(TrafficLightComponent.class);
+					flatRightStraight.setStatus(Status.GREEN);
 				}
 				else {
 					TrafficLightComponent flatLeftLeft = entityLeft.getComponent(TrafficLightComponent.class);
-					flatLeftLeft.setTimeElapsed(interval*2);
+					flatLeftLeft.setTimeElapsed(interval * 2);
 					TrafficLightComponent flatLeftStraight = entityStraight.getComponent(TrafficLightComponent.class);
-					flatLeftStraight.setTimeElapsed(interval*2);
+					flatLeftStraight.setTimeElapsed(interval * 2);
 				}
 
 			}
@@ -266,8 +264,8 @@ public class EntityFactory {
 		}
 	}
 
-	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, int timerG, int timerO,
-			int timerR, Status status, boolean straight, boolean OnPointA, float angleInRads) {
+	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, float timerG, float timerO,
+			float timerR, Status status, boolean straight, boolean OnPointA, float angleInRads) {
 		Entity trafficLight = world.createEntity();
 		float width = 1f;
 		float length = 1f;

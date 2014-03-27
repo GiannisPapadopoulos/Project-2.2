@@ -12,6 +12,7 @@ import gnu.trove.list.TIntList;
 import graph.Edge;
 import graph.Vertex;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.TrafficRayCastCallBack;
@@ -116,6 +117,7 @@ public class MovementSystem
 					Entity otherCar = world.getEntity(rayCallBack.getClosestId());
 					float distance = physicsBodyMapper.get(otherCar).getPosition().dst(position);
 					// steeringComponentMapper.get(otherCar).getState() != State.DEFAULT &&
+					// && routeComponentMapper.get(otherCar).getCurrentEdge() == routeComp.getCurrentEdge()
 					if (distance < carInFrontThreshold) {
 						slowDown(steeringComp, physComp);
 						continue;
@@ -316,7 +318,7 @@ public class MovementSystem
 		return physicsBodyMapper.get(entityB).getPosition().cpy().sub(physicsBodyMapper.get(entityA).getPosition());
 	}
 
-	private static float getAngleOfCurrentEdgeInRads(RouteComponent routeComp) {
+	private float getAngleOfCurrentEdgeInRads(RouteComponent routeComp) {
 		Road road = routeComp.getCurrentEdge().getData();
 		Vector2 roadVector = VectorUtils.getVector(road);
 		if (!fromAtoB(routeComp)) {
@@ -325,26 +327,44 @@ public class MovementSystem
 		return roadVector.angle() * MathUtils.degRad;
 	}
 
-	private static boolean fromAtoB(RouteComponent routeComp) {
+	private boolean fromAtoB(RouteComponent routeComp) {
 		return routeComp.getCurrentVertex() == routeComp.getCurrentEdge().getAdjacentVertexIterator().next();
 	}
 
-	public static Vector2 getTarget(RouteComponent routeComp) {
+	public Vector2 getTarget(RouteComponent routeComp) {
+		boolean fromAtoB = fromAtoB(routeComp);
 		// Vector2 target = VectorUtils.getMidPoint(routeComp.getNextVertex().getData());
-		Vector2 target = fromAtoB(routeComp) ? routeComp.getCurrentEdge().getData().getPointB().cpy()
-											: routeComp.getCurrentEdge().getData().getPointA().cpy();
+		Vector2 target = fromAtoB ? routeComp.getCurrentEdge().getData().getPointB().cpy() : routeComp.getCurrentEdge()
+																										.getData()
+																										.getPointA()
+																										.cpy();
 		Vector2 laneCorrection = getVector(routeComp.getCurrentEdge().getData()).cpy().nor().rotate(90);
 		// To reduce the chance of stepping on the lane
 		laneCorrection.scl(1.1f);
 
-		if (fromAtoB(routeComp)) {
+		if (fromAtoB) {
 			laneCorrection.scl(-1);
 		}
 		target.add(laneCorrection);
+
+		// float deltaAngle = getDeltaAngle(routeComp) * degRad;
+		// boolean leftTurn = deltaAngle > 0 && deltaAngle < PI;
+		// // System.out.println(deltaAngle + " " + leftTurn);
+		// if (leftTurn) {
+		// Vector2 roadVector = getVector(routeComp.getCurrentEdge().getData());
+		// if (!fromAtoB) {
+		// roadVector.scl(-1);
+		// }
+		// // System.out.print("bef " + target + " ");
+		// target.add(roadVector).nor().scl(1);
+		// // System.out.println("after " + target);
+		// }
+
+
 		return target;
 	}
 
-	public static float constrainAngle(float angle) {
+	public float constrainAngle(float angle) {
 		int factor = (int) (angle / MathUtils.PI2);
 		angle -= factor * MathUtils.PI2;
 		if (Math.abs(angle) > MathUtils.PI) {
@@ -357,6 +377,14 @@ public class MovementSystem
 	protected boolean checkProcessing() {
 		return true;
 	}
+
+	@Override
+	protected void inserted(Entity e) {
+		totalCars++;
+	}
+
+	@Getter
+	private int totalCars = 0;
 
 
 }

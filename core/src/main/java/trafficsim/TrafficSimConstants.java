@@ -39,7 +39,7 @@ public final class TrafficSimConstants {
 	public static final float CAR_WIDTH = 2.0f;
 
 	/** The width of a single lane, one way */
-	public static final float LANE_WIDTH = 3f;
+	public static final float LANE_WIDTH = 3.5f;
 
 	/** Speed limit for simple (1-lane) roads in meters per second */
 	public static final float CITY_SPEED_LIMIT = 50 / 3.6f;

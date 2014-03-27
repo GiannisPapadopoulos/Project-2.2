@@ -1,5 +1,6 @@
 package trafficsim.systems;
 
+import static trafficsim.TrafficSimConstants.TIMER;
 import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
 import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
 import trafficsim.TrafficSimWorld;
@@ -45,6 +46,8 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 	@Override
 	public boolean keyDown(int keycode) {
 		if (keycode == Keys.P) {
+			System.out.println("Total time running " + TIMER.getTime() / 1000.0 + " cars spawned "
+								+ world.getSystem(MovementSystem.class).getTotalCars());
 			System.out.println(((TrafficSimWorld) world).getDataGatherer());
 			return true;
 		}

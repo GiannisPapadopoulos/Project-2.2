@@ -11,6 +11,7 @@ import trafficsim.TrafficSimWorld;
 import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
+import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.InputSystem;
@@ -70,7 +71,7 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new ExpirySystem());
 
 		// Temporary hack
-		// world.setSystem(new CollisionDisablingSystem());
+		world.setSystem(new CollisionDisablingSystem());
 
 		InputSystem inputSystem = new InputSystem(this);
 		initMultiplexer();
@@ -92,16 +93,16 @@ public class SimulationScreen extends SuperScreen {
 		firstTimeSimulationRun = false;
 
 
-		EntityFactory.addTrafficLights(world, world.getGraph());
+
 
 
 		if (TIMER.isStarted())
 			TIMER.reset();
 		TIMER.start();
-		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
-		world.process();
-
-		EntityFactory.addSpawnPoints(world, graph);
+		GraphFactory.addSpawnPointsTest(world, world.getGraph());
+		EntityFactory.addTrafficLights(world, world.getGraph());
+		// world.process();
+		// EntityFactory.addSpawnPoints(world, graph);
 
 	}
 
@@ -126,6 +127,12 @@ public class SimulationScreen extends SuperScreen {
 
 		if (DEBUG_FPS)
 			System.out.println(TIMER.getTime() - start + " milliseconds ");
+
+		if (Math.abs(TIMER.getTime() / 1000.0 - 200) < 0.02) {
+			System.out.println("Total time running " + TIMER.getTime() / 1000.0 + " cars spawned "
+								+ world.getSystem(MovementSystem.class).getTotalCars());
+			System.out.println(world.getDataGatherer());
+		}
 	}
 
 	@Override

@@ -123,7 +123,9 @@ public abstract class SuperScreen implements Screen {
 		
 		SidePanels sidePanels = new SidePanels();
 		
-		getUILayer().addActor(sidePanels);
+			getUILayer().addActor(sidePanels);
+		
+	
 			
 			for (val button : sidePanels.getTransitionButtons().getButtons())
 				button.addListener(new ChangeListener() {

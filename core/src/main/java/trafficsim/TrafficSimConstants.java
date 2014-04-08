@@ -8,7 +8,7 @@ import org.apache.commons.lang3.time.StopWatch;
 public final class TrafficSimConstants {
 
 	/** Whether textures should be re-packed. Set to true if anything is changed */
-	public static final boolean PACK = true;
+	public static final boolean PACK = false;
 
 	/** Frames per second */
 	public static final int FPS = 60;
@@ -20,7 +20,7 @@ public final class TrafficSimConstants {
 	public static boolean DEBUG_RENDER = true;
 
 	/** Whether to debug the ui tables */
-	public static boolean DEBUG_TABLES = false;
+	public static boolean DEBUG_TABLES = true;
 
 	/** Constant used by world.step() in box2d. Higher values mean higher accuracy, 8 is standard */
 	public static final int VELOCITY_ITERATIONS = 8;

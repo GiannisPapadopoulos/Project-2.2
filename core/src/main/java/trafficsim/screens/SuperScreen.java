@@ -51,6 +51,9 @@ public abstract class SuperScreen implements Screen {
 
 	@Getter
 	MousePosition mousePosition;
+	
+	@Getter
+	private SidePanels sidePanels;
 
 	public SuperScreen(Screens screens) {
 		this.screens = screens;
@@ -66,6 +69,7 @@ public abstract class SuperScreen implements Screen {
 		if (this instanceof EditorScreen)
 			this.multiplexer.addProcessor(new InputEditorSystem(getCamera(),
 					(EditorScreen) this));
+		
 		else
 			this.multiplexer.addProcessor(new InputSystem(getCamera()));
 		
@@ -75,6 +79,7 @@ public abstract class SuperScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
+		
 	
 		}
 	
@@ -120,12 +125,12 @@ public abstract class SuperScreen implements Screen {
 
 
 	private void populateCommonLayers() {
+		sidePanels = new SidePanels();
 		
-		SidePanels sidePanels = new SidePanels();
 		
 			getUILayer().addActor(sidePanels);
 		
-	
+			
 			
 			for (val button : sidePanels.getTransitionButtons().getButtons())
 				button.addListener(new ChangeListener() {

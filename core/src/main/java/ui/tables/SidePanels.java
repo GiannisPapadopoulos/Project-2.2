@@ -1,15 +1,21 @@
 package ui.tables;
 
 import lombok.Getter;
+import lombok.Setter;
 import utils.Assets;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class SidePanels extends Table {
@@ -17,12 +23,34 @@ public class SidePanels extends Table {
 	@Getter
 	private TransitionButtons transitionButtons = new TransitionButtons();
 	@Getter
-	private CheckBox showhide;
+	private Button showhide;
+	@Getter
+	@Setter
+	private int rightpanelwidth;
+	
+	@Getter
+	private Table worldStatistics,bottomPanel,corner,empty;
+	
 
 	public SidePanels() {
+		
+		
 
-		showhide = new CheckBox("show/hide", Assets.skin);
-
+		showhide = new Button( Assets.skin);
+		showhide.addListener(new ClickListener(){
+				
+			public void clicked (InputEvent event, float x, float y) {
+			
+	           worldStatistics.setVisible(!worldStatistics.isVisible());
+	           bottomPanel.setVisible(!bottomPanel.isVisible());
+	           corner.setVisible(!corner.isVisible());
+	           empty.setVisible(!empty.isVisible());
+	           
+	           
+	        }
+		
+			
+		});
 		// root table initialization
 
 		this.setFillParent(true);
@@ -41,13 +69,13 @@ public class SidePanels extends Table {
 		Label emptyLabel = new Label(" ", Assets.skin);
 
 		// UI appearance width / heights
-		int worldstatswidth = 300;
+		rightpanelwidth = 300;
 
 		/** UI Table Backgrounds */
 
 		add(getTransitionButtons()).top().left();
 
-		Table worldStatistics = new Table();
+		 worldStatistics = new Table();
 
 		Sprite bgc = new Sprite();
 
@@ -70,23 +98,21 @@ public class SidePanels extends Table {
 		carsOnRoad.add(carsOnRoadNumber).width(100);
 		worldStatistics.add(carsOnRoad);
 
-		add(worldStatistics).width(worldstatswidth).top(); // TODO ROOT TABLE
+		add(worldStatistics).width(rightpanelwidth).top(); // TODO ROOT TABLE
 															// ADD
 
 		row();
-		Table empty = new Table();
+		 empty = new Table();
 		empty.setBackground(getTableBackground("right"));
 
 		// Show - Hide Table ( TODO show-hide button)
 		Table showHidePanelButton = new Table();
 
-		showhide.setChecked(true);
-
 		showHidePanelButton.add(showhide);
 		add(showHidePanelButton).expand().bottom().right(); // TODO ROOT TABLE
 															// ADD
 
-		add(empty).width(worldstatswidth).top();
+		add(empty).width(rightpanelwidth).top();
 
 		//
 		// Table bottomHeading = new Table(); // done
@@ -95,7 +121,7 @@ public class SidePanels extends Table {
 
 		row();
 
-		Table bottomPanel = new Table();
+		bottomPanel = new Table();
 		Table fourSplitPanel = new Table();
 		Table leftSplit = new Table();
 		Table midoneSplit = new Table();
@@ -143,9 +169,9 @@ public class SidePanels extends Table {
 
 		// CurrentFocus
 		// Label currentFocusHeading = new Label("Current Focus:", Assets.skin);
-		Table corner = new Table();
+		corner = new Table();
 		corner.setBackground(getTableBackground("right"));
-		add(corner).width(worldstatswidth).top();
+		add(corner).width(rightpanelwidth).top();
 		;
 
 		// debug();

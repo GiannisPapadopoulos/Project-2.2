@@ -115,13 +115,14 @@ public class CreateSplinePlot {
 		double[] Xvals2 = Xvals1;
 		// % waiting time
 		double[] Yvals2 = { 0.588, 0.597, 0.673, 0.722, 0.658, 0.679, 0.679 };
-		XYSeries series2 = new XYSeries("% of time spent on traffic lights");
+		XYSeries series2 = new XYSeries("% of time spent waiting on traffic lights");
 		addAll(series2, Xvals2, Yvals2);
 
 
-		createPlot(	"plots/TrafficLightTimers2.jpg", "Time spent waiting on traffic lights", "interval",
+		createPlot(	"plots/TrafficLightTimers.jpg", "Effect of traffic light timer",
+					"traffic light interval in seconds",
 					"% Waiting time",
-					series2);
+ series1);
 
 	}
 

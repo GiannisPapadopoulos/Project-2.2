@@ -14,7 +14,13 @@ import search.Path;
 import trafficsim.roads.Road;
 
 import com.artemis.Component;
+import com.badlogic.gdx.math.Vector2;
 
+/**
+ * Component that holds information about the path
+ * 
+ * @author Giannis Papadopoulos
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -22,19 +28,23 @@ import com.artemis.Component;
 public class RouteComponent
 		extends Component {
 
+
 	@NonNull
+	/** The start of the route */
 	private Vertex<Road> source;
 
-	// @NonNull
+	/** The last vertex of the route */
 	private Vertex<Road> target;
 
 	@Delegate
 	private Path<GraphState, GraphAction> path;
 
-	/** */
+	/** The current vertex along the path */
 	private Vertex<Road> currentVertex;
-	/** */
+	/** Index of the current edge in the route */
 	private int edgeIndex;
+
+	private Vector2 wayPoint;
 
 	/** If false, path will be recomputed */
 	private boolean set;

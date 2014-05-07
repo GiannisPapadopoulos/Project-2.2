@@ -1,8 +1,6 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.DEBUG_FPS;
-import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
-import static trafficsim.TrafficSimConstants.TIMER;
+import static trafficsim.TrafficSimConstants.*;
 import graph.Graph;
 import graph.GraphFactory;
 import lombok.Getter;
@@ -19,6 +17,7 @@ import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
+import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
 import trafficsim.systems.TrafficLightSystem;
 
@@ -69,6 +68,8 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new SpawnSystem());
 		world.setSystem(new TrafficLightSystem());
 		world.setSystem(new ExpirySystem());
+
+		world.setSystem(new RoutingSystem());
 
 		// Temporary hack
 		world.setSystem(new CollisionDisablingSystem());

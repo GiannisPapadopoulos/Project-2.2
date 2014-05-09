@@ -23,7 +23,6 @@ public class TransitionButtons extends Table{
 public TransitionButtons(){
 	buttons = new ArrayList<Button>();
 	
-	
 	atlas = new TextureAtlas("assets/packed-textures/textures.pack");
 
 	panelicon = createButton("panelicon");
@@ -39,10 +38,8 @@ public TransitionButtons(){
 	buttons.add(edit);
 	
 	for (val button : buttons){	
-		add(button);	
+		add(button).size(100, 100);	
 	}	
-	
-
 	
 }
 
@@ -58,7 +55,6 @@ private Button createButton(String name){
 	
 	style.over = hover;
 	style.up = up;
-	//style.checked = hover;
 
 	return new Button(style);
 	

@@ -18,7 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-public class SidePanels extends Table {
+public class SidePanelsa extends Table {
 
 	@Getter
 	private TransitionButtons transitionButtons = new TransitionButtons();
@@ -32,7 +32,7 @@ public class SidePanels extends Table {
 	private Table worldStatistics,bottomPanel,corner,empty;
 	
 
-	public SidePanels() {
+	public SidePanelsa() {
 		
 		
 

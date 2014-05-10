@@ -1,5 +1,6 @@
 package trafficsim.screens;
 
+import static functions.VectorUtils.getMidPoint;
 import static trafficsim.TrafficSimConstants.*;
 import graph.Graph;
 import graph.GraphFactory;
@@ -14,6 +15,7 @@ import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
+import trafficsim.systems.OldMovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
@@ -21,7 +23,6 @@ import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
 import trafficsim.systems.TrafficLightSystem;
 
-import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -49,8 +50,6 @@ public class SimulationScreen extends SuperScreen {
 
 	}
 
-	Entity car = null;
-
 	@Override
 	public void show() {
 
@@ -61,7 +60,7 @@ public class SimulationScreen extends SuperScreen {
 		// Add systems
 		world.setSystem(new DataSystem());
 		world.setSystem(new RenderSystem(getCamera()));
-		world.setSystem(new MovementSystem());
+		// world.setSystem(new OldMovementSystem());
 		world.setSystem(new PhysicsSystem());
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
@@ -70,6 +69,7 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new ExpirySystem());
 
 		world.setSystem(new RoutingSystem());
+		world.setSystem(new MovementSystem());
 
 		// Temporary hack
 		world.setSystem(new CollisionDisablingSystem());
@@ -105,6 +105,7 @@ public class SimulationScreen extends SuperScreen {
 		// world.process();
 		// EntityFactory.addSpawnPoints(world, graph);
 
+		System.out.println(getMidPoint(graph.getEdge(0).getData()));
 	}
 
 
@@ -131,7 +132,7 @@ public class SimulationScreen extends SuperScreen {
 
 		if (Math.abs(TIMER.getTime() / 1000.0 - 200) < 0.02) {
 			System.out.println("Total time running " + TIMER.getTime() / 1000.0 + " cars spawned "
-								+ world.getSystem(MovementSystem.class).getTotalCars());
+								+ world.getSystem(OldMovementSystem.class).getTotalCars());
 			System.out.println(world.getDataGatherer());
 		}
 	}

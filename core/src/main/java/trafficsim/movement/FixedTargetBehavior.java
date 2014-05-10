@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Vector2;
  * @see MovingTargetBehavior
  * @author Giannis Papadopoulos
  */
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 @Getter
 @Setter

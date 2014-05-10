@@ -2,9 +2,7 @@ package trafficsim.factories;
 
 import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.CAR_WIDTH;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import static trafficsim.TrafficSimConstants.*;
 import functions.VectorUtils;
 import graph.Edge;
 import graph.Element;
@@ -17,6 +15,7 @@ import trafficsim.components.DimensionComponent;
 import trafficsim.components.ExpiryComponent;
 import trafficsim.components.LightToRoadMappingComponent;
 import trafficsim.components.MaxSpeedComponent;
+import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.SpawnComponent;
 import trafficsim.components.SpriteComponent;
@@ -24,6 +23,8 @@ import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
+import trafficsim.movement.SeekBehavior;
+import trafficsim.movement.WeightedBehavior;
 import trafficsim.roads.Road;
 import trafficsim.spawning.FixedIntervalSpawningStrategy;
 
@@ -80,7 +81,10 @@ public class EntityFactory {
 		car.addComponent(new DataComponent());
 		// So that it can be properly erased when it reaches the destination
 		car.addComponent(new ExpiryComponent());
-
+		// add empty movement behavior
+		WeightedBehavior behavior = new WeightedBehavior();
+		behavior.add(new SeekBehavior(), 1f);
+		car.addComponent(new MovementComponent(behavior));
 		return car;
 	}
 

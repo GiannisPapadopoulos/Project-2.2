@@ -5,17 +5,16 @@ import trafficsim.components.PhysicsBodyComponent;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Behavior for seeking a fixed target
+ * Arrival behavior, to slow down when reaching the target
  * 
  * @author Giannis Papadopoulos
  */
-public class SeekBehavior
+public class ArrivalBehavior
 		extends FixedTargetBehavior {
 
 	@Override
 	public Vector2 steeringForce(PhysicsBodyComponent physComp) {
-		if (getTargetLocation() == null)
-			return new Vector2(0, 0);
-		return SteeringFunctions.seek(physComp.getPosition(), getTargetLocation());
+		return SteeringFunctions.arrive(physComp.getPosition(), getTargetLocation());
 	}
+
 }

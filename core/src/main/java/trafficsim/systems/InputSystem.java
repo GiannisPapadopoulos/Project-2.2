@@ -1,8 +1,6 @@
 package trafficsim.systems;
 
-import static trafficsim.TrafficSimConstants.TIMER;
-import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
-import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
+import static trafficsim.TrafficSimConstants.*;
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.FindBodyQueryCallback;
 import trafficsim.components.PhysicsBodyComponent;
@@ -87,6 +85,11 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 									+ physComp.getPosition() + "\n");
 			}
 		}
+		// else {
+		// superScreen.getMousePosition().update(camera);
+		// Coordinates coords = superScreen.getMousePosition().getAbsolute();
+		// System.out.println("x " + coords.getX() + " y " + coords.getY());
+		// }
 		return true;
 	}
 

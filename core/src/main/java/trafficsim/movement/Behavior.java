@@ -1,5 +1,6 @@
 package trafficsim.movement;
 
+import trafficsim.components.PhysicsBodyComponent;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -14,5 +15,5 @@ import com.badlogic.gdx.math.Vector2;
 // @AllArgsConstructor
 public abstract class Behavior {
 
-	public abstract Vector2 steeringForce(Vector2 position);
+	public abstract Vector2 steeringForce(PhysicsBodyComponent physComp);
 }

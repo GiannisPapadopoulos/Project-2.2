@@ -1,7 +1,8 @@
 package trafficsim.systems;
 
-import static functions.MovementFunctions.getTarget;
+import static functions.MovementFunctions.buildWaypoints;
 import static functions.MovementFunctions.isRightTurn;
+import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
 import trafficsim.components.SteeringComponent;
@@ -29,16 +30,21 @@ public class RoutingSystem
 	private ComponentMapper<SteeringComponent> steeringComponentMapper;
 	@Mapper
 	private ComponentMapper<PhysicsBodyComponent> physicsBodyMapper;
+	@Mapper
+	private ComponentMapper<MovementComponent> movementComponentMapper;
 
 	// Start turning left
-	float leftTurnThreshold = 0.2f;
-	float rightTurnThreshold = 1.2f;
+	private float leftTurnThreshold = 0.2f;
+	private float rightTurnThreshold = 1.2f;
 	// Arrived at destination
-	float arrivalThreshold = 2.5f;
+	private float arrivalThreshold = 2.5f;
+
+	private float threshold = 1.0f;
 
 	@SuppressWarnings("unchecked")
 	public RoutingSystem() {
-		super(Aspect.getAspectForAll(SteeringComponent.class, RouteComponent.class, PhysicsBodyComponent.class));
+		super(Aspect.getAspectForAll(	SteeringComponent.class, RouteComponent.class, PhysicsBodyComponent.class,
+										MovementComponent.class));
 	}
 
 	@Override
@@ -48,13 +54,34 @@ public class RoutingSystem
 			RouteComponent routeComp = routeComponentMapper.get(car);
 			SteeringComponent steeringComp = steeringComponentMapper.get(car);
 			PhysicsBodyComponent physComp = physicsBodyMapper.get(car);
+			MovementComponent movementComp = movementComponentMapper.get(car);
 			if (routeComp.isSet()) {
-				Vector2 target = getTarget(routeComp);
+				Vector2 target = routeComp.getNextWaypoint();
 				float distanceToTarget = target.dst(physComp.getPosition());
-				updatePath(routeComp, steeringComp, distanceToTarget);
+				if (distanceToTarget < threshold) {
+					updatePath(routeComp);
+					System.out.println(routeComp.getEdgeIndex() + " w " + routeComp.getWayPointIndex() + " "
+										+ routeComp.getNextWaypoint());
+				}
 			}
 		}
+	}
 
+	private void updatePath(RouteComponent routeComp) {
+		if (routeComp.getWayPointIndex() < routeComp.getWayPoints().size() - 1) {
+			routeComp.incrementWaypointIndex();
+		}
+		else {
+			if (!routeComp.isLastEdge()) {
+				routeComp.setCurrentVertex(routeComp.getNextVertex());
+				routeComp.incrementEdgeIndex();
+				routeComp.setWayPoints(buildWaypoints(routeComp));
+				routeComp.setWayPointIndex(0);
+			}
+			else {
+				// TODO set arrival behavior
+			}
+		}
 	}
 
 	public void updatePath(RouteComponent routeComp, SteeringComponent steeringComp, float distanceToTarget) {
@@ -65,8 +92,8 @@ public class RoutingSystem
 			float thresHold = isRightTurn(routeComp) ? rightTurnThreshold : leftTurnThreshold;
 			if (distanceToTarget < thresHold) {
 				// routeComp.update();
-				// routeComp.setCurrentVertex(routeComp.getNextVertex());
-				// routeComp.setEdgeIndex(routeComp.getEdgeIndex() + 1);
+				routeComp.setCurrentVertex(routeComp.getNextVertex());
+				routeComp.setEdgeIndex(routeComp.getEdgeIndex() + 1);
 			}
 		}
 	}

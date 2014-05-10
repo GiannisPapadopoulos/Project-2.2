@@ -1,5 +1,6 @@
 package trafficsim.systems;
 
+import static trafficsim.TrafficSimConstants.TIMER;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.ExpiryComponent;
 import trafficsim.components.PhysicsBodyComponent;
@@ -74,6 +75,8 @@ public class CollisionDisablingSystem
 
 		}
 
+		boolean firstHit = false;
+
 		@Override
 		public void preSolve(Contact contact, Manifold oldManifold) {
 			if (contact.isTouching() && bothDynamic(contact)) {
@@ -82,6 +85,10 @@ public class CollisionDisablingSystem
 				removeFromWorld(userData1);
 				contact.setEnabled(false);
 				// removeFromWorld(userData2);
+				if (!firstHit) {
+					System.out.println("first hit " + TIMER.getTime() / 1000.0);
+					firstHit = true;
+				}
 			}
 		}
 

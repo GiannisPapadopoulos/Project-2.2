@@ -2,6 +2,9 @@ package trafficsim.components;
 
 import graph.Edge;
 import graph.Vertex;
+
+import java.util.List;
+
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.NonNull;
@@ -44,7 +47,10 @@ public class RouteComponent
 	/** Index of the current edge in the route */
 	private int edgeIndex;
 
-	private Vector2 wayPoint;
+	/** Waypoints along the current edge */
+	private List<Vector2> wayPoints;
+	/** Index of the current waypoint */
+	private int wayPointIndex;
 
 	/** If false, path will be recomputed */
 	private boolean set;
@@ -66,17 +72,29 @@ public class RouteComponent
 		return currentVertex == target ? currentVertex : currentVertex.getNeighbor(getCurrentEdge());
 	}
 
-	public void update() {
-		assert !isLastEdge();
-		// if (first) {
-		// first = false;
-		// }
-		// else {
-		setCurrentVertex(getNextVertex());
-		setEdgeIndex(getEdgeIndex() + 1);
-		// first = true;
-		// }
+	public Vector2 getNextWaypoint() {
+		return wayPoints.get(wayPointIndex);
 	}
+
+	public void incrementWaypointIndex() {
+		wayPointIndex++;
+	}
+
+	public void incrementEdgeIndex() {
+		edgeIndex++;
+	}
+
+	// public void update() {
+	// assert !isLastEdge();
+	// // if (first) {
+	// // first = false;
+	// // }
+	// // else {
+	// setCurrentVertex(getNextVertex());
+	// setEdgeIndex(getEdgeIndex() + 1);
+	// // first = true;
+	// // }
+	// }
 
 	public boolean isLastEdge() {
 		return edgeIndex >= path.getRoute().size() - 1;

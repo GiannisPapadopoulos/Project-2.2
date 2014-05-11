@@ -21,17 +21,19 @@ public class GraphFactory {
 		float length = 60;
 		int interval = 2000;
 
-		Vertex<Road> connection = graph.getVertex(0);
-		Vector2 edgeB = connection.getData().getPointA();
-		Vector2 edgeA = new Vector2(edgeB.x - length, edgeB.y);
-		makeSpawnVertex(world, connection, graph, edgeA, edgeB, new Vector2(edgeA.x - 2 * LANE_WIDTH, edgeA.y), edgeA,
-						true, interval * 100);
+		// Vertex<Road> connection = graph.getVertex(0);
+		// Vector2 edgeB = connection.getData().getPointA();
+		// Vector2 edgeA = new Vector2(edgeB.x - length, edgeB.y);
+		// makeSpawnVertex(world, connection, graph, edgeA, edgeB, new Vector2(edgeA.x - 2 * LANE_WIDTH, edgeA.y),
+		// edgeA,
+		// true, interval * 100);
 
-		// Vertex<Road> connection2 = graph.getVertex(29);
-		// Vector2 edgeA2 = connection2.getData().getPointB();
-		// Vector2 edgeB2 = new Vector2(edgeA2.x + length, edgeA2.y);
-		// makeSpawnVertex(world, connection2, graph, edgeA2, edgeB2, edgeB2, new Vector2(edgeB2.x + 2 * LANE_WIDTH,
-		// edgeB2.y), false);
+		Vertex<Road> connection2 = graph.getVertex(29);
+		Vector2 edgeA2 = connection2.getData().getPointB();
+		Vector2 edgeB2 = new Vector2(edgeA2.x + length, edgeA2.y);
+		makeSpawnVertex(world, connection2, graph, edgeA2, edgeB2, edgeB2, new Vector2(edgeB2.x + 2 * LANE_WIDTH,
+																						edgeB2.y), false,
+						interval * 100);
 		//
 		// Vertex<Road> connection3 = graph.getVertex(4);
 		// Vector2 edgeB3 = connection3.getData().getPointA();

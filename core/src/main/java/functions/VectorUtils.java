@@ -1,5 +1,6 @@
 package functions;
 
+import graph.Element;
 import trafficsim.roads.Road;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -17,6 +18,10 @@ public class VectorUtils {
 
 	public static float calculateExpectedTime(Road road) {
 		return getLength(road) / road.getSpeedLimit();
+	}
+
+	public static Vector2 getVector(Element<Road> element) {
+		return getVector(element.getData());
 	}
 
 	public static Vector2 getVector(Road road) {

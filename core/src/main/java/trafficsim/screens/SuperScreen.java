@@ -1,8 +1,6 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
-import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
-import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
+import static trafficsim.TrafficSimConstants.*;
 
 import java.util.ArrayList;
 
@@ -32,13 +30,10 @@ public abstract class SuperScreen implements Screen {
 
 	private OrthographicCamera camera;
 
-	@Getter
 	private Stage UILayer;
 
-	@Getter
 	private Stage worldLayer;
 
-	@Getter
 	InputMultiplexer multiplexer;
 
 	@Getter

@@ -26,6 +26,7 @@ import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -48,6 +49,11 @@ public class SimulationScreen extends SuperScreen {
 
 	private boolean firstTimeSimulationRun = true;
 
+	@Getter
+	@Setter
+	// TODO it's not perfectly functional
+	private boolean paused;
+
 	public SimulationScreen(Screens screens) {
 		super(screens);
 
@@ -68,7 +74,7 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
-		// world.setSystem(new TrafficLightSystem());
+		world.setSystem(new GroupedTrafficLightSystem());
 		world.setSystem(new ExpirySystem());
 
 		world.setSystem(new RoutingSystem());
@@ -113,6 +119,9 @@ public class SimulationScreen extends SuperScreen {
 
 	@Override
 	public void render(float delta) {
+		if (paused) {
+			return;
+		}
 		long start;
 		if(DEBUG_FPS)
 			start = TIMER.getTime();

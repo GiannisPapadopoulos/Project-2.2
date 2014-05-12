@@ -3,6 +3,7 @@ package trafficsim.screens;
 import static trafficsim.TrafficSimConstants.DEBUG_FPS;
 import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
 import static trafficsim.TrafficSimConstants.TIMER;
+import graph.FileRead;
 import graph.Graph;
 import graph.GraphFactory;
 import lombok.Getter;
@@ -80,12 +81,17 @@ public class SimulationScreen extends SuperScreen {
 		world.initialize();
 
 		EntityFactory.createBackground(world, "background").addToWorld();
-
-		Graph<Road> graph;
+		
+		
+		Graph<Road> testGraph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
+		FileRead.fileWrite(testGraph, "tja");
+		Graph<Road> graph = FileRead.readFile("tja");
+		/*
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
 			graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
+			*/
 		world.setGraph(graph);
 		EntityFactory.populateWorld(world, graph);
 		
@@ -102,11 +108,15 @@ public class SimulationScreen extends SuperScreen {
 		world.process();
 
 		EntityFactory.addSpawnPoints(world, graph);
+		
+	
+		//
 
 	}
 
 
 	@Override
+	
 	public void render(float delta) {
 		long start;
 		if(DEBUG_FPS)

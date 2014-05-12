@@ -27,6 +27,7 @@ public class Graph<E> {
 		edgeList.add(edge);
 		return edge;
 	}
+	
 
 	public Iterable<Vertex<E>> getVertexIterator() {
 		return vertexList;

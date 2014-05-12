@@ -3,6 +3,11 @@ package trafficsim;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
 import graph.Graph;
+import graph.Vertex;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.data.DataGatherer;
@@ -37,6 +42,8 @@ public class TrafficSimWorld
 
 	/** For gathering data related to the simulation */
 	private DataGatherer dataGatherer;
+	
+	private List<Vertex<Road>> spawnPoints;
 
 	public TrafficSimWorld() {
 		super();
@@ -44,6 +51,7 @@ public class TrafficSimWorld
 		vertexToEntityMap = new TIntIntHashMap();
 		edgeToEntityMap = new TIntIntHashMap();
 		dataGatherer = new DataGatherer();
+		spawnPoints= new ArrayList<>();
 	}
 
 }

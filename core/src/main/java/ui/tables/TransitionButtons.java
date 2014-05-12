@@ -25,17 +25,16 @@ public TransitionButtons(){
 	
 	atlas = new TextureAtlas("assets/packed-textures/textures.pack");
 
-	panelicon = createButton("panelicon");
-	play = createButton("play");
-	edit = createButton("editor");
+	panelicon = createButton("panelicon", atlas);
+	play = createButton("play", atlas);
+	edit = createButton("editor", atlas);
 	
 	panelicon.setName("Simulation");
 	play.setName("TimeControl");
 	edit.setName("Editor");
 	
 	buttons.add(panelicon);
-	buttons.add(play);
-	buttons.add(edit);
+
 	
 	for (val button : buttons){	
 		add(button).size(100, 100);	
@@ -43,10 +42,7 @@ public TransitionButtons(){
 	
 }
 
-
-
-
-private Button createButton(String name){
+private Button createButton(String name, TextureAtlas atlas){
 
 	Drawable up = new TextureRegionDrawable( atlas.findRegion(name + "_normal"));
 	Drawable hover = new TextureRegionDrawable( atlas.findRegion(name + "_pressed"));
@@ -58,11 +54,6 @@ private Button createButton(String name){
 
 	return new Button(style);
 	
-	
 }
-
-
-
-
 
 }

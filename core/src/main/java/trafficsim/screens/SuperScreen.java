@@ -132,19 +132,43 @@ public abstract class SuperScreen implements Screen {
 		
 			
 			
-			for (val button : sidePanels.getTransitionButtons().getButtons())
-				button.addListener(new ChangeListener() {
-					@Override
-					public void changed(ChangeEvent event, Actor actor) {
-						if (actor.getName() == "Simulation")
-							switchToScreen(screens.getSimulationScreen());
-						else if (actor.getName() == "Editor")
-							switchToScreen(screens.getEditorScreen());
-						else if (actor.getName() == "Statistics")
-							switchToScreen(screens.getStatisticsScreen());
-					}
-				});
+//			for (val button : sidePanels.getTransitionButtons().getButtons())
+//				button.addListener(new ChangeListener() {
+//					@Override
+//					public void changed(ChangeEvent event, Actor actor) {
+//						if (actor.getName() == "Simulation")
+//							switchToScreen(screens.getSimulationScreen());
+//						else if (actor.getName() == "Statistics")
+//							switchToScreen(screens.getStatisticsScreen());
+//					}
+//				});
+			
+			sidePanels.getEditMode().addListener(new ClickListener(){
+				
+				public void clicked(InputEvent event, float x, float y) {
+						
+						sidePanels.getSwitchPanel().clearChildren();
+						sidePanels.getSwitchPanel().add(sidePanels.getEditorPanel());
+						switchToScreen(screens.getEditorScreen());
+						//sidePanels.
+				
+				}
+			});
 		
+			sidePanels.getSimTools().addListener(new ClickListener(){
+				
+				public void clicked(InputEvent event, float x, float y) {
+					
+						//if(screens.){
+					
+						switchToScreen(screens.getSimulationScreen());
+						//}
+						sidePanels.getSwitchPanel().clearChildren();
+						sidePanels.getSwitchPanel().add(sidePanels.getWorldVariables());
+				
+				}
+			});
+			
 		populateUILayer();
 		populateWorldLayer();
 	}

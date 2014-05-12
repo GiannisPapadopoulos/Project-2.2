@@ -1,10 +1,11 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.DEBUG_FPS;
-import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
-import static trafficsim.TrafficSimConstants.TIMER;
+import static trafficsim.TrafficSimConstants.*;
 import graph.Graph;
 import graph.GraphFactory;
+
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
@@ -13,13 +14,13 @@ import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
+import trafficsim.systems.GroupedTrafficLightSystem;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.SpawnSystem;
-import trafficsim.systems.TrafficLightSystem;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
@@ -49,8 +50,6 @@ public class SimulationScreen extends SuperScreen {
 
 	}
 
-	Entity car = null;
-
 	@Override
 	public void show() {
 
@@ -66,8 +65,10 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
-		world.setSystem(new TrafficLightSystem());
+		// world.setSystem(new TrafficLightSystem());
 		world.setSystem(new ExpirySystem());
+
+		world.setSystem(new GroupedTrafficLightSystem());
 
 		// Temporary hack
 		// world.setSystem(new CollisionDisablingSystem());
@@ -87,12 +88,12 @@ public class SimulationScreen extends SuperScreen {
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);
-		EntityFactory.populateWorld(world, graph);
+		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
 		
 		firstTimeSimulationRun = false;
 
-
-		EntityFactory.addTrafficLights(world, world.getGraph());
+		EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 
 
 		if (TIMER.isStarted())
@@ -101,7 +102,6 @@ public class SimulationScreen extends SuperScreen {
 		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		world.process();
 
-		EntityFactory.addSpawnPoints(world, graph);
 
 	}
 

@@ -2,6 +2,7 @@ package trafficsim.systems;
 
 import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.LightToRoadMappingComponent;
+import trafficsim.components.SpriteComponent;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
 
@@ -22,6 +23,8 @@ public class TrafficLightSystem extends EntitySystem{
 
 	@Mapper
 	ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
+	@Mapper
+	ComponentMapper<SpriteComponent> spriteMapper;
 
 	@SuppressWarnings("unchecked")
 	public TrafficLightSystem() {
@@ -34,8 +37,18 @@ public class TrafficLightSystem extends EntitySystem{
 	}
 
 	@Override
+	protected void inserted(Entity trafficLight) {
+		if (lightToRoadMapper.has(trafficLight)) {
+			Entity road = world.getEntity(lightToRoadMapper.get(trafficLight).getRoadId());
+			if (attachedLightsMapper.has(road)) {
+				attachedLightsMapper.get(road).getTrafficLightIDs().add(trafficLight.getId());
+				trafficLight.removeComponent(LightToRoadMappingComponent.class);
+			}
+		}
+	}
+
+	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
-		//System.out.println(entities.size());
 		for(int i = 0;i<entities.size();i++){
 			Entity trafficLight = entities.get(i);
 			TrafficLightComponent lightComp = trafficLightMapper.get(trafficLight);
@@ -44,14 +57,10 @@ public class TrafficLightSystem extends EntitySystem{
 				lightComp.setTimeElapsed(0);
 				int index = (lightComp.getStatus().ordinal() + 1) % Status.values().length;
 				lightComp.setStatus(Status.values()[index]);
-			}
-
-			if (lightToRoadMapper.has(trafficLight)) {
-				Entity road = world.getEntity(lightToRoadMapper.get(trafficLight).getRoadId());
-				if (attachedLightsMapper.has(road)) {
-					attachedLightsMapper.get(road).getTrafficLightIDs().add(trafficLight.getId());
-					trafficLight.removeComponent(LightToRoadMappingComponent.class);
-				}
+				// So that the RenderSystem can update the image
+				SpriteComponent spriteComp = spriteMapper.get(trafficLight);
+				spriteComp.setName(lightComp.getTextureName());
+				spriteComp.setSet(false);
 			}
 		}
 	}

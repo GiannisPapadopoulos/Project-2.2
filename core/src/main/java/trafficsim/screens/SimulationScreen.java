@@ -19,6 +19,7 @@ import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.GroupedTrafficLightSystem;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
+import trafficsim.systems.OldMovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
@@ -46,10 +47,6 @@ public class SimulationScreen extends SuperScreen {
 	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
 
 	private boolean firstTimeSimulationRun = true;
-
-	@Getter
-	@Setter
-	private boolean paused;
 
 	public SimulationScreen(Screens screens) {
 		super(screens);
@@ -116,9 +113,6 @@ public class SimulationScreen extends SuperScreen {
 
 	@Override
 	public void render(float delta) {
-		if (paused) {
-			return;
-		}
 		long start;
 		if(DEBUG_FPS)
 			start = TIMER.getTime();
@@ -140,7 +134,7 @@ public class SimulationScreen extends SuperScreen {
 
 		if (Math.abs(TIMER.getTime() / 1000.0 - 200) < 0.02) {
 			System.out.println("Total time running " + TIMER.getTime() / 1000.0 + " cars spawned "
-								+ world.getSystem(MovementSystem.class).getTotalCars());
+								+ world.getSystem(OldMovementSystem.class).getTotalCars());
 			System.out.println(world.getDataGatherer());
 		}
 	}

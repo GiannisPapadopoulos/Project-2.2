@@ -2,8 +2,6 @@ package trafficsim.systems;
 
 import static functions.MovementFunctions.constrainAngle;
 import static functions.MovementFunctions.getAngleOfCurrentEdgeInRads;
-import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -83,20 +81,6 @@ public class MovementSystem
 				steer(physComp, routeComp, steeringComp, newVel);
 				newVel.clamp(0, maxSpeed);
 				physComp.setLinearVelocity(newVel);
-				
-				Vector2 roadVector = getVector(routeComp.getCurrentEdge());
-				// The vector in world coordinates
-				Vector2 worldRoadVector = routeComp.getCurrentEdge().getData().getPointA().cpy().add(roadVector);
-
-
-				Vector2 roadLeft = worldRoadVector.cpy().add(roadVector.cpy().rotate(90).nor().scl(LANE_WIDTH));
-				Vector2 roadRight = worldRoadVector.cpy().add(roadVector.cpy().rotate(-90).nor().scl(LANE_WIDTH));
-				Vector2 adjust = roadVector.cpy().rotate(-90).nor().scl(LANE_WIDTH);
-				float length = physComp.getPosition().cpy().dot(roadLeft) / roadLeft.len2();
-				Vector2 projection = roadLeft.cpy().scl(length);
-				System.out.println("v " + roadVector + " w  " + worldRoadVector + " r " + roadRight + "l " + roadLeft
-									+ " p " + projection);
-				// System.out.println(projection);
 				// System.out.println(newVel);
 			}
 		}

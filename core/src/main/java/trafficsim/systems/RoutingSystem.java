@@ -60,8 +60,8 @@ public class RoutingSystem
 				float distanceToTarget = target.dst(physComp.getPosition());
 				if (distanceToTarget < threshold) {
 					updatePath(routeComp);
-					// System.out.println(routeComp.getEdgeIndex() + " w " + routeComp.getWayPointIndex() + " "
-					// + routeComp.getNextWaypoint());
+					System.out.println(routeComp.getEdgeIndex() + " w " + routeComp.getWayPointIndex() + " "
+										+ routeComp.getNextWaypoint());
 				}
 			}
 		}

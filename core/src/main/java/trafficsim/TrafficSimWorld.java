@@ -5,6 +5,7 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import graph.Graph;
 import lombok.Getter;
 import lombok.Setter;
+import trafficsim.data.DataGatherer;
 import trafficsim.roads.Road;
 
 import com.artemis.World;
@@ -32,13 +33,17 @@ public class TrafficSimWorld
 
 	/** The graph representing the roads and intersections */
 	@Setter
-	Graph<Road> graph;
+	private Graph<Road> graph;
+
+	/** For gathering data related to the simulation */
+	private DataGatherer dataGatherer;
 
 	public TrafficSimWorld() {
 		super();
 		box2dWorld = new com.badlogic.gdx.physics.box2d.World(new Vector2(0, 0), true);
 		vertexToEntityMap = new TIntIntHashMap();
 		edgeToEntityMap = new TIntIntHashMap();
+		dataGatherer = new DataGatherer();
 	}
 
 }

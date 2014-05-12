@@ -64,7 +64,7 @@ public abstract class SuperScreen implements Screen {
 		setCamera(new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX,
 				WINDOW_HEIGHT * WORLD_TO_BOX));
 		
-		this.multiplexer = new InputMultiplexer(UILayer, worldLayer);
+		initMultiplexer();
 		
 		if (this instanceof EditorScreen)
 			this.multiplexer.addProcessor(new InputEditorSystem(getCamera(),

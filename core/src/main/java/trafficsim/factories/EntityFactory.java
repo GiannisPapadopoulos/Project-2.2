@@ -1,5 +1,6 @@
 package trafficsim.factories;
 
+import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getVector;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.CAR_WIDTH;
@@ -9,19 +10,22 @@ import graph.Edge;
 import graph.Element;
 import graph.Graph;
 import graph.Vertex;
-import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.AttachedLightsComponent;
+import trafficsim.components.DataComponent;
 import trafficsim.components.DimensionComponent;
+import trafficsim.components.ExpiryComponent;
 import trafficsim.components.LightToRoadMappingComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
+import trafficsim.components.SpawnComponent;
 import trafficsim.components.SpriteComponent;
 import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
 import trafficsim.roads.Road;
+import trafficsim.spawning.FixedIntervalSpawningStrategy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.MathUtils;
@@ -59,7 +63,6 @@ public class EntityFactory {
 															.angle(angleInRads)
 															.userData(car.getId())
 															.build();
-		
 		/** @formatter:on */
 		car.addComponent(new PhysicsBodyComponent(body));
 
@@ -73,6 +76,11 @@ public class EntityFactory {
 		// TODO Steering is a magic constant, experiment with different cars
 		car.addComponent(new SteeringComponent(State.DEFAULT, maxForce, 350f));
 
+		// Data
+		car.addComponent(new DataComponent());
+		// So that it can be properly erased when it reaches the destination
+		car.addComponent(new ExpiryComponent());
+
 		return car;
 	}
 
@@ -85,13 +93,16 @@ public class EntityFactory {
 	 */
 	public static Entity createRoad(TrafficSimWorld world, Element<Road> element) {
 		Road roadData = element.getData();
+		String name;
 		Entity road = world.createEntity();
 		if (element.getClass() == Vertex.class) {
 			world.getVertexToEntityMap().put(element.getID(), road.getId());
+			name = "intersection";
 		}
 		else {
 			world.getEdgeToEntityMap().put(element.getID(), road.getId());
 			road.addComponent(new AttachedLightsComponent());
+			name = "road1x1";
 		}
 		
 		Vector2 position = new Vector2((roadData.getPointB().x + roadData.getPointA().x) / 2,
@@ -101,7 +112,6 @@ public class EntityFactory {
 		float length = VectorUtils.getLength(roadData);
 
 		// TODO Check number of lanes here
-		String name = "road1x1";
 		road.addComponent(new DimensionComponent(length, LANE_WIDTH * 2));
 		angle *= MathUtils.degRad;
 
@@ -174,22 +184,20 @@ public class EntityFactory {
 		 */
 
 		for (Vertex<Road> vertex : graph.getVertexIterator()) {
-			val iterator = vertex.getAdjacentEdgeIterator();
 			int edgesPerVertex = vertex.getAdjacentEdges().size();
-			for (Edge<Road> edge : iterator) {
+			for (Edge<Road> edge : vertex.getAdjacentEdgeIterator()) {
 
-				val iterator2 = edge.getAdjacentVertexIterator();
-				// TODO single for loop
+				// val iterator2 = edge.getAdjacentVertexIterator();
 				boolean onPointA = edge.getAdjacentVertices().get(0) == vertex.getID();
 				float angleOfRoad = VectorUtils.getAngle(edge.getData());
 
 				if (onPointA) {
-					Vertex<Road> vertexA = iterator2.next();
+					Vertex<Road> vertexA = graph.getVertex(edge.getAdjacentVertices().get(0));
 					// addLightA(world, edge, vertexA, edgesPerVertex, angleOfRoad);
 					addLight(world, edge, vertexA, edgesPerVertex, angleOfRoad, onPointA);
 				}
 				else {
-					Vertex<Road> vertexB = iterator2.next();
+					Vertex<Road> vertexB = graph.getVertex(edge.getAdjacentVertices().get(1));
 					// addLightB(world, edge, vertexB, edgesPerVertex, angleOfRoad);
 					addLight(world, edge, vertexB, edgesPerVertex, angleOfRoad, onPointA);
 				}
@@ -210,16 +218,23 @@ public class EntityFactory {
 			//int for changing speed of lights
 			int interval = 3;
 			
+			Vector2 roadVector = getVector(edge.getData());
+			if (onPointA)
+				roadVector.scl(-1);
+			float angle = roadVector.angle() * degRad;
+
 			Entity entityStraight = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(2f)),
-																		(int) (interval - 1), 1, (int) (interval * 3),
-																		Status.RED, true, onPointA);
+																		(interval - 1), 1, (interval * 3),
+ Status.RED,
+																		true, onPointA, angle);
 			entityStraight.addComponent(new LightToRoadMappingComponent(entityStraight.getId(),
 																		world.getEdgeToEntityMap().get(edge.getID())));
 			entityStraight.addToWorld();
 			// TODO left light should always point at a 90 degree angle from the road
 			Entity entityLeft = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(1f)),
-																	(int) (interval - 1), 1, (int) (interval * 3),
-																	Status.RED, false, onPointA);
+																	(interval - 1), 1, (interval * 3),
+ Status.RED,
+																	false, onPointA, angle);
 			entityLeft.addComponent(new LightToRoadMappingComponent(entityStraight.getId(), world.getEdgeToEntityMap()
 																									.get(edge.getID())));
 			entityLeft.addToWorld();
@@ -252,7 +267,7 @@ public class EntityFactory {
 	}
 
 	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, int timerG, int timerO,
-			int timerR, Status status, boolean straight, boolean OnPointA) {
+			int timerR, Status status, boolean straight, boolean OnPointA, float angleInRads) {
 		Entity trafficLight = world.createEntity();
 		float width = 1f;
 		float length = 1f;
@@ -266,7 +281,7 @@ public class EntityFactory {
 		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
 															.type(BodyType.StaticBody)
 															.position(position)
-															.angle(0)
+															.angle(angleInRads)
 															.build();
 		trafficLight.addComponent(new PhysicsBodyComponent(body));
 		trafficLight.addComponent(new DimensionComponent(length, width));
@@ -279,6 +294,54 @@ public class EntityFactory {
 		trafficLight.addComponent(sprite);
 
 		return trafficLight;
+	}
+
+
+	public static void addSpawnPoints(TrafficSimWorld world, Graph<Road> graph) {
+		for (Vertex<Road> vertex : graph.getVertexIterator()) {
+			if (vertex.getAdjacentVertices().size() == 1) {
+				Entity vertexEntity = world.getEntity(world.getVertexToEntityMap().get(vertex.getID()));
+				float interval = 2000;
+				vertexEntity.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(interval)));
+				world.changedEntity(vertexEntity);
+			}
+		}
+	}
+
+	public static Entity createBackground(TrafficSimWorld world, String name) {
+		Entity backGround = world.createEntity();
+
+		float length = 1000;
+		float width = 1000;
+
+		Vector2 position = new Vector2(250, 250);
+		float angle = 0;
+
+
+
+		backGround.addComponent(new DimensionComponent(length, width));
+		angle *= MathUtils.degRad;
+
+		// boxShape takes the half width/height as input
+		// TODO Check number of lanes here
+		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, width / 2)
+																.density(1.0f)
+																.restitution(1.0f)
+																.friction(0f)
+																.sensor(true)
+																// There should be a better way
+																.groupIndex((short) -2);
+		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
+															.type(BodyType.StaticBody)
+															.position(position)
+															.angle(angle)
+															.build();
+		backGround.addComponent(new PhysicsBodyComponent(body));
+		// road.addComponent(new PositionComponent(position));
+
+		SpriteComponent sprite = new SpriteComponent(name);
+		backGround.addComponent(sprite);
+		return backGround;
 	}
 
 

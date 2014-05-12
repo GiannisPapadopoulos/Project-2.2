@@ -2,7 +2,13 @@ package trafficsim.systems;
 
 import static trafficsim.TrafficSimConstants.RANDOM;
 import graph.Graph;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.Getter;
 import trafficsim.components.RouteComponent;
+import trafficsim.components.SpawnComponent;
 import trafficsim.roads.Road;
 
 import com.artemis.Aspect;
@@ -21,7 +27,13 @@ public class DestinationSystem
 		extends EntitySystem {
 
 	@Mapper
-	ComponentMapper<RouteComponent> routeComponentMapper;
+	private ComponentMapper<RouteComponent> routeComponentMapper;
+
+	@Mapper
+	private ComponentMapper<SpawnComponent> spawnComponentMapper;
+
+	@Getter
+	private List<Entity> spawnPoints = new ArrayList<>();
 
 	@SuppressWarnings("unchecked")
 	public DestinationSystem() {
@@ -36,12 +48,23 @@ public class DestinationSystem
 			if (routeComp.getTarget() == null) {
 				assert routeComp.getSource() != null;
 				Graph<Road> graph = routeComp.getSource().getParent();
-				int randIndex = RANDOM.nextInt(graph.getVertexCount() - 1);
-				// Make sure source != target
-				if (randIndex >= routeComp.getSource().getID()) {
-					randIndex++;
+				if (spawnPoints.size() <= 1) {
+					int randIndex = RANDOM.nextInt(graph.getVertexCount() - 1);
+					// Make sure source != target
+					if (randIndex >= routeComp.getSource().getID()) {
+						randIndex++;
+					}
+					routeComp.setTarget(graph.getVertex(randIndex));
 				}
-				routeComp.setTarget(graph.getVertex(randIndex));
+				else {
+					int randIndex = RANDOM.nextInt(spawnPoints.size() - 1);
+					if (spawnComponentMapper.get(spawnPoints.get(randIndex)).getVertex() == routeComp.getSource()) {
+						randIndex++;
+					}
+					routeComp.setTarget(spawnComponentMapper.get(spawnPoints.get(randIndex)).getVertex());
+					assert routeComp.getTarget() != routeComp.getSource();
+				}
+
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 package editor;
 
+import functions.VectorUtils;
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
@@ -22,11 +23,17 @@ public class PointsOfInterest {
 	public PointsOfInterest(Graph<Road> graph) {
 		this.graph = graph;
 		POI = new ArrayList<PointOfInterest>();
-		boolean found = false;
 
+		updatePOI();
+
+
+	}
+	
+	private void updatePOI() {
+		boolean found = false;
 		for (Vertex<Road> v : graph.getVertexList())
 			for (Vector2 vec : new Vector2[] { v.getData().getPointA(),
-					v.getData().getPointB() }) {
+					v.getData().getPointB(), v.getData().getPointC(), v.getData().getPointD() }) {
 				found = false;
 				for (PointOfInterest poi : POI)
 					if (vec.x == poi.position.x && vec.y == poi.position.y) {
@@ -41,7 +48,6 @@ public class PointsOfInterest {
 					POI.add(poi);
 				}
 			}
-
 	}
 
 	@Data
@@ -70,11 +76,32 @@ public class PointsOfInterest {
 	public PointOfInterest registerNewPOI(Vector2 position) {
 		PointOfInterest newPOI = new PointOfInterest(position);
 		POI.add(newPOI);
-		newPOI.vertices.add(graph.addVertex(new Road(position, position, 1, Direction.BOTH, TrafficSimConstants.CITY_SPEED_LIMIT)));
 		return newPOI;
 	}
 	
 	public Graph<Road> createGraphObject(PointOfInterest poi1, PointOfInterest poi2) {
+		
+		float angle;
+		
+		if(poi1.getVertices().size()==0) {
+			angle = VectorUtils.getAngle(poi2.position, poi1.position);
+			Vector2 endPoint = VectorUtils.getUnitVector(angle);
+			endPoint.x*=TrafficSimConstants.LANE_WIDTH*2;
+			endPoint.y*=TrafficSimConstants.LANE_WIDTH*2;
+			endPoint.add(poi1.position);
+			poi1.vertices.add(graph.addVertex(new Road(poi1.position, endPoint, 1, Direction.BOTH, TrafficSimConstants.CITY_SPEED_LIMIT)));
+		}
+		if(poi2.getVertices().size()==0) {
+			angle = VectorUtils.getAngle(poi1.position, poi2.position);
+			Vector2 endPoint = VectorUtils.getUnitVector(angle);
+			endPoint.x*=TrafficSimConstants.LANE_WIDTH*2;
+			endPoint.y*=TrafficSimConstants.LANE_WIDTH*2;
+			endPoint.add(poi2.position);
+			poi2.vertices.add(graph.addVertex(new Road(endPoint, poi2.position, 1, Direction.BOTH, TrafficSimConstants.CITY_SPEED_LIMIT)));
+		}
+
+		updatePOI();
+
 		graph.addEdge(new Road(poi1.position, poi2.position,1, Direction.BOTH, TrafficSimConstants.CITY_SPEED_LIMIT),poi1.getVertices().get(0),poi2.getVertices().get(0),false);
 		return graph;
 	}

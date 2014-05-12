@@ -8,7 +8,7 @@ import org.apache.commons.lang3.time.StopWatch;
 public final class TrafficSimConstants {
 
 	/** Whether textures should be re-packed. Set to true if anything is changed */
-	public static final boolean PACK = false;
+	public static final boolean PACK = true;
 
 	/** Frames per second */
 	public static final int FPS = 60;
@@ -17,7 +17,7 @@ public final class TrafficSimConstants {
 	public static final boolean DEBUG_FPS = false;
 
 	/** Whether to do box2d debug rendering */
-	public static boolean DEBUG_RENDER = true;
+	public static boolean DEBUG_RENDER = false;
 
 	/** Whether to debug the ui tables */
 	public static boolean DEBUG_TABLES = true;

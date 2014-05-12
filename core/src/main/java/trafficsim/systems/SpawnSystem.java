@@ -7,6 +7,7 @@ import static functions.VectorUtils.getAngle;
 import static functions.VectorUtils.getVector;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import static trafficsim.TrafficSimConstants.RANDOM;
 import static trafficsim.TrafficSimConstants.TIMER;
 import functions.VectorUtils;
 import graph.Vertex;
@@ -38,11 +39,18 @@ public class SpawnSystem
 	}
 
 	@Override
+	protected void inserted(Entity entity) {
+		world.getSystem(DestinationSystem.class).getSpawnPoints().add(entity);
+	}
+
+	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
 		for (int i = 0; i < entities.size(); i++) {
+
 			Entity entity = entities.get(i);
 			SpawnComponent spawnComp = spawnComponentMapper.get(entity);
 			if (spawnComp.shouldSpawn(TIMER.getTime())) {
+
 				Vertex<Road> spawnVertex = spawnComp.getVertex();
 				Vertex<Road> connection = spawnVertex.getParent().getVertex(spawnVertex.getAdjacentVertices().get(0));
 				float angle = getAngle(spawnVertex.getData(), connection.getData()) * degRad;
@@ -53,9 +61,9 @@ public class SpawnSystem
 																								.scl(LANE_WIDTH / 2);
 				position.add(laneCorrection);
 				if (canSpawn(spawnComp, position, angle)) {
-					
-
-					Entity car = EntityFactory.createCar((TrafficSimWorld) world, position, 1f, 40, angle, "car4");
+					int randInt = RANDOM.nextInt(7) + 1;
+					Entity car = EntityFactory.createCar((TrafficSimWorld) world, position, 1f, 40, angle, "car"
+																											+ randInt);
 					car.addComponent(new RouteComponent(spawnComp.getVertex()));
 					car.addToWorld();
 					spawnComp.spawned(TIMER.getTime());

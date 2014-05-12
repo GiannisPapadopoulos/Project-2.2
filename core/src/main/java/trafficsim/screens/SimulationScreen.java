@@ -9,9 +9,12 @@ import graph.GraphFactory;
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
+import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.systems.DestinationSystem;
+import trafficsim.systems.ExpirySystem;
+import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
@@ -19,6 +22,7 @@ import trafficsim.systems.RenderSystem;
 import trafficsim.systems.SpawnSystem;
 import trafficsim.systems.TrafficLightSystem;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -38,8 +42,7 @@ public class SimulationScreen extends SuperScreen {
 	// So it's mutable by EditorScreen
 	private TrafficSimWorld world;
 
-	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true,
-			false, false, false, true, true);
+	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
 
 	private boolean firstTimeSimulationRun = true;
 
@@ -48,12 +51,17 @@ public class SimulationScreen extends SuperScreen {
 
 	}
 
+	Entity car = null;
+
 	@Override
 	public void show() {
 
+		if (world != null)
+			world.dispose();
 		world = new TrafficSimWorld();
 
 		// Add systems
+		world.setSystem(new DataSystem());
 		world.setSystem(new RenderSystem(getCamera()));
 		world.setSystem(new MovementSystem());
 		world.setSystem(new PhysicsSystem());
@@ -61,26 +69,44 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
 		world.setSystem(new TrafficLightSystem());
+		world.setSystem(new ExpirySystem());
+
+		// Temporary hack
+		// world.setSystem(new CollisionDisablingSystem());
+
+		InputSystem inputSystem = new InputSystem(this);
+		initMultiplexer();
+		getMultiplexer().addProcessor(inputSystem);
+		world.setSystem(inputSystem, true);
 
 		world.initialize();
 
-		Graph<Road> graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
-		world.setGraph(graph);
-		if (firstTimeSimulationRun)
-			EntityFactory.populateWorld(world, graph);
+		EntityFactory.createBackground(world, "background").addToWorld();
+
+		Graph<Road> graph;
+		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
+			graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
 		else
-			EntityFactory.populateWorld(world, getScreens()
-					.getEditorScreen().getWorld().getGraph());
+			graph = getScreens().getEditorScreen().getWorld().getGraph();
+		world.setGraph(graph);
+		EntityFactory.populateWorld(world, graph);
+		
 		firstTimeSimulationRun = false;
 
-		GraphFactory.addSpawnPointsTest(world, world.getGraph());
-		EntityFactory.addTrafficLights(world, world.getGraph());
-		if (!TIMER.isStarted())
-			TIMER.start();
 
+		EntityFactory.addTrafficLights(world, world.getGraph());
+
+
+		if (TIMER.isStarted())
+			TIMER.reset();
+		TIMER.start();
+		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		world.process();
 
+		EntityFactory.addSpawnPoints(world, graph);
+
 	}
+
 
 	@Override
 	public void render(float delta) {
@@ -105,7 +131,6 @@ public class SimulationScreen extends SuperScreen {
 
 		if (DEBUG_FPS)
 			System.out.println(TIMER.getTime() - start + " milliseconds ");
-
 	}
 	
 

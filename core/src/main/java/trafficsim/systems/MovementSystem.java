@@ -11,10 +11,13 @@ import functions.VectorUtils;
 import gnu.trove.list.TIntList;
 import graph.Edge;
 import graph.Vertex;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.TrafficRayCastCallBack;
 import trafficsim.components.AccelerationComponent;
 import trafficsim.components.AttachedLightsComponent;
+import trafficsim.components.ExpiryComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
@@ -39,6 +42,7 @@ import com.badlogic.gdx.physics.box2d.World;
  * 
  * @author Giannis Papadopoulos
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MovementSystem
 		extends EntitySystem {
 
@@ -56,11 +60,26 @@ public class MovementSystem
 	ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
 	@Mapper
 	ComponentMapper<TrafficLightComponent> trafficLightsMapper;
+	@Mapper
+	ComponentMapper<ExpiryComponent> expiryMapper;
 
 	@SuppressWarnings("unchecked")
 	public MovementSystem() {
 		super(Aspect.getAspectForAll(SteeringComponent.class, RouteComponent.class, PhysicsBodyComponent.class));
 	}
+
+	// Steering constants, abstract this at some point
+
+	// Distance to light
+	float brakingThreshold = 5f;
+
+	// Start turning left
+	float leftTurnThreshold = 0.2f;
+	float rightTurnThreshold = 1.2f;
+	// Arrived at destination
+	float arrivalThreshold = 2.5f;
+
+	float carInFrontThreshold = CAR_LENGTH * 1.6f;
 
 	// TODO clean this up
 	@Override
@@ -78,94 +97,157 @@ public class MovementSystem
 					Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
 					physComp.setLinearVelocity(newVel);
 					if (newVel.len() < 0.1) {
-						car.deleteFromWorld();
-						physComp.setActive(false);
+//						car.deleteFromWorld();
+//						physComp.setActive(false);
+						expiryMapper.get(car).setExpired(true);
 					}
 					continue;
 				}
-
-				float brakingThreshold = 5f;
-
-				float leftTurnThreshold = 0.5f;
-				float rightTurnThreshold = 1.0f;
-				float arrivalThreshold = 0.5f;
-
-				float carInFrontThreshold = CAR_LENGTH * 1.6f;
 
 				World box2dWorld = ((TrafficSimWorld) world).getBox2dWorld();
 				Vector2 position = physComp.getPosition();
 				Vector2 angleAdjustment = new Vector2(cos(physComp.getAngle()), sin(physComp.getAngle()));
 				float rayLength = 3 * CAR_LENGTH;
 				TrafficRayCastCallBack rayCallBack = new TrafficRayCastCallBack();
-				// System.out.println(position + " " + position.cpy().add(position.cpy().nor().scl(rayLength)));
 				box2dWorld.rayCast(rayCallBack, position,
 									position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
 
 				if (rayCallBack.foundSomething()) {
 					Entity otherCar = world.getEntity(rayCallBack.getClosestId());
 					float distance = physicsBodyMapper.get(otherCar).getPosition().dst(position);
-					if (steeringComponentMapper.get(otherCar).getState() != State.DEFAULT
-						&& distance < carInFrontThreshold) {
+					// steeringComponentMapper.get(otherCar).getState() != State.DEFAULT &&
+					if (distance < carInFrontThreshold) {
 						slowDown(steeringComp, physComp);
 						continue;
 					}
 				}
 
+				Vector2 target = getTarget(routeComp);
+				float distanceToTarget = target.dst(physComp.getPosition());
+
 				Entity trafficLight = getRelevantLight(routeComp);
 
 				if (trafficLight != null && trafficLightsMapper.get(trafficLight).getStatus() != Status.GREEN
-					&& distance(car, trafficLight) < brakingThreshold) {
+					&& distance(car, trafficLight) < brakingThreshold && !pastTrafficLight(car, trafficLight, target)) {
 					slowDown(steeringComp, physComp);
+					// continue;
 				}
 				else {
 					steeringComp.setState(State.DEFAULT);
+					execute(routeComp, physComp, steeringComp, maxSpeedMapper.get(car));
 				}
 
-				if (steeringComp.getState() != State.DEFAULT) {
-					continue;
-				}
 
-				Vector2 target = getTarget(routeComp);
-				float dst = target.dst(physComp.getPosition());
 
-				if (routeComp.isLastEdge() && steeringComp.getState() == State.DEFAULT && dst < arrivalThreshold) {
-					steeringComp.setState(State.ARRIVED);
-				}
-				else {
-					float thresHold = isRightTurn(routeComp) ? rightTurnThreshold : leftTurnThreshold;
-					if (dst < thresHold) {
-						routeComp.setCurrentVertex(routeComp.getNextVertex());
-						routeComp.setEdgeIndex(routeComp.getEdgeIndex() + 1);
-					}
-				}
+				// if (steeringComp.getState() != State.DEFAULT) {
+				// continue;
+				// }
 
-				Vector2 force = SeekBehavior.getForce(physComp.getPosition(), target);
-				// TODO Define maxForce in relation to mass
-				force.clamp(0, steeringComp.getMaxForce());
-				Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
-				float maxSpeed = Math.min(	routeComp.getCurrentEdge().getData().getSpeedLimit(),
-											maxSpeedMapper.get(car).getSpeed());
-				newVel.clamp(0, maxSpeed);
-				float deltaA = getAngleOfCurrentEdgeInRads(routeComp) - physComp.getAngle();
-				deltaA = constrainAngle(deltaA);
-				// TODO extract constants, refactor
-				float angularThreshold = 6;
-				if (Math.abs(deltaA) > 0.05) {
-					if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
-						if (deltaA < 0) {
-							newVel.scl(0.9f);
-						}
-						physComp.applyTorque(steeringComp.getMaxTorque() * deltaA, true);
-					}
-				}
-				else {
-					physComp.setAngularVelocity(0);
-				}
-
-				physComp.setLinearVelocity(newVel);
-
+				// if (routeComp.isLastEdge() && steeringComp.getState() == State.DEFAULT
+				// && distanceToTarget < arrivalThreshold) {
+				// steeringComp.setState(State.ARRIVED);
+				// }
+				// else {
+				// float thresHold = isRightTurn(routeComp) ? rightTurnThreshold : leftTurnThreshold;
+				// if (distanceToTarget < thresHold) {
+				// routeComp.setCurrentVertex(routeComp.getNextVertex());
+				// routeComp.setEdgeIndex(routeComp.getEdgeIndex() + 1);
+				// }
+				// }
+				//
+				// Vector2 force = SeekBehavior.getForce(physComp.getPosition(), target);
+				// // TODO Define maxForce in relation to mass
+				// force.clamp(0, steeringComp.getMaxForce());
+				// Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
+				// float maxSpeed = Math.min( routeComp.getCurrentEdge().getData().getSpeedLimit(),
+				// maxSpeedMapper.get(car).getSpeed());
+				// newVel.clamp(0, maxSpeed);
+				// float deltaA = getAngleOfCurrentEdgeInRads(routeComp) - physComp.getAngle();
+				// deltaA = constrainAngle(deltaA);
+				// // TODO extract constants, refactor
+				// float angularThreshold = 6;
+				// if (Math.abs(deltaA) > 0.05) {
+				// if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
+				// if (deltaA < 0) {
+				// newVel.scl(0.9f);
+				// }
+				// physComp.applyTorque(steeringComp.getMaxTorque() * deltaA, true);
+				// }
+				// }
+				// else {
+				// physComp.setAngularVelocity(0);
+				// }
+				//
+				// physComp.setLinearVelocity(newVel);
+				//
 			}
 		}
+	}
+
+	private boolean pastTrafficLight(Entity car, Entity trafficLight, Vector2 target) {
+		// distance(car, trafficLight) < distanceToTarget
+		// float angle = physicsBodyMapper.get(car).getAngle();
+		// Vector2 carFrontPosition = getPosition(car).add(new Vector2(cos(angle), sin(angle)).scl(CAR_LENGTH / 2));
+		Vector2 carFrontPosition = physicsBodyMapper.get(car).getWorldPoint(new Vector2(CAR_LENGTH / 2, 0));
+		// System.out.println(carFrontPosition + " " + getPosition(car));
+		Vector2 lightPosition = getPosition(trafficLight);
+		float distanceToTarget = target.dst(carFrontPosition);
+		return distance(car, trafficLight) < distanceToTarget || distanceToTarget < target.dst(lightPosition);
+	}
+
+	public void execute(RouteComponent routeComp, PhysicsBodyComponent physComp, SteeringComponent steeringComp,
+			MaxSpeedComponent maxSpeedComp
+			) {
+		Vector2 target = getTarget(routeComp);
+		float distanceToTarget = target.dst(physComp.getPosition());
+
+		//
+		updatePath(routeComp, steeringComp, distanceToTarget);
+
+		Vector2 force = SeekBehavior.getForce(physComp.getPosition(), target);
+		// TODO Define maxForce in relation to mass
+		force.clamp(0, steeringComp.getMaxForce());
+		Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
+		float maxSpeed = Math.min(routeComp.getCurrentEdge().getData().getSpeedLimit(), maxSpeedComp.getSpeed());
+		newVel.clamp(0, maxSpeed);
+		float deltaA = getAngleOfCurrentEdgeInRads(routeComp) - physComp.getAngle();
+		// float deltaA = getDeltaAngle(routeComp) - physComp.getAngle();
+		deltaA = constrainAngle(deltaA);
+		// TODO extract constants, refactor
+		float angularThreshold = 7;
+		float turningSpeed = 8;
+		if (Math.abs(deltaA) > 0.05) {
+			if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
+				// deltaA < 0 &&
+				if (deltaA < 0 && newVel.len() > turningSpeed) {
+					newVel.scl(0.9f);
+				}
+				physComp.applyTorque(steeringComp.getMaxTorque() * deltaA, true);
+			}
+		}
+		else {
+			physComp.setAngularVelocity(0);
+		}
+
+		physComp.setLinearVelocity(newVel);
+	}
+
+	private void updatePath(RouteComponent routeComp, SteeringComponent steeringComp, float distanceToTarget) {
+		if (routeComp.isLastEdge() && steeringComp.getState() == State.DEFAULT && distanceToTarget < arrivalThreshold) {
+			steeringComp.setState(State.ARRIVED);
+		}
+		else {
+			float thresHold = isRightTurn(routeComp) ? rightTurnThreshold : leftTurnThreshold;
+			if (distanceToTarget < thresHold) {
+				routeComp.update();
+				// routeComp.setCurrentVertex(routeComp.getNextVertex());
+				// routeComp.setEdgeIndex(routeComp.getEdgeIndex() + 1);
+			}
+		}
+	}
+
+	private Vector2 getPosition(Entity entity) {
+		return physicsBodyMapper.get(entity).getPosition();
 	}
 
 	private void slowDown(SteeringComponent steeringComp, PhysicsBodyComponent physComp) {
@@ -208,7 +290,8 @@ public class MovementSystem
 		if (routeComp.isLastEdge()) {
 			return false;
 		}
-		return getDeltaAngle(routeComp) < 0;
+		float deltaAngle = getDeltaAngle(routeComp);
+		return deltaAngle < 0 || deltaAngle > PI;
 	}
 
 	private float getDeltaAngle(RouteComponent routeComp) {
@@ -226,6 +309,11 @@ public class MovementSystem
 	private float distance(Entity entityA, Entity entityB) {
 		assert physicsBodyMapper.has(entityA) && physicsBodyMapper.has(entityB);
 		return physicsBodyMapper.get(entityA).getPosition().dst(physicsBodyMapper.get(entityB).getPosition());
+	}
+
+	private Vector2 vector(Entity entityA, Entity entityB) {
+		assert physicsBodyMapper.has(entityA) && physicsBodyMapper.has(entityB);
+		return physicsBodyMapper.get(entityB).getPosition().cpy().sub(physicsBodyMapper.get(entityA).getPosition());
 	}
 
 	private static float getAngleOfCurrentEdgeInRads(RouteComponent routeComp) {

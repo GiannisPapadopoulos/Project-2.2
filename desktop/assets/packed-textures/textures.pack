@@ -3,118 +3,182 @@ textures.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-car1
+background
   rotate: false
-  xy: 804, 904
+  xy: 2, 1244
+  size: 2835, 2835
+  orig: 2835, 2835
+  offset: 0, 0
+  index: -1
+blue-car
+  rotate: false
+  xy: 3481, 3479
+  size: 600, 600
+  orig: 600, 600
+  offset: 0, 0
+  index: -1
+car
+  rotate: false
+  xy: 1446, 780
   size: 188, 97
   orig: 188, 97
+  offset: 0, 0
+  index: 1
+car
+  rotate: false
+  xy: 2140, 1145
+  size: 188, 97
+  orig: 188, 97
+  offset: 0, 0
+  index: 6
+car
+  rotate: false
+  xy: 3343, 2607
+  size: 97, 188
+  orig: 97, 188
+  offset: 0, 0
+  index: 7
+car1
+  rotate: false
+  xy: 3481, 3308
+  size: 327, 169
+  orig: 327, 169
+  offset: 0, 0
+  index: -1
+lambo2
+  rotate: false
+  xy: 3481, 3308
+  size: 327, 169
+  orig: 327, 169
   offset: 0, 0
   index: -1
 car2
   rotate: false
-  xy: 804, 805
+  xy: 1950, 1145
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car3
   rotate: false
-  xy: 804, 706
+  xy: 2839, 2504
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car4
   rotate: false
-  xy: 804, 607
+  xy: 1198, 503
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car5
   rotate: false
-  xy: 804, 508
-  size: 188, 97
-  orig: 188, 97
+  xy: 2, 77
+  size: 327, 169
+  orig: 327, 169
+  offset: 0, 0
+  index: -1
+lambo
+  rotate: false
+  xy: 2, 77
+  size: 327, 169
+  orig: 327, 169
   offset: 0, 0
   index: -1
 car6
   rotate: false
-  xy: 804, 409
+  xy: 3481, 3209
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car7
   rotate: false
-  xy: 804, 219
-  size: 97, 188
-  orig: 97, 188
+  xy: 3810, 3380
+  size: 188, 97
+  orig: 188, 97
+  offset: 0, 0
+  index: -1
+intersection
+  rotate: false
+  xy: 2839, 3439
+  size: 640, 640
+  orig: 640, 640
+  offset: 0, 0
+  index: -1
+lambo3
+  rotate: false
+  xy: 1446, 879
+  size: 327, 169
+  orig: 327, 169
   offset: 0, 0
   index: -1
 left_green
   rotate: false
   xy: 2, 2
-  size: 73, 60
-  orig: 73, 60
+  size: 60, 73
+  orig: 60, 73
   offset: 0, 0
   index: -1
 left_orange
   rotate: false
-  xy: 903, 253
-  size: 73, 60
-  orig: 73, 60
+  xy: 331, 173
+  size: 60, 73
+  orig: 60, 73
   offset: 0, 0
   index: -1
 left_red
   rotate: false
-  xy: 77, 2
-  size: 73, 60
-  orig: 73, 60
+  xy: 1775, 975
+  size: 60, 73
+  orig: 60, 73
   offset: 0, 0
   index: -1
 light_green
   rotate: false
-  xy: 679, 107
-  size: 97, 92
-  orig: 97, 92
+  xy: 1950, 1070
+  size: 60, 73
+  orig: 60, 73
   offset: 0, 0
   index: -1
 light_orange
   rotate: false
-  xy: 679, 13
-  size: 97, 92
-  orig: 97, 92
+  xy: 3029, 2528
+  size: 60, 73
+  orig: 60, 73
   offset: 0, 0
   index: -1
 light_red
   rotate: false
-  xy: 903, 315
-  size: 97, 92
-  orig: 97, 92
+  xy: 3481, 3134
+  size: 60, 73
+  orig: 60, 73
   offset: 0, 0
   index: -1
 parking
   rotate: false
-  xy: 396, 20
+  xy: 506, 261
   size: 281, 179
   orig: 281, 179
   offset: 0, 0
   index: -1
+police
+  rotate: false
+  xy: 2839, 2405
+  size: 188, 97
+  orig: 188, 97
+  offset: 0, 0
+  index: -1
 red-car
   rotate: false
-  xy: 2, 64
+  xy: 804, 465
   size: 392, 135
   orig: 392, 135
   offset: 0, 0
   index: -1
-road2x2
-  rotate: false
-  xy: 2, 201
-  size: 800, 800
-  orig: 800, 800
-  offset: 0, 0
-  index: -1
+<<<<<<< HEAD
 
 textures2.png
 format: RGBA8888
@@ -172,10 +236,16 @@ play_hover
 road1x1
   rotate: false
   xy: 2, 348
+=======
+road1x1
+  rotate: false
+  xy: 804, 602
+>>>>>>> refs/heads/develop
   size: 640, 640
   orig: 640, 640
   offset: 0, 0
   index: -1
+<<<<<<< HEAD
 
 textures3.png
 format: RGBA8888
@@ -205,22 +275,23 @@ play_pressed
 road1x1v
   rotate: false
   xy: 2, 238
+=======
+road1x1v
+  rotate: false
+  xy: 2839, 2797
+>>>>>>> refs/heads/develop
   size: 640, 640
   orig: 640, 640
   offset: 0, 0
   index: -1
-
-textures4.png
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-blue-car
+road2x2
   rotate: false
-  xy: 2, 2
-  size: 600, 600
-  orig: 600, 600
+  xy: 2, 442
+  size: 800, 800
+  orig: 800, 800
   offset: 0, 0
   index: -1
+<<<<<<< HEAD
 
 textures5.png
 format: RGBA8888
@@ -233,3 +304,26 @@ repeat: none
   orig: 640, 640
   offset: 0, 0
   index: -1
+=======
+truck
+  rotate: false
+  xy: 2, 248
+  size: 502, 192
+  orig: 502, 192
+  offset: 0, 0
+  index: 1
+truck
+  rotate: false
+  xy: 1446, 1050
+  size: 502, 192
+  orig: 502, 192
+  offset: 0, 0
+  index: 2
+truck
+  rotate: false
+  xy: 2839, 2603
+  size: 502, 192
+  orig: 502, 192
+  offset: 0, 0
+  index: 3
+>>>>>>> refs/heads/develop

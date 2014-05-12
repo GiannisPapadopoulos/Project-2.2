@@ -4,6 +4,9 @@ import static functions.VectorUtils.getMidPoint;
 import static trafficsim.TrafficSimConstants.*;
 import graph.Graph;
 import graph.GraphFactory;
+
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
@@ -13,6 +16,7 @@ import trafficsim.roads.Road;
 import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
+import trafficsim.systems.GroupedTrafficLightSystem;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
@@ -20,7 +24,6 @@ import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
-import trafficsim.systems.TrafficLightSystem;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -68,7 +71,7 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
-		world.setSystem(new TrafficLightSystem());
+		// world.setSystem(new TrafficLightSystem());
 		world.setSystem(new ExpirySystem());
 
 		world.setSystem(new RoutingSystem());
@@ -92,21 +95,20 @@ public class SimulationScreen extends SuperScreen {
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);
-		EntityFactory.populateWorld(world, graph);
+		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
 		
 		firstTimeSimulationRun = false;
 
-
-
+		EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 
 
 		if (TIMER.isStarted())
 			TIMER.reset();
 		TIMER.start();
-		GraphFactory.addSpawnPointsTest(world, world.getGraph());
-		EntityFactory.addTrafficLights(world, world.getGraph());
-		// world.process();
-		// EntityFactory.addSpawnPoints(world, graph);
+		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
+		world.process();
+
 
 		System.out.println(getMidPoint(graph.getEdge(0).getData()));
 	}

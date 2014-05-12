@@ -81,6 +81,7 @@ public class RenderSystem
 			sprite.setRotation(physicsBodyMapper.get(e).getAngle() * MathUtils.radDeg);
 		}
 		spriteComp.setSprite(sprite);
+		spriteComp.setSet(true);
 	}
 
 	@Override
@@ -96,15 +97,19 @@ public class RenderSystem
 			// inserted(e);
 			// }
 
-			if (trafficLightMapper.has(e)) {
-				
-				TrafficLightComponent lightComp = e.getComponent(TrafficLightComponent.class);
-				// Means that the light was switched last step
-				if (lightComp.getTimeElapsed() == 0) {
-					spriteComp.setName(lightComp.getTextureName());
-					inserted(e);
-				}
+			if (!spriteComp.isSet()) {
+				inserted(e);
 			}
+
+			// if (trafficLightMapper.has(e)) {
+			//
+			// TrafficLightComponent lightComp = e.getComponent(TrafficLightComponent.class);
+			// // Means that the light was switched last step
+			// if (lightComp.getTimeElapsed() == 0) {
+			// // spriteComp.setName(lightComp.getTextureName());
+			// inserted(e);
+			// }
+			// }
 
 			Sprite sprite = spriteComp.getSprite();
 

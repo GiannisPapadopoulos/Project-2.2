@@ -69,6 +69,8 @@ public class EditorScreen extends SuperScreen {
 				mousePosition.getGrid().getY());
 
 		wr.renderPOI(getCamera(), POI, getMousePosition().updateClosestPOI(POI));
+		
+		wr.debugRENDER(getCamera());
 
 		getWorldLayer().act(delta);
 		getUILayer().act(delta);

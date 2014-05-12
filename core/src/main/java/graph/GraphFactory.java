@@ -2,6 +2,7 @@ package graph;
 
 import static trafficsim.TrafficSimConstants.CITY_SPEED_LIMIT;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
@@ -103,6 +104,20 @@ public class GraphFactory {
 				}
 			}
 		}
+		return graph;
+	}
+	
+	public static Graph<Road> create2LaneStraight() {
+		Graph<Road> graph = new Graph<Road>();
+		
+		graph.addVertex(new Road(new Vector2(0,0),new Vector2(2*LANE_WIDTH,0),1,Direction.BOTH,CITY_SPEED_LIMIT));
+		graph.addVertex(new Road(new Vector2(100,0),new Vector2(100+2*LANE_WIDTH,0),1,Direction.BOTH,CITY_SPEED_LIMIT));
+		
+		val v1 = graph.getVertex(0);
+		val v2 = graph.getVertex(1);
+		
+		
+		
 		return graph;
 	}
 }

@@ -7,6 +7,11 @@ public class Vertex<E> extends Element<E> {
 	protected Vertex(Graph<E> parent, int ID, E data) {
 		super(parent, ID, data);
 	}
+	
+	//TEST ONLY
+	public Vertex() {
+		super(null,0,null);
+	}
 
 	/** Returns the other vertex of the given edge or null if this vertex is not part of the edge */
 	public Vertex<E> getNeighbor(Edge<E> edge) {

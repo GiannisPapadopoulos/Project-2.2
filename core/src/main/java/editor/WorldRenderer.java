@@ -1,10 +1,21 @@
 package editor;
 
+import graph.Vertex;
+
+import java.util.ArrayList;
+
+import paramatricCurves.ParametricCurve;
+import paramatricCurves.curveDefs.C_Circular;
+import paramatricCurves.curveDefs.C_Linear;
+import trafficsim.TrafficSimConstants;
+import trafficsim.roads.CrossRoad;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
 
 public class WorldRenderer {
 
@@ -66,12 +77,47 @@ public class WorldRenderer {
 		gridRenderer.begin(ShapeType.Filled);
 		gridRenderer.setColor(Color.BLUE);
 		for (int i = 0; i < POI.getPOI().size(); i++) {
-			if (closestPOI!=null && closestPOI == POI.getPOI().get(i))
+			if (closestPOI != null && closestPOI == POI.getPOI().get(i))
 				gridRenderer.setColor(Color.PINK);
 			gridRenderer.rect(POI.getPOI().get(i).getPosition().x - 0.5f, POI
 					.getPOI().get(i).getPosition().y - 0.5f, 1f, 1f);
 			gridRenderer.setColor(Color.BLUE);
 		}
+		gridRenderer.end();
+	}
+
+	public void debugRENDER(OrthographicCamera cam) {
+		float LANE_WIDTH = TrafficSimConstants.LANE_WIDTH;
+		CrossRoad cr = new CrossRoad(new Vertex(), 6, new Vector2(0, 0));
+		ParametricCurve pc = new ParametricCurve(new C_Circular(new Vector2(
+				100, 100), 8));
+
+		ArrayList<ParametricCurve> pcs = new ArrayList<ParametricCurve>();
+		ParametricCurve p1 = new ParametricCurve(new C_Linear(new Vector2(0,
+				97), new Vector2(90, 97)));
+		pcs.add(p1);
+
+		gridRenderer.setProjectionMatrix(cam.combined);
+		gridRenderer.begin(ShapeType.Line);
+		gridRenderer.setColor(Color.RED);
+		gridRenderer.circle(cr.getPosition().x, cr.getPosition().y,
+				cr.getSize(), 50);
+		for (Double t : pc.getR_t().getDiscreteCover(100)) {
+			Vector2 v = pc.getPoint(t);
+			System.out.println(v);
+			gridRenderer.rect(v.x - LANE_WIDTH / 2, v.y - LANE_WIDTH / 2,
+					LANE_WIDTH, LANE_WIDTH);
+		}
+		gridRenderer.setColor(Color.ORANGE);
+		for( ParametricCurve p : pcs) {
+			for (Double t : p.getR_t().getDiscreteCover(100)) {
+				Vector2 v = p.getPoint(t);
+				gridRenderer.rect(v.x - LANE_WIDTH / 2, v.y - LANE_WIDTH / 2,
+						LANE_WIDTH, LANE_WIDTH);
+			}
+		}
+		System.out.println(pc.getR_t().getDiscreteCover(100));
+
 		gridRenderer.end();
 	}
 

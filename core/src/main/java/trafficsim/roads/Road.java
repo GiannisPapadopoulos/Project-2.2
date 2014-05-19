@@ -62,6 +62,11 @@ public class Road {
 		this.direction = direction;
 		this.speedLimit = speedLimit;
 	}
+	/*public Rectangle2D getRectangle(){
+		
+		new Rectangle2D.Float(pointA.x-LANE_WIDTH*Math.cos(getAngle(this)), pointA.y-LANE_WIDTH*Math.sin(getAngle(this)), LANE_WIDTH*numLanes,)
+	}
+	*/
 
 	public Vector2 getPointC() {
 		Vector2 v = VectorUtils.getMidPoint(pointA, pointB);

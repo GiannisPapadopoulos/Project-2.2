@@ -2,7 +2,10 @@ package trafficsim.factories;
 
 import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.*;
+import static trafficsim.TrafficSimConstants.CAR_LENGTH;
+import static trafficsim.TrafficSimConstants.CAR_WIDTH;
+import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import static trafficsim.TrafficSimConstants.TRAFFIC_LIGHT_INTERVAL;
 import functions.VectorUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
@@ -272,6 +275,13 @@ public class EntityFactory {
 
 		}
 		return trafficLightIDs;
+	}
+
+		
+
+	private static void For() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, int timerG, int timerO,

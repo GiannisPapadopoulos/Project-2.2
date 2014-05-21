@@ -1,7 +1,7 @@
 package trafficsim.movement;
 
-import trafficsim.components.PhysicsBodyComponent;
 import lombok.Getter;
+import trafficsim.components.PhysicsBodyComponent;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;

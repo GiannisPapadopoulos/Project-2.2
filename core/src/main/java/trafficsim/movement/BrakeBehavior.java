@@ -35,9 +35,10 @@ public class BrakeBehavior
 	public Vector2 steeringForce(PhysicsBodyComponent physComp) {
 		Vector2 velocity = physComp.getLinearVelocity().cpy();
 		if (velocity.len() > maxSpeed) {
-			return velocity.scl(-scalingFactor);
+			return velocity.scl(-(1 - scalingFactor));
 		}
 		return new Vector2(0, 0);
+		// System.out.println("v " + velocity + " r " + velocity.cpy().scl(-scalingFactor) + " s " + scalingFactor);
 	}
 
 }

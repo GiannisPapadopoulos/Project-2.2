@@ -1,7 +1,6 @@
 package trafficsim.systems;
 
 import static functions.MovementFunctions.buildWaypoints;
-import static functions.MovementFunctions.isRightTurn;
 import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
@@ -35,7 +34,7 @@ public class RoutingSystem
 
 	// Start turning left
 	private float leftTurnThreshold = 0.2f;
-	private float rightTurnThreshold = 1.2f;
+	private float rightTurnThreshold = 2.2f;
 	// Arrived at destination
 	private float arrivalThreshold = 2.5f;
 
@@ -59,7 +58,7 @@ public class RoutingSystem
 				Vector2 target = routeComp.getNextWaypoint();
 				float distanceToTarget = target.dst(physComp.getPosition());
 				if (distanceToTarget < threshold) {
-					updatePath(routeComp);
+					updatePath(routeComp, steeringComp);
 					// System.out.println(routeComp.getEdgeIndex() + " w " + routeComp.getWayPointIndex() + " "
 					// + routeComp.getNextWaypoint());
 				}
@@ -67,7 +66,7 @@ public class RoutingSystem
 		}
 	}
 
-	private void updatePath(RouteComponent routeComp) {
+	private void updatePath(RouteComponent routeComp, SteeringComponent steeringComp) {
 		if (routeComp.getWayPointIndex() < routeComp.getWayPoints().size() - 1) {
 			routeComp.incrementWaypointIndex();
 		}
@@ -79,21 +78,8 @@ public class RoutingSystem
 				routeComp.setWayPointIndex(0);
 			}
 			else {
-				// TODO set arrival behavior
-			}
-		}
-	}
-
-	public void updatePath(RouteComponent routeComp, SteeringComponent steeringComp, float distanceToTarget) {
-		if (routeComp.isLastEdge() && steeringComp.getState() == State.DEFAULT && distanceToTarget < arrivalThreshold) {
-			steeringComp.setState(State.ARRIVED);
-		}
-		else {
-			float thresHold = isRightTurn(routeComp) ? rightTurnThreshold : leftTurnThreshold;
-			if (distanceToTarget < thresHold) {
-				// routeComp.update();
-				routeComp.setCurrentVertex(routeComp.getNextVertex());
-				routeComp.setEdgeIndex(routeComp.getEdgeIndex() + 1);
+				// TODO arrival behavior
+				steeringComp.setState(State.ARRIVED);
 			}
 		}
 	}

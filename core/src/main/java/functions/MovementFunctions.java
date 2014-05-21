@@ -1,6 +1,7 @@
 package functions;
 
 import static com.badlogic.gdx.math.MathUtils.PI;
+import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getAngle;
 import static functions.VectorUtils.getVector;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
@@ -18,13 +19,12 @@ import com.badlogic.gdx.math.Vector2;
 
 public class MovementFunctions {
 
-	/** Returns true if the next turn is a right one */
-	public static boolean isRightTurn(RouteComponent routeComp) {
-		if (routeComp.isLastEdge()) {
-			return false;
-		}
-		float deltaAngle = getDeltaAngle(routeComp);
-		return deltaAngle < 0 || deltaAngle > PI;
+	// TODO fix
+	public static boolean isLeftTurn(RouteComponent routeComp) {
+		float angle = getDeltaAngle(routeComp) * degRad;
+		// 0.001 is for floating point accuracy
+		boolean leftTurn = angle < -0.001 || angle > PI + 0.001;
+		return leftTurn;
 	}
 
 	public static float getDeltaAngle(RouteComponent routeComp) {
@@ -77,6 +77,10 @@ public class MovementFunctions {
 		for (int i = 1; i < number - 1; i++) {
 			Vector2 waypoint = start.cpy().add(step.cpy().scl(i));
 			waypoints.add(waypoint);
+		}
+		// To make left turns less wide
+		if (isLeftTurn(routeComp)) {
+			finish.add(lane.cpy().nor().scl(LANE_WIDTH));
 		}
 		waypoints.add(finish);
 		// System.out.println(start + " f " + finish + " " + waypoints);

@@ -82,11 +82,12 @@ public class CollisionDisablingSystem
 			if (contact.isTouching() && bothDynamic(contact)) {
 				Object userData1 = contact.getFixtureA().getBody().getUserData();
 				Object userData2 = contact.getFixtureB().getBody().getUserData();
-				removeFromWorld(userData1);
+				// removeFromWorld(userData1);
 				contact.setEnabled(false);
 				// removeFromWorld(userData2);
 				if (!firstHit) {
-					System.out.println("first hit " + TIMER.getTime() / 1000.0);
+					System.out.println("first hit " + TIMER.getTime() / 1000.0 + " pos "
+										+ contact.getFixtureA().getBody().getPosition());
 					firstHit = true;
 				}
 			}

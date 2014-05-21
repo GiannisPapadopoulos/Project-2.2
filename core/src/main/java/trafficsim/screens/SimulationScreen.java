@@ -1,6 +1,5 @@
 package trafficsim.screens;
 
-import static functions.VectorUtils.getMidPoint;
 import static trafficsim.TrafficSimConstants.*;
 import graph.Graph;
 import graph.GraphFactory;
@@ -18,6 +17,7 @@ import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.GroupedTrafficLightSystem;
 import trafficsim.systems.InputSystem;
+import trafficsim.systems.ManageMovementBehaviorsSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.OldMovementSystem;
 import trafficsim.systems.PathFindingSystem;
@@ -79,6 +79,7 @@ public class SimulationScreen extends SuperScreen {
 
 		world.setSystem(new RoutingSystem());
 		world.setSystem(new MovementSystem());
+		world.setSystem(new ManageMovementBehaviorsSystem());
 
 		// Temporary hack
 		world.setSystem(new CollisionDisablingSystem());
@@ -98,22 +99,23 @@ public class SimulationScreen extends SuperScreen {
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);
-		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
 		
+
 		firstTimeSimulationRun = false;
 
-		EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+		// EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+		GraphFactory.addSpawnPointsTest(world, world.getGraph());
+		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
 		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 
 
 		if (TIMER.isStarted())
 			TIMER.reset();
 		TIMER.start();
-		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		world.process();
 
 
-		System.out.println(getMidPoint(graph.getEdge(0).getData()));
+		// System.out.println(getMidPoint(graph.getEdge(0).getData()));
 	}
 
 

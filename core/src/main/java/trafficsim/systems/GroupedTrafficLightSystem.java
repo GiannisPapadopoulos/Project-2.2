@@ -1,8 +1,12 @@
 package trafficsim.systems;
 
+import java.util.List;
+
 import lombok.val;
+import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.GroupedTrafficLightComponent;
 import trafficsim.components.GroupedTrafficLightComponent.GroupedTrafficLightData;
+import trafficsim.components.LightToRoadMappingComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.SpriteComponent;
 import trafficsim.components.TrafficLightComponent;
@@ -33,10 +37,35 @@ public class GroupedTrafficLightSystem
 	@Mapper
 	private ComponentMapper<SpriteComponent> spriteMapper;
 
+	@Mapper
+	private ComponentMapper<LightToRoadMappingComponent> lightToRoadMapper;
+	@Mapper
+	private ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
+
 
 	@SuppressWarnings("unchecked")
 	public GroupedTrafficLightSystem() {
 		super(Aspect.getAspectForAll(GroupedTrafficLightComponent.class, PhysicsBodyComponent.class));
+	}
+	
+	protected void initialize(GroupedTrafficLightComponent groupComp) {
+		for (List<GroupedTrafficLightData> list : groupComp.getGroupedLightsData()) {
+			for (GroupedTrafficLightData groupedData : list) {
+				Entity trafficLight = world.getEntity(groupedData.getID());
+				initialize(trafficLight);
+			}
+		}
+		groupComp.setMapped(true);
+	}
+
+	protected void initialize(Entity trafficLight) {
+		if (lightToRoadMapper.has(trafficLight)) {
+			Entity road = world.getEntity(lightToRoadMapper.get(trafficLight).getRoadId());
+			if (attachedLightsMapper.has(road)) {
+				attachedLightsMapper.get(road).getTrafficLightIDs().add(trafficLight.getId());
+				trafficLight.removeComponent(LightToRoadMappingComponent.class);
+			}
+		}
 	}
 
 	/** Sets the lights at the current index to green, rest to red */
@@ -68,8 +97,10 @@ public class GroupedTrafficLightSystem
 	protected void processEntities(ImmutableBag<Entity> entities) {
 		for (int i = 0; i < entities.size(); i++) {
 			Entity vertexEntity = entities.get(i);
-
 			GroupedTrafficLightComponent groupComp = groupedTrafficLightMapper.get(vertexEntity);
+			if (!groupComp.isMapped()) {
+				initialize(groupComp);
+			}
 			if (!groupComp.isSet()) {
 				toggle(groupComp);
 				groupComp.setSet(true);

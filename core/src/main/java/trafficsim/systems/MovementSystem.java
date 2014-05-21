@@ -4,6 +4,7 @@ import static functions.MovementFunctions.constrainAngle;
 import static functions.MovementFunctions.getAngleOfCurrentEdgeInRads;
 import static functions.VectorUtils.getVector;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import static trafficsim.TrafficSimConstants.SPEED_SCALING_FACTOR;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -14,8 +15,7 @@ import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
 import trafficsim.components.SteeringComponent;
-import trafficsim.movement.Behavior;
-import trafficsim.movement.SeekBehavior;
+import trafficsim.components.SteeringComponent.State;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -49,10 +49,6 @@ public class MovementSystem
 	ComponentMapper<SteeringComponent> steeringComponentMapper;
 	@Mapper
 	ComponentMapper<MovementComponent> movementComponentMapper;
-	// @Mapper
-	// ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
-	// @Mapper
-	// ComponentMapper<TrafficLightComponent> trafficLightsMapper;
 	@Mapper
 	ComponentMapper<ExpiryComponent> expiryMapper;
 
@@ -71,40 +67,37 @@ public class MovementSystem
 			PhysicsBodyComponent physComp = physicsBodyMapper.get(car);
 			MovementComponent movementComp = movementComponentMapper.get(car);
 			if (routeComp.isSet()) {
-				updateBehaviors(movementComp, routeComp);
+				processArrived(car, steeringComp, physComp, routeComp);
+
 				// Vector2 target = routeComp.getNextWaypoint();
 				Vector2 steeringForce = movementComp.getBehavior().steeringForce(physComp);
 				// TODO Define maxForce in relation to mass
+				// steeringForce.clamp(0, steeringComp.getMaxForce());
+				// steeringForce.nor().scl(steeringComp.getMaxForce());
 				steeringForce.clamp(0, steeringComp.getMaxForce());
 				float maxAllowedSpeed = maxSpeedMapper.get(car).getSpeed();
 				float maxSpeed = Math.min(routeComp.getCurrentEdge().getData().getSpeedLimit(), maxAllowedSpeed);
 
-				Vector2 newVel = physComp.getLinearVelocity().cpy().add(steeringForce);
+//				Vector2 newVel = physComp.getLinearVelocity().cpy().add(steeringForce);
+				Vector2 newVel = physComp.getLinearVelocity()
+											.cpy()
+											.scl(1f)
+											.add(steeringForce.scl(SPEED_SCALING_FACTOR));
 				steer(physComp, routeComp, steeringComp, newVel);
 				newVel.clamp(0, maxSpeed);
 				physComp.setLinearVelocity(newVel);
 
-				Vector2 roadVector = getVector(routeComp.getCurrentEdge());
-				// The vector in world coordinates
-				Vector2 worldRoadVector = routeComp.getCurrentEdge().getData().getPointA().cpy().add(roadVector);
-
-				Vector2 roadLeft = worldRoadVector.cpy().add(roadVector.cpy().rotate(90).nor().scl(LANE_WIDTH));
-				Vector2 roadRight = worldRoadVector.cpy().add(roadVector.cpy().rotate(-90).nor().scl(LANE_WIDTH));
-				Vector2 adjust = roadVector.cpy().rotate(-90).nor().scl(LANE_WIDTH);
-				float length = physComp.getPosition().cpy().dot(roadLeft) / roadLeft.len2();
-				Vector2 projection = roadLeft.cpy().scl(length);
-				System.out.println("v " + roadVector + " w  " + worldRoadVector + " r " + roadRight + "l " + roadLeft
-									+ " p " + projection);
-				// System.out.println(projection);
-				// System.out.println(newVel);
+				correctionVectors(routeComp, physComp);
 			}
 		}
 	}
 
-	private void updateBehaviors(MovementComponent movementComp, RouteComponent routeComp) {
-		for (Behavior behavior : movementComp.getBehaviors().keys()) {
-			if (behavior instanceof SeekBehavior && routeComp.getWayPoints() != null) {
-				((SeekBehavior) behavior).setTargetLocation(routeComp.getNextWaypoint());
+	// TODO change to arrival behavior,state-based
+	private void processArrived(Entity car, SteeringComponent steeringComp, PhysicsBodyComponent physComp,
+			RouteComponent routeComp) {
+		if (steeringComp.getState() == State.ARRIVED) {
+			if (physComp.getPosition().dst(routeComp.getNextWaypoint()) < 1f) {
+				expiryMapper.get(car).setExpired(true);
 			}
 		}
 	}
@@ -139,6 +132,27 @@ public class MovementSystem
 	@Override
 	protected void inserted(Entity e) {
 		totalCars++;
+	}
+
+	public void carRemoved() {
+		totalCars--;
+		assert totalCars >= 0;
+	}
+
+	private void correctionVectors(RouteComponent routeComp, PhysicsBodyComponent physComp) {
+		Vector2 roadVector = getVector(routeComp.getCurrentEdge());
+		// The vector in world coordinates
+		Vector2 worldRoadVector = routeComp.getCurrentEdge().getData().getPointA().cpy().add(roadVector);
+
+		Vector2 roadLeft = worldRoadVector.cpy().add(roadVector.cpy().rotate(90).nor().scl(LANE_WIDTH));
+		Vector2 roadRight = worldRoadVector.cpy().add(roadVector.cpy().rotate(-90).nor().scl(LANE_WIDTH));
+		Vector2 adjust = roadVector.cpy().rotate(-90).nor().scl(LANE_WIDTH);
+		float length = physComp.getPosition().cpy().dot(roadLeft) / roadLeft.len2();
+		Vector2 projection = roadLeft.cpy().scl(length);
+		// System.out.println("v " + roadVector + " w  " + worldRoadVector + " r " + roadRight + "l " + roadLeft
+		// + " p " + projection);
+		// System.out.println(projection);
+		// System.out.println(newVel);
 	}
 
 }

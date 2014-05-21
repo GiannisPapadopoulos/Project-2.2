@@ -44,6 +44,12 @@ public final class TrafficSimConstants {
 	/** Speed limit for simple (1-lane) roads in meters per second */
 	public static final float CITY_SPEED_LIMIT = 50 / 3.6f;
 
+	/** When braking, velocity will become brakingFactor * velocity (but also take into account the scaling factor) */
+	public static final float DEFAULT_BRAKING_FACTOR = 0.98f;
+
+	/** velocity = velocity + desired_velocity * SPEED_SCALING_FACTOR */
+	public static final float SPEED_SCALING_FACTOR = 6f;
+
 	/** The random instance used throughout the traffic simulation */
 	public static final Random RANDOM = new Random(7);
 

@@ -31,6 +31,7 @@ import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
+import trafficsim.movement.BrakeBehavior;
 import trafficsim.movement.SeekBehavior;
 import trafficsim.movement.WeightedBehavior;
 import trafficsim.roads.Road;
@@ -95,6 +96,7 @@ public class EntityFactory {
 		// add empty movement behavior
 		WeightedBehavior behavior = new WeightedBehavior();
 		behavior.add(new SeekBehavior(), 1f);
+		behavior.add(new BrakeBehavior(DEFAULT_BRAKING_FACTOR), 0f);
 		car.addComponent(new MovementComponent(behavior));
 		return car;
 	}

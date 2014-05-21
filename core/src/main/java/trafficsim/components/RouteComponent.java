@@ -76,6 +76,10 @@ public class RouteComponent
 		return wayPoints.get(wayPointIndex);
 	}
 
+	public Vector2 getRoadEndPoint() {
+		return wayPoints.get(wayPoints.size() - 1);
+	}
+
 	public void incrementWaypointIndex() {
 		wayPointIndex++;
 	}

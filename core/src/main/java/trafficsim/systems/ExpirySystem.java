@@ -50,6 +50,7 @@ public class ExpirySystem
 					// + dataComp.getPercentageStopped());
 				}
 				entity.deleteFromWorld();
+				world.getSystem(MovementSystem.class).carRemoved();
 			}
 		}
 	}

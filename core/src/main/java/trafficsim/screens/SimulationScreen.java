@@ -12,14 +12,18 @@ import trafficsim.TrafficSimWorld;
 import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
+import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.GroupedTrafficLightSystem;
 import trafficsim.systems.InputSystem;
+import trafficsim.systems.ManageMovementBehaviorsSystem;
 import trafficsim.systems.MovementSystem;
+import trafficsim.systems.OldMovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
+import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
 
 import com.artemis.Entity;
@@ -45,6 +49,11 @@ public class SimulationScreen extends SuperScreen {
 
 	private boolean firstTimeSimulationRun = true;
 
+	@Getter
+	@Setter
+	// TODO it's not perfectly functional
+	private boolean paused;
+
 	public SimulationScreen(Screens screens) {
 		super(screens);
 
@@ -60,18 +69,20 @@ public class SimulationScreen extends SuperScreen {
 		// Add systems
 		world.setSystem(new DataSystem());
 		world.setSystem(new RenderSystem(getCamera()));
-		world.setSystem(new MovementSystem());
+		// world.setSystem(new OldMovementSystem());
 		world.setSystem(new PhysicsSystem());
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
-		// world.setSystem(new TrafficLightSystem());
+		world.setSystem(new GroupedTrafficLightSystem());
 		world.setSystem(new ExpirySystem());
 
-		world.setSystem(new GroupedTrafficLightSystem());
+		world.setSystem(new RoutingSystem());
+		world.setSystem(new MovementSystem());
+		world.setSystem(new ManageMovementBehaviorsSystem());
 
 		// Temporary hack
-		// world.setSystem(new CollisionDisablingSystem());
+		world.setSystem(new CollisionDisablingSystem());
 
 		InputSystem inputSystem = new InputSystem(this);
 		initMultiplexer();
@@ -88,26 +99,31 @@ public class SimulationScreen extends SuperScreen {
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);
-		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
 		
+
 		firstTimeSimulationRun = false;
 
-		EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+		// EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+		GraphFactory.addSpawnPointsTest(world, world.getGraph());
+		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
 		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 
 
 		if (TIMER.isStarted())
 			TIMER.reset();
 		TIMER.start();
-		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		world.process();
 
 
+		// System.out.println(getMidPoint(graph.getEdge(0).getData()));
 	}
 
 
 	@Override
 	public void render(float delta) {
+		if (paused) {
+			return;
+		}
 		long start;
 		if(DEBUG_FPS)
 			start = TIMER.getTime();
@@ -126,6 +142,12 @@ public class SimulationScreen extends SuperScreen {
 
 		if (DEBUG_FPS)
 			System.out.println(TIMER.getTime() - start + " milliseconds ");
+
+		if (Math.abs(TIMER.getTime() / 1000.0 - 200) < 0.02) {
+			System.out.println("Total time running " + TIMER.getTime() / 1000.0 + " cars spawned "
+								+ world.getSystem(OldMovementSystem.class).getTotalCars());
+			System.out.println(world.getDataGatherer());
+		}
 	}
 
 	@Override

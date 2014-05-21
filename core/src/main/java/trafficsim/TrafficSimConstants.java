@@ -39,18 +39,28 @@ public final class TrafficSimConstants {
 	public static final float CAR_WIDTH = 2.0f;
 
 	/** The width of a single lane, one way */
-	public static final float LANE_WIDTH = 3f;
+	public static final float LANE_WIDTH = 4.5f;
 
 	/** Speed limit for simple (1-lane) roads in meters per second */
 	public static final float CITY_SPEED_LIMIT = 50 / 3.6f;
 
+	/** When braking, velocity will become brakingFactor * velocity (but also take into account the scaling factor) */
+	public static final float DEFAULT_BRAKING_FACTOR = 0.98f;
+
+	/** velocity = velocity + desired_velocity * SPEED_SCALING_FACTOR */
+	public static final float SPEED_SCALING_FACTOR = 6f;
+
 	/** The random instance used throughout the traffic simulation */
-	public static final Random RANDOM = new Random(0);
+	public static final Random RANDOM = new Random(7);
 
 	public static final StopWatch TIMER = new StopWatch();
 	
 	public static final boolean DEBUG_PRINT_LEVEL_0 = false;
 
-	/** Default traffic light interval */
-	public static final int TRAFFIC_LIGHT_INTERVAL = 3;
+	/** Default traffic light green interval */
+	public static final int TRAFFIC_LIGHT_GREEN_INTERVAL = 10;
+
+	/** Default traffic light orange interval */
+	public static final int TRAFFIC_LIGHT_ORANGE_INTERVAL = 3;
+
 }

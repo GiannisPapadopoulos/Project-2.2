@@ -42,6 +42,9 @@ public class GroupedTrafficLightComponent
 	 */
 	private boolean set = false;
 
+	/** If each traffic light belonging to the intersection has been mapped to the correct road */
+	private boolean mapped = false;
+
 	public GroupedTrafficLightComponent(List<List<GroupedTrafficLightData>> groupedLightsData) {
 		this.groupedLightsData = groupedLightsData;
 	}

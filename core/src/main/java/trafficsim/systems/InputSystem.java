@@ -1,10 +1,10 @@
 package trafficsim.systems;
 
-import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
-import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
+import static trafficsim.TrafficSimConstants.*;
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.FindBodyQueryCallback;
 import trafficsim.components.PhysicsBodyComponent;
+import trafficsim.screens.SimulationScreen;
 import trafficsim.screens.SuperScreen;
 
 import com.artemis.Entity;
@@ -44,9 +44,18 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if (keycode == Keys.P) {
+		if (keycode == Keys.C) {
+			System.out.println("Total time running " + TIMER.getTime() / 1000.0 + " cars spawned "
+								+ world.getSystem(MovementSystem.class).getTotalCars());
 			System.out.println(((TrafficSimWorld) world).getDataGatherer());
 			return true;
+		}
+		else if (keycode == Keys.P) {
+			SimulationScreen screen = superScreen.getScreens().getSimulationScreen();
+			if (screen != null) {
+				// Toggle paused
+				screen.setPaused(!screen.isPaused());
+			}
 		}
 		return false;
 	}
@@ -83,6 +92,11 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 				System.out.println("Found something " + car + " id " + callBack.getClosestId() + " "
 									+ physComp.getPosition() + "\n");
 			}
+		}
+		else {
+			superScreen.getMousePosition().update(camera);
+			Coordinates coords = superScreen.getMousePosition().getAbsolute();
+			System.out.println("x " + coords.getX() + " y " + coords.getY());
 		}
 		return true;
 	}

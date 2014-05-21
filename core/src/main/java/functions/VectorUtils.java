@@ -1,5 +1,6 @@
 package functions;
 
+import graph.Element;
 import trafficsim.roads.Road;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -29,6 +30,10 @@ public class VectorUtils {
 
 	public static Vector2 getVector(Road roadA, Road roadB) {
 		return getVector(getMidPoint(roadA), getMidPoint(roadB));
+	}
+
+	public static Vector2 getVector(Element<Road> element) {
+		return getVector(element.getData());
 	}
 
 	public static float getAngle(Road road) {

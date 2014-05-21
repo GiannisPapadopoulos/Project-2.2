@@ -2,10 +2,7 @@ package trafficsim.factories;
 
 import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.CAR_WIDTH;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
-import static trafficsim.TrafficSimConstants.TRAFFIC_LIGHT_INTERVAL;
+import static trafficsim.TrafficSimConstants.*;
 import functions.VectorUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
@@ -26,6 +23,7 @@ import trafficsim.components.GroupedTrafficLightComponent;
 import trafficsim.components.GroupedTrafficLightComponent.GroupedTrafficLightData;
 import trafficsim.components.LightToRoadMappingComponent;
 import trafficsim.components.MaxSpeedComponent;
+import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.SpawnComponent;
 import trafficsim.components.SpriteComponent;
@@ -33,6 +31,9 @@ import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
+import trafficsim.movement.BrakeBehavior;
+import trafficsim.movement.SeekBehavior;
+import trafficsim.movement.WeightedBehavior;
 import trafficsim.roads.Road;
 import trafficsim.spawning.FixedIntervalSpawningStrategy;
 
@@ -92,7 +93,11 @@ public class EntityFactory {
 		car.addComponent(new DataComponent());
 		// So that it can be properly erased when it reaches the destination
 		car.addComponent(new ExpiryComponent());
-
+		// add empty movement behavior
+		WeightedBehavior behavior = new WeightedBehavior();
+		behavior.add(new SeekBehavior(), 1f);
+		behavior.add(new BrakeBehavior(DEFAULT_BRAKING_FACTOR), 0f);
+		car.addComponent(new MovementComponent(behavior));
 		return car;
 	}
 
@@ -175,12 +180,10 @@ public class EntityFactory {
 		return vertexEntities;
 	}
 
-	private static void addLights(Vertex<Road> vertex) {
-		// TODO Auto-generated method stub
-	}
 
 	public static void addTrafficLights(TrafficSimWorld world, Graph<Road> graph, List<Entity> vertexEntities) {
-		int interval = TRAFFIC_LIGHT_INTERVAL;
+		int interval = TRAFFIC_LIGHT_GREEN_INTERVAL;
+		int orangeInterval = TRAFFIC_LIGHT_ORANGE_INTERVAL;
 
 		// iterator
 		int index = 0;
@@ -198,7 +201,8 @@ public class EntityFactory {
 				List<GroupedTrafficLightData> leftAndStraightData = new ArrayList<GroupedTrafficLightData>();
 				if (lightIDs.size() > 0) {
 					for (int i = 0; i < lightIDs.size(); i++) {
-						leftAndStraightData.add(new GroupedTrafficLightData(lightIDs.get(i), interval - 1, 1));
+						leftAndStraightData.add(new GroupedTrafficLightData(lightIDs.get(i), interval - orangeInterval,
+																			orangeInterval));
 					}
 					groupedLights.add(leftAndStraightData);
 				}
@@ -226,7 +230,7 @@ public class EntityFactory {
 			Vector2 corr = getVector(edge.getData()).nor().rotate(90 * direction);
 
 			// int for changing speed of lights
-			int interval = TRAFFIC_LIGHT_INTERVAL;
+			int interval = TRAFFIC_LIGHT_GREEN_INTERVAL;
 
 			Vector2 roadVector = getVector(edge.getData());
 			if (onPointA)
@@ -277,15 +281,8 @@ public class EntityFactory {
 		return trafficLightIDs;
 	}
 
-		
-
-	private static void For() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, int timerG, int timerO,
-			int timerR, Status status, boolean straight, boolean OnPointA, float angleInRads) {
+	public static Entity createTrafficLight(TrafficSimWorld world, Vector2 position, float timerG, float timerO,
+			float timerR, Status status, boolean straight, boolean OnPointA, float angleInRads) {
 		Entity trafficLight = world.createEntity();
 		float width = 1f;
 		float length = 1f;

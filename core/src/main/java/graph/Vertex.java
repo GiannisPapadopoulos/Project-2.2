@@ -9,19 +9,6 @@ public class Vertex<E> extends Element<E> {
 	}
 
 	/**
-	 * Returns the edge connecting this and vertex, or null. Does not take
-	 * direction of edges into account
-	 */
-	public Edge<E> getNeighbor(Vertex<E> vertex) {
-		for (Edge<E> edge : parent.getEdgeIterator()) {
-			if (edge.isAdjacentVertex(vertex)) {
-				return edge;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Returns the other vertex of the given edge or null if this vertex is not
 	 * part of the edge
 	 */

@@ -2,10 +2,7 @@ package trafficsim.factories;
 
 import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.CAR_WIDTH;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
-import static trafficsim.TrafficSimConstants.TRAFFIC_LIGHT_INTERVAL;
+import static trafficsim.TrafficSimConstants.*;
 import functions.VectorUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;

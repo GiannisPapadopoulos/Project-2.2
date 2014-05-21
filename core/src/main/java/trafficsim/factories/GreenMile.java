@@ -47,7 +47,8 @@ public class GreenMile {
 					nextIntersection.getID()));
 			groupedLightComp = vertexEntity
 					.getComponent(GroupedTrafficLightComponent.class);
-			float redTimer = groupedLightComp.getGroupedLightsData().get(correctIndex).get(0).getRedTimer();
+			// float redTimer = groupedLightComp.getGroupedLightsData().get(correctIndex).get(0).getRedTimer();
+			float redTimer = groupedLightComp.getRedTimer(correctIndex);
 			if(redTimer < totalGreenWaveTime){
 				setLight(world, nextIntersection, angle,redTimer-totalGreenWaveTime);
 			}
@@ -82,7 +83,7 @@ public class GreenMile {
 	}
 
 	private static int findCorrectLight(Vertex<Road> intersection, float angle) {
-	return 0;
+		return 0;
 	}
 
 	// This is not really correct, won't work in every situation

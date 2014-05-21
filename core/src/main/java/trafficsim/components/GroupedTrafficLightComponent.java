@@ -50,9 +50,20 @@ public class GroupedTrafficLightComponent
 	}
 
 	/** Assume that straight and left light are toggled at the same time */
-	public double getTimer() {
+	public float getTimer() {
 		GroupedTrafficLightData activeTrafficLight = groupedLightsData.get(index).get(0);
 		return green ? activeTrafficLight.greenTimer : activeTrafficLight.orangeTimer;
+	}
+
+	public float getRedTimer(int lightIndex) {
+		float redTimer = 0;
+		for (int i = 0; i < groupedLightsData.size(); i++) {
+			if (i != lightIndex) {
+				redTimer += groupedLightsData.get(lightIndex).get(0).getGreenTimer();
+				redTimer += groupedLightsData.get(lightIndex).get(0).getOrangeTimer();
+			}
+		}
+		return redTimer;
 	}
 
 	/**
@@ -65,14 +76,14 @@ public class GroupedTrafficLightComponent
 		private int ID;
 		@Setter
 		/** The green timer */
-		private double greenTimer;
+		private float greenTimer;
 		@Setter
-		private double orangeTimer;
+		private float orangeTimer;
 		
-		//TODO
-		public float getRedTimer(){
-			return 0;
-		}
+		// //TODO
+		// public float getRedTimer(){
+		// return 0;
+		// }
 	}
 
 }

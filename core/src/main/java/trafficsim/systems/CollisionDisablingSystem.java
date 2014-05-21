@@ -1,5 +1,6 @@
 package trafficsim.systems;
 
+import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.TIMER;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.ExpiryComponent;
@@ -11,6 +12,7 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Mapper;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -80,11 +82,13 @@ public class CollisionDisablingSystem
 		@Override
 		public void preSolve(Contact contact, Manifold oldManifold) {
 			if (contact.isTouching() && bothDynamic(contact)) {
-				Object userData1 = contact.getFixtureA().getBody().getUserData();
-				Object userData2 = contact.getFixtureB().getBody().getUserData();
-				// removeFromWorld(userData1);
+				Body physBody1 = contact.getFixtureA().getBody();
+				Body physBody2 = contact.getFixtureB().getBody();
+				if (physBody1.getPosition().dst(physBody2.getPosition()) < CAR_LENGTH / 2) {
+					removeFromWorld(physBody1.getUserData());
+				}
+				removeFromWorld(physBody1.getUserData());
 				contact.setEnabled(false);
-				// removeFromWorld(userData2);
 				if (!firstHit) {
 					System.out.println("first hit " + TIMER.getTime() / 1000.0 + " pos "
 										+ contact.getFixtureA().getBody().getPosition());

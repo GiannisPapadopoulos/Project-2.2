@@ -69,19 +69,6 @@ public class ManageMovementBehaviorsSystem
 	}
 
 	private void updateBehaviors(MovementComponent movementComp, RouteComponent routeComp, PhysicsBodyComponent physComp) {
-		Entity trafficLight = getRelevantLight(routeComp);
-		if (trafficLight != null) {
-			Vector2 lightPos = physicsBodyMapper.get(trafficLight).getPosition();
-			Vector2 carPos = physComp.getPosition();
-			// Vector2 target = routeComp.getRoadEndPoint();
-			Vector2 carFrontPosition = physComp.getWorldPoint(new Vector2(CAR_LENGTH / 2, 0));
-
-			if (trafficLight != null && trafficLightsMapper.get(trafficLight).getStatus() != Status.GREEN
-				&& carFrontPosition.dst(lightPos) < brakingThreshold && !pastTrafficLight(physComp, trafficLight)) {
-				setBrakeBehavior(movementComp, DEFAULT_BRAKING_FACTOR);
-				return;
-			}
-		}
 		World box2dWorld = ((TrafficSimWorld) world).getBox2dWorld();
 		Vector2 position = physComp.getPosition();
 		Vector2 angleAdjustment = new Vector2(cos(physComp.getAngle()), sin(physComp.getAngle()));
@@ -96,6 +83,7 @@ public class ManageMovementBehaviorsSystem
 			// && routeComponentMapper.get(otherCar).getCurrentEdge() == routeComp.getCurrentEdge()
 			if (distance < emergencyThreshold) {
 				setBrakeBehavior(movementComp, 0.1f);
+				physComp.setLinearVelocity(new Vector2(0, 0));
 				return;
 			}
 			else if (distance < carInFrontThreshold) {
@@ -103,6 +91,20 @@ public class ManageMovementBehaviorsSystem
 				return;
 			}
 		}
+		Entity trafficLight = getRelevantLight(routeComp);
+		if (trafficLight != null) {
+			Vector2 lightPos = physicsBodyMapper.get(trafficLight).getPosition();
+			Vector2 carPos = physComp.getPosition();
+			// Vector2 target = routeComp.getRoadEndPoint();
+			Vector2 carFrontPosition = physComp.getWorldPoint(new Vector2(CAR_LENGTH / 2, 0));
+
+			if (trafficLight != null && trafficLightsMapper.get(trafficLight).getStatus() != Status.GREEN
+				&& carFrontPosition.dst(lightPos) < brakingThreshold && !pastTrafficLight(physComp, trafficLight)) {
+				setBrakeBehavior(movementComp, DEFAULT_BRAKING_FACTOR);
+				return;
+			}
+		}
+
 		setSeekBehavior(movementComp, routeComp);
 
 	}

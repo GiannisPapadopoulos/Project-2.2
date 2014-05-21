@@ -57,6 +57,10 @@ public final class TrafficSimConstants {
 	
 	public static final boolean DEBUG_PRINT_LEVEL_0 = false;
 
-	/** Default traffic light interval */
-	public static final int TRAFFIC_LIGHT_INTERVAL = 3;
+	/** Default traffic light green interval */
+	public static final int TRAFFIC_LIGHT_GREEN_INTERVAL = 10;
+
+	/** Default traffic light orange interval */
+	public static final int TRAFFIC_LIGHT_ORANGE_INTERVAL = 3;
+
 }

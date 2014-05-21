@@ -180,12 +180,10 @@ public class EntityFactory {
 		return vertexEntities;
 	}
 
-	private static void addLights(Vertex<Road> vertex) {
-		// TODO Auto-generated method stub
-	}
 
 	public static void addTrafficLights(TrafficSimWorld world, Graph<Road> graph, List<Entity> vertexEntities) {
-		int interval = TRAFFIC_LIGHT_INTERVAL;
+		int interval = TRAFFIC_LIGHT_GREEN_INTERVAL;
+		int orangeInterval = TRAFFIC_LIGHT_ORANGE_INTERVAL;
 
 		// iterator
 		int index = 0;
@@ -203,7 +201,8 @@ public class EntityFactory {
 				List<GroupedTrafficLightData> leftAndStraightData = new ArrayList<GroupedTrafficLightData>();
 				if (lightIDs.size() > 0) {
 					for (int i = 0; i < lightIDs.size(); i++) {
-						leftAndStraightData.add(new GroupedTrafficLightData(lightIDs.get(i), interval - 1, 1));
+						leftAndStraightData.add(new GroupedTrafficLightData(lightIDs.get(i), interval - orangeInterval,
+																			orangeInterval));
 					}
 					groupedLights.add(leftAndStraightData);
 				}
@@ -231,7 +230,7 @@ public class EntityFactory {
 			Vector2 corr = getVector(edge.getData()).nor().rotate(90 * direction);
 
 			// int for changing speed of lights
-			int interval = TRAFFIC_LIGHT_INTERVAL;
+			int interval = TRAFFIC_LIGHT_GREEN_INTERVAL;
 
 			Vector2 roadVector = getVector(edge.getData());
 			if (onPointA)

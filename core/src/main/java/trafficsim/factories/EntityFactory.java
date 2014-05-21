@@ -35,7 +35,8 @@ import trafficsim.movement.BrakeBehavior;
 import trafficsim.movement.SeekBehavior;
 import trafficsim.movement.WeightedBehavior;
 import trafficsim.roads.Road;
-import trafficsim.spawning.FixedIntervalSpawningStrategy;
+import trafficsim.spawning.AbstractSpawnStrategy;
+import trafficsim.spawning.PoissonSpawnStrategy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.MathUtils;
@@ -317,7 +318,9 @@ public class EntityFactory {
 				// Entity vertexEntity = world.getEntity(world.getVertexToEntityMap().get(vertex.getID()));
 				Entity vertexEntity = vertexEntities.get(index);
 				float interval = 2000;
-				vertexEntity.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(interval)));
+				// AbstractSpawnStrategy spawnStrategy = new FixedIntervalSpawningStrategy(interval);
+				AbstractSpawnStrategy spawnStrategy = new PoissonSpawnStrategy(1.0 / interval);
+				vertexEntity.addComponent(new SpawnComponent(vertex, spawnStrategy));
 				world.changedEntity(vertexEntity);
 			}
 			index++;

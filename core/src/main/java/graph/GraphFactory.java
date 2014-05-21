@@ -7,7 +7,8 @@ import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.roads.Road.Direction;
-import trafficsim.spawning.FixedIntervalSpawningStrategy;
+import trafficsim.spawning.AbstractSpawnStrategy;
+import trafficsim.spawning.PoissonSpawnStrategy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Vector2;
@@ -61,7 +62,9 @@ public class GraphFactory {
 		EntityFactory.createRoad(world, spawn1).addToWorld();
 		EntityFactory.createRoad(world, roadEdge).addToWorld();
 		Entity spawnPoint = world.createEntity();
-		spawnPoint.addComponent(new SpawnComponent(spawn1, new FixedIntervalSpawningStrategy(interval)));
+		// AbstractSpawnStrategy spawnStrategy = new FixedIntervalSpawningStrategy(interval);
+		AbstractSpawnStrategy spawnStrategy = new PoissonSpawnStrategy(interval);
+		spawnPoint.addComponent(new SpawnComponent(spawn1, spawnStrategy));
 		spawnPoint.addToWorld();
 		return spawn1;
 	}

@@ -8,7 +8,23 @@ public class Vertex<E> extends Element<E> {
 		super(parent, ID, data);
 	}
 
-	/** Returns the other vertex of the given edge or null if this vertex is not part of the edge */
+	/**
+	 * Returns the edge connecting this and vertex, or null. Does not take
+	 * direction of edges into account
+	 */
+	public Edge<E> getNeighbor(Vertex<E> vertex) {
+		for (Edge<E> edge : parent.getEdgeIterator()) {
+			if (edge.isAdjacentVertex(vertex)) {
+				return edge;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the other vertex of the given edge or null if this vertex is not
+	 * part of the edge
+	 */
 	public Vertex<E> getNeighbor(Edge<E> edge) {
 		Vertex<E> v1 = parent.getVertex(edge.getAdjacentVertices().get(0));
 		Vertex<E> v2 = parent.getVertex(edge.getAdjacentVertices().get(1));
@@ -41,7 +57,6 @@ public class Vertex<E> extends Element<E> {
 	// System.out.println("Vertex to be deleted is not neighbor of this!");
 	// }
 
-
 	// public void destroy() {
 	// for (val e : neighboringEdges) {
 	// //e.destroy();
@@ -51,6 +66,6 @@ public class Vertex<E> extends Element<E> {
 
 	@Override
 	public String toString() {
-		return "Vertex " + getID() + " Adjacent: " +getAdjacentVertices();
+		return "Vertex " + getID() + " Adjacent: " + getAdjacentVertices();
 	}
 }

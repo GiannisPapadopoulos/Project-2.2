@@ -68,6 +68,11 @@ public class GroupedTrafficLightComponent
 		private double greenTimer;
 		@Setter
 		private double orangeTimer;
+		
+		//TODO
+		public float getRedTimer(){
+			return 0;
+		}
 	}
 
 }

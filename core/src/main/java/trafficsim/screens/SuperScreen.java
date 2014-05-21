@@ -41,10 +41,10 @@ public abstract class SuperScreen implements Screen {
 	private OrthographicCamera camera;
 
 	@Getter
-	private Stage UILayer;
+	protected Stage UILayer;
 
 	@Getter
-	private Stage worldLayer;
+	protected Stage worldLayer;
 
 	@Getter
 	InputMultiplexer multiplexer;
@@ -71,16 +71,21 @@ public abstract class SuperScreen implements Screen {
 					(EditorScreen) this));
 		
 		else
-			this.multiplexer.addProcessor(new InputSystem(getCamera()));
+			this.multiplexer.addProcessor(new InputSystem(this));
 		
-		populateCommonLayers();
+		
 		this.mousePosition = new MousePosition(100, 100);
+		populateCommonLayers();
+	}
+	
+	protected void initMultiplexer() {
+		this.multiplexer = new InputMultiplexer(UILayer, worldLayer);
 	}
 	
 	@Override
 	public void render(float delta) {
 		
-	
+		
 		}
 	
 	@Override
@@ -91,6 +96,7 @@ public abstract class SuperScreen implements Screen {
 	
 	@Override
 	public void show() {
+		System.out.println("called");
 		// System.out.println(multiplexer.getProcessors());
 	}
 
@@ -125,7 +131,9 @@ public abstract class SuperScreen implements Screen {
 
 
 	private void populateCommonLayers() {
-		sidePanels = new SidePanels();
+		
+			sidePanels = new SidePanels();
+		
 		
 		
 			getUILayer().addActor(sidePanels);

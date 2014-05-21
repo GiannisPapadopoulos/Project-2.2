@@ -9,6 +9,8 @@ public class ImagePacker {
 		settings.maxHeight = 4096;
 		settings.maxWidth = 4096;
 		TexturePacker2.processIfModified(settings, "assets/textures", "assets/packed-textures", "textures.pack");
+		TexturePacker2.processIfModified(settings, "assets/ui-textures", "assets/packed-textures", "ui-textures.pack");
+
 	}
 
 }

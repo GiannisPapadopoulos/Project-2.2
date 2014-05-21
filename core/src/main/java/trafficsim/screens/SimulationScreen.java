@@ -21,9 +21,11 @@ import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.SpawnSystem;
 import trafficsim.systems.TrafficLightSystem;
+import ui.tables.InfoPop;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -45,6 +47,8 @@ public class SimulationScreen extends SuperScreen {
 	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
 
 	private boolean firstTimeSimulationRun = true;
+	@Getter
+	private InfoPop pop;
 
 	public SimulationScreen(Screens screens) {
 		super(screens);
@@ -62,7 +66,8 @@ public class SimulationScreen extends SuperScreen {
 
 		// Add systems
 		world.setSystem(new DataSystem());
-		world.setSystem(new RenderSystem(getCamera()));
+		RenderSystem renderSystem = new RenderSystem(getCamera());
+		world.setSystem(renderSystem);
 		world.setSystem(new MovementSystem());
 		world.setSystem(new PhysicsSystem());
 		world.setSystem(new PathFindingSystem());
@@ -100,23 +105,30 @@ public class SimulationScreen extends SuperScreen {
 		if (TIMER.isStarted())
 			TIMER.reset();
 		TIMER.start();
-		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
+		GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		world.process();
 
-		EntityFactory.addSpawnPoints(world, graph);
+		
+		pop = new InfoPop(renderSystem.getBatch());
+		
+		
 
+	}
+	protected void initMultiplexer() {
+		this.multiplexer = new InputMultiplexer(UILayer, worldLayer);
 	}
 
 
 	@Override
 	public void render(float delta) {
+		
 		long start;
 		if(DEBUG_FPS)
 			start = TIMER.getTime();
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		getCamera().update();
 		world.setDelta(delta);
-
+		//super.render(delta);
 		world.process();
 		if (DEBUG_RENDER)
 			debugRenderer.render(world.getBox2dWorld(), getCamera().combined);
@@ -131,6 +143,7 @@ public class SimulationScreen extends SuperScreen {
 
 		if (DEBUG_FPS)
 			System.out.println(TIMER.getTime() - start + " milliseconds ");
+		pop.render();		
 	}
 	
 

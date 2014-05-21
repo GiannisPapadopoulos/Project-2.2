@@ -2,6 +2,7 @@ package trafficsim.systems;
 
 import java.util.HashMap;
 
+import lombok.Getter;
 import trafficsim.components.DimensionComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.PositionComponent;
@@ -37,6 +38,7 @@ public class RenderSystem
 
 	private HashMap<String, AtlasRegion> regions;
 	private TextureAtlas textureAtlas;
+	@Getter
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 

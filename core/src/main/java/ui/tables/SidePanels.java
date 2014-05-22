@@ -110,7 +110,7 @@ public class SidePanels extends Table {
 		worldStatistics.add(new Label("Cars On Road", Assets.skin)).left(); // cars on road image
 		worldStatistics.add(carsOnRoadLabel); // cars on road number
 		worldStatistics.row();
-		worldStatistics.add(new Label("Av. time waited", Assets.skin)).left(); // average time waited image
+		worldStatistics.add(new Label("Average % of route waited: ", Assets.skin)).left(); // average time waited image
 		worldStatistics.add(averageLightTime); // average time waited number
 	
 		

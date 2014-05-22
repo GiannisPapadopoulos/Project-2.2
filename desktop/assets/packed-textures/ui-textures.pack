@@ -5,56 +5,70 @@ filter: Nearest,Nearest
 repeat: none
 adjust_normal
   rotate: false
-  xy: 2, 518
+  xy: 2, 231
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 adjust_pressed
   rotate: false
-  xy: 2, 260
+  xy: 260, 231
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
+bg
+  rotate: false
+  xy: 2066, 387
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+car glow
+  rotate: false
+  xy: 2, 2
+  size: 227, 227
+  orig: 227, 227
+  offset: 0, 0
+  index: -1
 carsonroad2_normal
   rotate: false
-  xy: 260, 518
+  xy: 518, 231
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 carsonroad_normal
   rotate: false
-  xy: 2, 2
+  xy: 776, 231
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 deletingtool_normal
   rotate: false
-  xy: 260, 260
+  xy: 1034, 231
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 deletingtool_pressed
   rotate: false
-  xy: 518, 518
+  xy: 1292, 231
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 editor_normal
   rotate: false
-  xy: 260, 2
+  xy: 1550, 231
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 editor_pressed
   rotate: false
-  xy: 518, 260
+  xy: 1808, 231
   size: 256, 256
   orig: 256, 256
   offset: 0, 0

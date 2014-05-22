@@ -128,11 +128,10 @@ public abstract class SuperScreen implements Screen {
 
 	public void setWaitTimeUI(TrafficSimWorld world) {
 
-		float timewaited = (float) Stats.mean(world.getDataGatherer()
-				.getAverageTimeWaited());
+		int timewaited = (int) (Stats.mean(world.getDataGatherer().getAveragePercentageStopped())*100);
 	
 		sidePanels.getAverageLightTime().setText(
-				Integer.toString((int) timewaited) + "s");
+				Integer.toString(timewaited) + "%");
 	}
 
 	private void populateCommonLayers() {

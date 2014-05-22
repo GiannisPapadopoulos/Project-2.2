@@ -98,7 +98,7 @@ public class SimulationScreen extends SuperScreen {
 		
 		firstTimeSimulationRun = false;
 
-
+		//super.passWorld(world);
 		EntityFactory.addTrafficLights(world, world.getGraph());
 
 
@@ -143,7 +143,11 @@ public class SimulationScreen extends SuperScreen {
 
 		if (DEBUG_FPS)
 			System.out.println(TIMER.getTime() - start + " milliseconds ");
-		pop.render();		
+		pop.render();
+		super.setWaitTimeUI(world);
+		super.setCarsUI(world);
+		
+		
 	}
 	
 

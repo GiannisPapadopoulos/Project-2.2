@@ -20,7 +20,7 @@ public final class TrafficSimConstants {
 	public static boolean DEBUG_RENDER = false;
 
 	/** Whether to debug the ui tables */
-	public static boolean DEBUG_TABLES = true;
+	public static boolean DEBUG_TABLES = false;
 
 	/** Constant used by world.step() in box2d. Higher values mean higher accuracy, 8 is standard */
 	public static final int VELOCITY_ITERATIONS = 8;

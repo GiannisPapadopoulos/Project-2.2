@@ -46,6 +46,11 @@ public class RenderSystem
 	public RenderSystem(OrthographicCamera camera) {
 		super(Aspect.getAspectForAll(SpriteComponent.class).one(PhysicsBodyComponent.class, PositionComponent.class));
 		this.camera = camera;
+		
+		OrthographicCamera guicam = new OrthographicCamera();
+		float ratew = guicam.viewportWidth/camera.viewportWidth;  //<--- you should calculate these 2 only once.
+		float rateh = guicam.viewportHeight/camera.viewportHeight;
+	
 	}
 
 	@Override

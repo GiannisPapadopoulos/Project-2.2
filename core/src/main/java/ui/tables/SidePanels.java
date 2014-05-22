@@ -2,18 +2,25 @@ package ui.tables;
 
 import lombok.Getter;
 import lombok.Setter;
+import trafficsim.TrafficSimWorld;
+import trafficsim.systems.MovementSystem;
 import utils.Assets;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -35,19 +42,28 @@ public class SidePanels extends Table {
 				panelwidth,
 				avtimewait;		
 
-	private TextButton carsOnRoadLabel, roundabout, standardRoad, intersection;
+	@Getter
+	private TextButton roundabout, standardRoad, intersection;
+	@Getter
+	private Label averageLightTime,carsOnRoadLabel ;
+	
+	private TrafficSimWorld world;
 	
 	private Slider carSpawningRate,speedLimitSlider;
 	
 	private Label cspawncompanion,slimitcompanion;	
+	private BitmapFont black;
 	
 	@Getter
 	private Table worldStatistics,worldVariables,expandCollapse, switchPanel, editorPanel;	
 	
 	public SidePanels() {
-		
+		this.world = new TrafficSimWorld();
 		TextureAtlas atlas = new TextureAtlas("assets/packed-textures/ui-textures.pack");
-		
+	//	TextStyle style = new TextStyle();
+		black = new BitmapFont(Gdx.files.internal("assets/myanmar_black.fnt"));
+		LabelStyle style = new LabelStyle();
+		style.font = black;
 		defaultstep = 1;
 		cspawnmin = 0;
 		cspawnmax = 100;	
@@ -78,20 +94,25 @@ public class SidePanels extends Table {
 		
 		this.setFillParent(true);
 		
-		carsOnRoad = 5;		
-		carsOnRoadLabel = new TextButton(Integer.toString(carsOnRoad), Assets.skin);
+	//	carsOnRoad = world.getSystem(MovementSystem.class).;		
+		carsOnRoadLabel = new Label(Integer.toString(0), Assets.skin);
+		averageLightTime = new Label("not updated",Assets.skin);
 
 		avtimewait = 30;
 		
 		
-		/** World Statistics Table */		
-		worldStatistics = new Table();
+		/** World Statistics Table */
+		Label worldStatsLabel = new Label("World Statistics",style);
 		
-		worldStatistics.add(createImage("carsonroad2",atlas)).size(100, 100).padTop(30).right(); // cars on road image
-		worldStatistics.add(new Label(Integer.toString(carsOnRoad), Assets.skin)).left(); // cars on road number
+		worldStatistics = new Table();
+		worldStatistics.add(worldStatsLabel).right();
 		worldStatistics.row();
-		worldStatistics.add(new Label(Integer.toString(avtimewait) + "s", Assets.skin)); // average time waited number
-		worldStatistics.add(new Label("Av. time waited", Assets.skin)); // average time waited image
+		worldStatistics.add(new Label("Cars On Road", Assets.skin)).left(); // cars on road image
+		worldStatistics.add(carsOnRoadLabel); // cars on road number
+		worldStatistics.row();
+		worldStatistics.add(new Label("Av. time waited", Assets.skin)).left(); // average time waited image
+		worldStatistics.add(averageLightTime); // average time waited number
+	
 		
 		/** Switch Panel */
 		
@@ -109,18 +130,18 @@ public class SidePanels extends Table {
 	
 		buttonGroup.add(simTools);
 		buttonGroup.add(editMode);
-		
-//		simTools.addListener(new ClickListener(){
-//			
-//			public void clicked(InputEvent event, float x, float y) {
-//				
-//				switchPanel.clearChildren();
-//				switchPanel.add(worldVariables);
-//				
-//				}
-//		    }
-//			
-//		);
+	
+		simTools.addListener(new ClickListener(){
+			
+			public void clicked(InputEvent event, float x, float y) {
+				
+				switchPanel.clearChildren();
+				switchPanel.add(worldVariables);
+				
+				}
+		    }
+			
+		);
 //		
 //		editMode.addListener(new ClickListener(){
 //			
@@ -138,7 +159,12 @@ public class SidePanels extends Table {
 		
 		/** World Variables Table */		
 		worldVariables = new Table();
-
+		
+		Label worldVariablesLabel = new Label("Simulation Tools",style);
+		
+		
+		worldVariables.add(worldVariablesLabel).right();
+		worldVariables.row();
 		worldVariables.add(new Label("Car Spawning Rate", Assets.skin)); // first adjusting tool
 		worldVariables.row();
 		worldVariables.add(carSpawningRate).left();
@@ -171,6 +197,10 @@ public class SidePanels extends Table {
 		/** Adding to mainPanel */				
 		Table sidepanel = new Table();
 		
+		Drawable background = new TextureRegionDrawable(atlas.findRegion("bg"));
+		
+		sidepanel.setBackground(background);
+	
 		sidepanel.add(worldStatistics).width(panelwidth).top(); /// world stats
 		sidepanel.row(); 
 		sidepanel.add(expandCollapse).width(panelwidth); // show hide
@@ -179,9 +209,11 @@ public class SidePanels extends Table {
 
 		add(getTransitionButtons()).expand().top().left();
 		
-		add(new TextButton("x" , Assets.skin)).right().width(20);
+		//add(new TextButton("x" , Assets.skin)).right().width(20);
 		
 		add(sidepanel).top().right();
+		
+		
 		
 		
 		debug();
@@ -199,6 +231,11 @@ public class SidePanels extends Table {
 		style.checked = hover;
 
 		return new Button(style);
+		
+	}
+	
+	public void passWorld(TrafficSimWorld world){
+		//this.world = world;
 		
 	}
 	

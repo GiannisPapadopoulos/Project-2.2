@@ -12,6 +12,7 @@ import gnu.trove.list.TIntList;
 import graph.Edge;
 import graph.Vertex;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.TrafficRayCastCallBack;
@@ -62,6 +63,9 @@ public class MovementSystem
 	ComponentMapper<TrafficLightComponent> trafficLightsMapper;
 	@Mapper
 	ComponentMapper<ExpiryComponent> expiryMapper;
+	
+	@Getter 
+	private int totalCars;
 
 	@SuppressWarnings("unchecked")
 	public MovementSystem() {
@@ -84,7 +88,10 @@ public class MovementSystem
 	// TODO clean this up
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
+		
+		totalCars = entities.size();
 		for (int i = 0; i < entities.size(); i++) {
+			
 			Entity car = entities.get(i);
 			if (routeComponentMapper.has(car) && steeringComponentMapper.has(car)
 				&& routeComponentMapper.get(car).isSet()) {

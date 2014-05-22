@@ -6,12 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import trafficsim.components.DataComponent;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class DataGatherer {
 
 	List<Float> averageDistanceTravelled = new ArrayList<Float>();

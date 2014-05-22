@@ -1,24 +1,28 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.DEBUG_FPS;
-import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
-import static trafficsim.TrafficSimConstants.DEBUG_TABLES;
-import static trafficsim.TrafficSimConstants.TIMER;
+import static trafficsim.TrafficSimConstants.*;
 import graph.Graph;
 import graph.GraphFactory;
+
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
+import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
+import trafficsim.systems.GroupedTrafficLightSystem;
 import trafficsim.systems.InputSystem;
+import trafficsim.systems.ManageMovementBehaviorsSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
+import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
 import trafficsim.systems.TrafficLightSystem;
 import ui.tables.InfoPop;
@@ -50,12 +54,15 @@ public class SimulationScreen extends SuperScreen {
 	@Getter
 	private InfoPop pop;
 
+	@Getter
+	@Setter
+	// TODO it's not perfectly functional
+	private boolean paused;
+
 	public SimulationScreen(Screens screens) {
 		super(screens);
 
 	}
-
-	Entity car = null;
 
 	@Override
 	public void show() {
@@ -73,11 +80,15 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
-		world.setSystem(new TrafficLightSystem());
+		world.setSystem(new GroupedTrafficLightSystem());
 		world.setSystem(new ExpirySystem());
 
+		world.setSystem(new RoutingSystem());
+		world.setSystem(new MovementSystem());
+		world.setSystem(new ManageMovementBehaviorsSystem());
+
 		// Temporary hack
-		// world.setSystem(new CollisionDisablingSystem());
+		world.setSystem(new CollisionDisablingSystem());
 
 		InputSystem inputSystem = new InputSystem(this);
 		initMultiplexer();
@@ -94,12 +105,14 @@ public class SimulationScreen extends SuperScreen {
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);
-		EntityFactory.populateWorld(world, graph);
 		
+
 		firstTimeSimulationRun = false;
 
-		//super.passWorld(world);
-		EntityFactory.addTrafficLights(world, world.getGraph());
+		// EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+		GraphFactory.addSpawnPointsTest(world, world.getGraph());
+		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
+		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 
 
 		if (TIMER.isStarted())
@@ -121,7 +134,9 @@ public class SimulationScreen extends SuperScreen {
 
 	@Override
 	public void render(float delta) {
-		
+		if (paused) {
+			return;
+		}
 		long start;
 		if(DEBUG_FPS)
 			start = TIMER.getTime();
@@ -150,6 +165,8 @@ public class SimulationScreen extends SuperScreen {
 		
 	}
 	
+
+	boolean exported = false;
 
 	@Override
 	public void populateUILayer() {

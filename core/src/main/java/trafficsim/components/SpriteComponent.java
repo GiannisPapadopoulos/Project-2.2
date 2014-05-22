@@ -1,8 +1,6 @@
 package trafficsim.components;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import com.artemis.Component;
@@ -14,8 +12,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
  * @author Giannis Papadopoulos
  * 
  */
-@RequiredArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class SpriteComponent
@@ -30,6 +26,10 @@ public class SpriteComponent
 	private float rotation;
 	/** The actual sprite that will be drawn */
 	private Sprite sprite;
+
+	/** If false, RenderSystem.inserted() will be called */
+	private boolean set = false;
+
 
 	public SpriteComponent(String name) {
 		this.name = name;

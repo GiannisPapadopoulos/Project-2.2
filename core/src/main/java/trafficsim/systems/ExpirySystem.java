@@ -43,13 +43,14 @@ public class ExpirySystem
 					World box2dWorld = ((TrafficSimWorld) world).getBox2dWorld();
 					box2dWorld.destroyBody(physicsBodyMapper.get(entity).getBody());
 				}
-				if (dataComponentMapper.has(entity)) {
+				if (dataComponentMapper.has(entity) && dataComponentMapper.get(entity).getTotalTime() > 5) {
 					DataComponent dataComp = dataComponentMapper.get(entity);
 					((TrafficSimWorld) world).getDataGatherer().add(dataComp);
 					// System.out.println(dataComp.getTotalDistance() + " " + dataComp.getAverageSpeed() + " pct "
 					// + dataComp.getPercentageStopped());
 				}
 				entity.deleteFromWorld();
+				world.getSystem(MovementSystem.class).carRemoved();
 			}
 		}
 	}

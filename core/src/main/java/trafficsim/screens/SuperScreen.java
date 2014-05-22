@@ -1,8 +1,6 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
-import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
-import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
+import static trafficsim.TrafficSimConstants.*;
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
@@ -36,11 +34,9 @@ public abstract class SuperScreen implements Screen {
 	@Getter
 	protected Stage worldLayer;
 
-	@Getter
 	InputMultiplexer multiplexer;
 
-	@Getter
-	MousePosition mousePosition;
+	protected MousePosition mousePosition;
 
 	@Getter
 	private SidePanels sidePanels;

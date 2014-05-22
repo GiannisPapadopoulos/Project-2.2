@@ -45,8 +45,9 @@ public class DataSystem
 					if (steeringComp.getState() == State.STOPPED) {
 						dataComp.setTimeSpentOnTrafficLights(dataComp.getTimeSpentOnTrafficLights() + world.getDelta());
 					}
+					// System.out.println(distance + " " + physComp.getPosition() + " " + dataComp.getLastPosition());
 				}
-				dataComp.setLastPosition(physComp.getPosition());
+				dataComp.setLastPosition(physComp.getPosition().cpy());
 				dataComp.setDeltaTime(world.getDelta());
 			}
 		}

@@ -1,5 +1,6 @@
 package trafficsim.systems;
 
+import static functions.MovementFunctions.buildWaypoints;
 import pathfinding.GraphAction;
 import pathfinding.GraphBasedAstar;
 import pathfinding.GraphState;
@@ -45,6 +46,8 @@ public class PathFindingSystem
 					routeComp.setSet(true);
 					routeComp.setCurrentVertex(routeComp.getSource());
 					routeComp.setEdgeIndex(0);
+					// TODO not tested
+					routeComp.setWayPoints(buildWaypoints(routeComp));
 				}
 			}
 		}

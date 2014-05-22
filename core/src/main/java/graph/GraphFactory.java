@@ -7,7 +7,9 @@ import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.roads.Road.Direction;
+import trafficsim.spawning.AbstractSpawnStrategy;
 import trafficsim.spawning.FixedIntervalSpawningStrategy;
+import trafficsim.spawning.PoissonSpawnStrategy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Vector2;
@@ -18,34 +20,39 @@ public class GraphFactory {
 
 	public static void addSpawnPointsTest(TrafficSimWorld world, Graph<Road> graph) {
 
+		float length = 60;
+		int interval = 3000;
+
 		Vertex<Road> connection = graph.getVertex(0);
 		Vector2 edgeB = connection.getData().getPointA();
-		Vector2 edgeA = new Vector2(edgeB.x - 20, edgeB.y);
+		Vector2 edgeA = new Vector2(edgeB.x - length, edgeB.y);
 		makeSpawnVertex(world, connection, graph, edgeA, edgeB, new Vector2(edgeA.x - 2 * LANE_WIDTH, edgeA.y), edgeA,
-						true);
+						true, interval);
 
 		Vertex<Road> connection2 = graph.getVertex(29);
 		Vector2 edgeA2 = connection2.getData().getPointB();
-		Vector2 edgeB2 = new Vector2(edgeA2.x + 20, edgeA2.y);
+		Vector2 edgeB2 = new Vector2(edgeA2.x + length, edgeA2.y);
 		makeSpawnVertex(world, connection2, graph, edgeA2, edgeB2, edgeB2, new Vector2(edgeB2.x + 2 * LANE_WIDTH,
-																						edgeB2.y), false);
+																						edgeB2.y), false, interval);
 
 		Vertex<Road> connection3 = graph.getVertex(4);
 		Vector2 edgeB3 = connection3.getData().getPointA();
-		Vector2 edgeA3 = new Vector2(edgeB3.x - 20, edgeB3.y);
+		Vector2 edgeA3 = new Vector2(edgeB3.x - length, edgeB3.y);
 		makeSpawnVertex(world, connection3, graph, edgeA3, edgeB3, new Vector2(edgeA3.x - 2 * LANE_WIDTH, edgeA3.y),
-						edgeA3, true);
+						edgeA3, true, interval);
 
 		Vertex<Road> connection4 = graph.getVertex(25);
 		Vector2 edgeA4 = connection4.getData().getPointB();
-		Vector2 edgeB4 = new Vector2(edgeA4.x + 20, edgeA4.y);
+		Vector2 edgeB4 = new Vector2(edgeA4.x + length, edgeA4.y);
 		makeSpawnVertex(world, connection4, graph, edgeA4, edgeB4, edgeB4, new Vector2(edgeB4.x + 2 * LANE_WIDTH,
-																						edgeB4.y), false);
+																						edgeB4.y), false, interval);
 	}
+
+	public static boolean poisson = true;
 
 	// TODO Refactor this mess
 	public static Vertex<Road> makeSpawnVertex(TrafficSimWorld world, Vertex<Road> connection, Graph<Road> graph,
-			Vector2 edgeA, Vector2 edgeB, Vector2 vertexA, Vector2 vertexB, boolean AtoB) {
+			Vector2 edgeA, Vector2 edgeB, Vector2 vertexA, Vector2 vertexB, boolean AtoB, int interval) {
 		Road intersection = new Road(vertexA, vertexB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
 		Vertex<Road> spawn1 = graph.addVertex(intersection);
 		Road edge = new Road(edgeA, edgeB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
@@ -58,8 +65,10 @@ public class GraphFactory {
 		EntityFactory.createRoad(world, spawn1).addToWorld();
 		EntityFactory.createRoad(world, roadEdge).addToWorld();
 		Entity spawnPoint = world.createEntity();
-		int interval = 2000;
-		spawnPoint.addComponent(new SpawnComponent(spawn1, new FixedIntervalSpawningStrategy(interval)));
+		AbstractSpawnStrategy spawnStrategy = poisson	? new PoissonSpawnStrategy(interval)
+														: new FixedIntervalSpawningStrategy(interval);
+		// AbstractSpawnStrategy spawnStrategy = new PoissonSpawnStrategy(interval);
+		spawnPoint.addComponent(new SpawnComponent(spawn1, spawnStrategy));
 		spawnPoint.addToWorld();
 		return spawn1;
 	}

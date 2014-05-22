@@ -24,7 +24,6 @@ import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
-import trafficsim.systems.TrafficLightSystem;
 import ui.tables.InfoPop;
 
 import com.artemis.Entity;
@@ -75,7 +74,7 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new DataSystem());
 		RenderSystem renderSystem = new RenderSystem(getCamera());
 		world.setSystem(renderSystem);
-		world.setSystem(new MovementSystem());
+		// world.setSystem(new MovementSystem());
 		world.setSystem(new PhysicsSystem());
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
@@ -118,13 +117,13 @@ public class SimulationScreen extends SuperScreen {
 		if (TIMER.isStarted())
 			TIMER.reset();
 		TIMER.start();
-		GraphFactory.addSpawnPointsTest(world, world.getGraph());
+		pop = new InfoPop(renderSystem.getBatch());
 		world.process();
 
 		
-		pop = new InfoPop(renderSystem.getBatch());
 		
 		
+
 
 	}
 	protected void initMultiplexer() {

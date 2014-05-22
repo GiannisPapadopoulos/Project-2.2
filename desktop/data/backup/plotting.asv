@@ -1,0 +1,12 @@
+poisson = importdata('poisson');
+uniform = importdata('uniform');
+
+% 1: distance, 
+row = 2;
+
+lengths = [length(poisson), length(uniform)];
+M = [mean(poisson(2:2,:)), mean(uniform(2:2,:))];
+confidenceInterval = zeros(1, length(M));
+for i=1:length(M)
+    confidenceInterval(i) = 1.96*std(M(i)) / sqrt(lengths(i));
+end

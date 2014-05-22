@@ -19,7 +19,6 @@ import trafficsim.systems.GroupedTrafficLightSystem;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.ManageMovementBehaviorsSystem;
 import trafficsim.systems.MovementSystem;
-import trafficsim.systems.OldMovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
@@ -114,8 +113,6 @@ public class SimulationScreen extends SuperScreen {
 		TIMER.start();
 		world.process();
 
-
-		// System.out.println(getMidPoint(graph.getEdge(0).getData()));
 	}
 
 
@@ -143,12 +140,16 @@ public class SimulationScreen extends SuperScreen {
 		if (DEBUG_FPS)
 			System.out.println(TIMER.getTime() - start + " milliseconds ");
 
-		if (Math.abs(TIMER.getTime() / 1000.0 - 200) < 0.02) {
-			System.out.println("Total time running " + TIMER.getTime() / 1000.0 + " cars spawned "
-								+ world.getSystem(OldMovementSystem.class).getTotalCars());
-			System.out.println(world.getDataGatherer());
-		}
+		// if (TIMER.getTime() > 1000 * 600 && !exported) {
+		// String file = GraphFactory.poisson ? "data/poisson" : "data/uniform";
+		// ExportData.writeToFile(world.getDataGatherer(), file);
+		// System.out.println("exporting");
+		// exported = true;
+		// System.out.println(world.getDataGatherer());
+		// }
 	}
+
+	boolean exported = false;
 
 	@Override
 	public void populateUILayer() {

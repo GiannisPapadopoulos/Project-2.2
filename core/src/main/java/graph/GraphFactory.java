@@ -7,7 +7,9 @@ import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.roads.Road.Direction;
+import trafficsim.spawning.AbstractSpawnStrategy;
 import trafficsim.spawning.FixedIntervalSpawningStrategy;
+import trafficsim.spawning.PoissonSpawnStrategy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Vector2;
@@ -19,7 +21,7 @@ public class GraphFactory {
 	public static void addSpawnPointsTest(TrafficSimWorld world, Graph<Road> graph) {
 
 		float length = 60;
-		int interval = 2000;
+		int interval = 3000;
 
 		Vertex<Road> connection = graph.getVertex(0);
 		Vector2 edgeB = connection.getData().getPointA();
@@ -46,6 +48,8 @@ public class GraphFactory {
 																						edgeB4.y), false, interval);
 	}
 
+	public static boolean poisson = true;
+
 	// TODO Refactor this mess
 	public static Vertex<Road> makeSpawnVertex(TrafficSimWorld world, Vertex<Road> connection, Graph<Road> graph,
 			Vector2 edgeA, Vector2 edgeB, Vector2 vertexA, Vector2 vertexB, boolean AtoB, int interval) {
@@ -61,7 +65,10 @@ public class GraphFactory {
 		EntityFactory.createRoad(world, spawn1).addToWorld();
 		EntityFactory.createRoad(world, roadEdge).addToWorld();
 		Entity spawnPoint = world.createEntity();
-		spawnPoint.addComponent(new SpawnComponent(spawn1, new FixedIntervalSpawningStrategy(interval)));
+		AbstractSpawnStrategy spawnStrategy = poisson	? new PoissonSpawnStrategy(interval)
+														: new FixedIntervalSpawningStrategy(interval);
+		// AbstractSpawnStrategy spawnStrategy = new PoissonSpawnStrategy(interval);
+		spawnPoint.addComponent(new SpawnComponent(spawn1, spawnStrategy));
 		spawnPoint.addToWorld();
 		return spawn1;
 	}

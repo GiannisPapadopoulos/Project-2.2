@@ -13,6 +13,8 @@ import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
+import trafficsim.components.SteeringComponent;
+import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
 import trafficsim.movement.Behavior;
@@ -38,6 +40,8 @@ public class ManageMovementBehaviorsSystem
 	@Mapper
 	private ComponentMapper<MovementComponent> movementComponentMapper;
 	@Mapper
+	private ComponentMapper<SteeringComponent> steeringComponentMapper;
+	@Mapper
 	private ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
 	@Mapper
 	private ComponentMapper<TrafficLightComponent> trafficLightsMapper;
@@ -58,7 +62,8 @@ public class ManageMovementBehaviorsSystem
 			RouteComponent routeComp = routeComponentMapper.get(car);
 			PhysicsBodyComponent physComp = physicsBodyMapper.get(car);
 			MovementComponent movementComp = movementComponentMapper.get(car);
-			updateBehaviors(movementComp, routeComp, physComp);
+			SteeringComponent steeringComp = steeringComponentMapper.get(car);
+			updateBehaviors(movementComp, routeComp, physComp, steeringComp);
 		}
 
 	}
@@ -68,7 +73,8 @@ public class ManageMovementBehaviorsSystem
 		return true;
 	}
 
-	private void updateBehaviors(MovementComponent movementComp, RouteComponent routeComp, PhysicsBodyComponent physComp) {
+	private void updateBehaviors(MovementComponent movementComp, RouteComponent routeComp,
+			PhysicsBodyComponent physComp, SteeringComponent steeringComp) {
 		World box2dWorld = ((TrafficSimWorld) world).getBox2dWorld();
 		Vector2 position = physComp.getPosition();
 		Vector2 angleAdjustment = new Vector2(cos(physComp.getAngle()), sin(physComp.getAngle()));
@@ -84,10 +90,12 @@ public class ManageMovementBehaviorsSystem
 			if (distance < emergencyThreshold) {
 				setBrakeBehavior(movementComp, 0.1f);
 				physComp.setLinearVelocity(new Vector2(0, 0));
+				steeringComp.setState(State.STOPPED);
 				return;
 			}
 			else if (distance < carInFrontThreshold) {
 				setBrakeBehavior(movementComp, DEFAULT_BRAKING_FACTOR);
+				steeringComp.setState(State.STOPPED);
 				return;
 			}
 		}
@@ -101,10 +109,11 @@ public class ManageMovementBehaviorsSystem
 			if (trafficLight != null && trafficLightsMapper.get(trafficLight).getStatus() != Status.GREEN
 				&& carFrontPosition.dst(lightPos) < brakingThreshold && !pastTrafficLight(physComp, trafficLight)) {
 				setBrakeBehavior(movementComp, DEFAULT_BRAKING_FACTOR);
+				steeringComp.setState(State.STOPPED);
 				return;
 			}
 		}
-
+		steeringComp.setState(State.DEFAULT);
 		setSeekBehavior(movementComp, routeComp);
 
 	}

@@ -13,6 +13,9 @@ public final class TrafficSimConstants {
 	/** Frames per second */
 	public static final int FPS = 60;
 
+	/** Timestep */
+	public static final float DELTA_TIME = 1f / FPS;
+
 	/** Set to true to print the time each frame takes */
 	public static final boolean DEBUG_FPS = false;
 
@@ -58,9 +61,9 @@ public final class TrafficSimConstants {
 	public static final boolean DEBUG_PRINT_LEVEL_0 = false;
 
 	/** Default traffic light green interval */
-	public static final int TRAFFIC_LIGHT_GREEN_INTERVAL = 10;
+	public static final int TRAFFIC_LIGHT_GREEN_INTERVAL = 5;
 
 	/** Default traffic light orange interval */
-	public static final int TRAFFIC_LIGHT_ORANGE_INTERVAL = 3;
+	public static final int TRAFFIC_LIGHT_ORANGE_INTERVAL = 1;
 
 }

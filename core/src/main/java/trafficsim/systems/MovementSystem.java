@@ -3,8 +3,7 @@ package trafficsim.systems;
 import static functions.MovementFunctions.constrainAngle;
 import static functions.MovementFunctions.getAngleOfCurrentEdgeInRads;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
-import static trafficsim.TrafficSimConstants.SPEED_SCALING_FACTOR;
+import static trafficsim.TrafficSimConstants.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -107,8 +106,12 @@ public class MovementSystem
 		float deltaA = getAngleOfCurrentEdgeInRads(routeComp) - physComp.getAngle();
 		// float deltaA = getDeltaAngle(routeComp) - physComp.getAngle();
 		deltaA = constrainAngle(deltaA);
+		float scalingFactor = 1;// Math.min(DELTA_TIME / world.getDelta(), 1);
 		// TODO extract constants, refactor
 		float angularThreshold = 2;
+		if (Math.abs(scalingFactor - 1) > 0.3) {
+			System.out.println(scalingFactor + " delta " + world.getDelta() + " " + DELTA_TIME);
+		}
 		if (Math.abs(deltaA) > 0.05) {
 			if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
 				// deltaA < 0 &&
@@ -116,7 +119,7 @@ public class MovementSystem
 				if (newVel.len() > turningSpeed) {
 					newVel.scl(0.9f);
 				}
-				physComp.applyTorque(steeringComp.getMaxTorque() * deltaA, true);
+				physComp.applyTorque(steeringComp.getMaxTorque() * deltaA * scalingFactor, true);
 			}
 		}
 		else {

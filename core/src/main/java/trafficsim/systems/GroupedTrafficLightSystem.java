@@ -69,7 +69,7 @@ public class GroupedTrafficLightSystem
 	}
 
 	/** Sets the lights at the current index to green, rest to red */
-	private void toggle(GroupedTrafficLightComponent groupComp) {
+	private void setGreen(GroupedTrafficLightComponent groupComp) {
 		// Set first light to green
 		for (GroupedTrafficLightData lightData : groupComp.getGroupedLightsData().get(groupComp.getIndex())) {
 			setLight(lightData, Status.GREEN);
@@ -82,6 +82,25 @@ public class GroupedTrafficLightSystem
 				}
 			}
 		}
+		groupComp.setTimeElapsed(0);
+	}
+
+	/** Sets the lights at the current index to green, rest to red */
+	private void toggle(GroupedTrafficLightComponent groupComp) {
+		// Set first light to green
+		if (groupComp.isGreen()) {
+			for (GroupedTrafficLightData lightData : groupComp.getGroupedLightsData().get(groupComp.getIndex())) {
+				setLight(lightData, Status.ORANGE);
+			}
+			groupComp.setGreen(false);
+		}
+		else {
+			groupComp.setIndex((groupComp.getIndex() + 1) % groupComp.getGroupedLightsData().size());
+			// Set rest to red
+			setGreen(groupComp);
+			groupComp.setGreen(true);
+		}
+		groupComp.setTimeElapsed(0);
 	}
 
 	private void setLight(GroupedTrafficLightData lightData, Status status) {
@@ -102,15 +121,15 @@ public class GroupedTrafficLightSystem
 				initialize(groupComp);
 			}
 			if (!groupComp.isSet()) {
-				toggle(groupComp);
+				setGreen(groupComp);
 				groupComp.setSet(true);
 			}
 			groupComp.setTimeElapsed(groupComp.getTimeElapsed() + world.getDelta());
 			if (groupComp.getTimeElapsed() > groupComp.getTimer()) {
 				// increment index and toggle
-				groupComp.setIndex((groupComp.getIndex() + 1) % groupComp.getGroupedLightsData().size());
+
 				toggle(groupComp);
-				groupComp.setTimeElapsed(0);
+				
 			}
 		}
 	}

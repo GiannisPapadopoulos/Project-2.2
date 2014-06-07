@@ -2,6 +2,8 @@ package trafficsim.roads;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.math.Vector2;
+
 public class CrossRoadSubSystem {
 	
 	private ArrayList<ArrayList<Lane>> lanes;
@@ -25,6 +27,20 @@ public class CrossRoadSubSystem {
 			System.out.println("CrossRoadSubystem - Something went wrong!");
 			return null;
 		}
+	}
+	
+	
+	
+	public Lane getProperAuthority(Vector2 pos) {
+		Lane closest = null;
+		for(ArrayList<Lane> lane : lanes)
+			for(Lane lane_elem : lane)
+				if(closest==null)
+					closest = lane_elem;
+				else 
+					if(closest.getDistance(pos)>lane_elem.getDistance(pos))
+						closest = lane_elem;
+		return closest;
 	}
 	
 }

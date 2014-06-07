@@ -1,5 +1,6 @@
 package editor;
 
+import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 
@@ -130,7 +131,7 @@ public class WorldRenderer {
 		float LANE_WIDTH = TrafficSimConstants.LANE_WIDTH;
 
 		
-		for(Vertex v : graph.getVertexList()) {
+		for(Edge v : graph.getEdgeList()) {
 			Object o = v.getData();
 			Road r = (Road)o;
 			if(r.getAtoB()!=null) {

@@ -17,7 +17,7 @@ import functions.VectorUtils;
  */
 @Getter
 @ToString
-public class Road {
+public class Road extends NavigationObject {
 
 	/** The direction of a road, UPSTREAM is from pointA to pointB */
 	public enum Direction {

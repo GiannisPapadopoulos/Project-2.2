@@ -2,9 +2,9 @@ package graph;
 
 import static trafficsim.TrafficSimConstants.CITY_SPEED_LIMIT;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import lombok.val;
 import paramatricCurves.ParametricCurve;
 import paramatricCurves.curveDefs.C_Linear;
-import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
@@ -94,7 +94,7 @@ public class GraphFactory {
 					Vector2 pointB = VectorUtils.getMidPoint(v2.getData());
 					pointB.set(pointB.x - LANE_WIDTH, pointB.y);
 
-					graph.addEdge(new Road(pointA, pointB, 1, Direction.BOTH, CITY_SPEED_LIMIT), v1, v2, false);
+					graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointA,pointB)),1,1,CITY_SPEED_LIMIT),v1,v2,false);
 				}
 				if (j < height - 1) {
 					Vertex<Road> v3 = graph.getVertex(i * height + j + 1);
@@ -102,7 +102,7 @@ public class GraphFactory {
 					Vector2 pointB = VectorUtils.getMidPoint(v3.getData());
 					pointA.set(pointA.x, pointA.y + LANE_WIDTH);
 					pointB.set(pointB.x, pointB.y - LANE_WIDTH);
-					graph.addEdge(new Road(pointA, pointB, 1, Direction.BOTH, CITY_SPEED_LIMIT), v1, v3, false);
+					graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointA,pointB)),1,1,CITY_SPEED_LIMIT), v1, v3, false);
 				}
 			}
 		}

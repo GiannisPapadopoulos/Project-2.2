@@ -9,7 +9,7 @@ import lombok.Getter;
 import com.badlogic.gdx.math.Vector2;
 
 
-public class CrossRoad {
+public class CrossRoad extends NavigationObject {
 
 	@Getter
 	private float size;
@@ -24,5 +24,14 @@ public class CrossRoad {
 		this.vertex = v;
 		this.size = size;
 		this.position = position;
+	}
+	
+	public CrossRoadSubSystem requestTransitionPath(Road origin, Road destination) {
+		for(RoadTransition rt : crSubSystems.keySet()) {
+			if(rt.getOrigin() == origin && rt.getDestination() == destination)
+				return crSubSystems.get(rt);
+		}
+		System.out.println("Something went wrong in Crossroad subsystems!");
+		return null;
 	}
 }

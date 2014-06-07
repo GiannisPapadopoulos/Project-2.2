@@ -1,6 +1,8 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.*;
+import static trafficsim.TrafficSimConstants.DEBUG_FPS;
+import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
+import static trafficsim.TrafficSimConstants.TIMER;
 import graph.Graph;
 import graph.GraphFactory;
 

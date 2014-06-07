@@ -21,7 +21,7 @@ public class ParametricCurve {
 				@Override
 				public double getFt(double t) {
 					if (cd.getParams()[2] instanceof String)
-						return t;
+						return t+(Float)cd.getParams()[5];
 					else if (cd.getParams()[2] instanceof Float)
 						return (Float) cd.getParams()[2];
 					else {

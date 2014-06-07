@@ -2,6 +2,8 @@ package graph;
 
 import static trafficsim.TrafficSimConstants.CITY_SPEED_LIMIT;
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import paramatricCurves.ParametricCurve;
+import paramatricCurves.curveDefs.C_Linear;
 import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.SpawnComponent;
@@ -104,6 +106,10 @@ public class GraphFactory {
 				}
 			}
 		}
+		
+		Vector2 a = new Vector2(); a.x = 0; a.y = 0;
+		Vector2 b = new Vector2(); b.x = 300; b.y = 300;
+		graph.addVertex(new Road(new ParametricCurve(new C_Linear(a,b)),3,3,CITY_SPEED_LIMIT));		
 		return graph;
 	}
 	

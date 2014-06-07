@@ -10,7 +10,7 @@ public class C_Linear implements CurveDefinition {
 	private Object[] params;
 
 	public C_Linear(Vector2 v1, Vector2 v2) {
-		params = new Object[5];
+		params = new Object[6];
 		// P0: t_low
 		// P1: t_high
 		// P2: Constant or t variable for u_t
@@ -22,6 +22,7 @@ public class C_Linear implements CurveDefinition {
 			params[2] = "t";
 			params[3] = (Float) v1.y;
 			params[4] = (Float) ((v1.y - v2.y) / (v1.x - v2.x));
+			params[5] = (Float) v1.x;
 
 		} else if (v1.y != v2.y) {
 
@@ -30,6 +31,7 @@ public class C_Linear implements CurveDefinition {
 			params[2] = (Float) v1.x;
 			params[3] = 0.0f;
 			params[4] = 1.0f;
+			params[5] = 0.0f;
 		} else {
 			System.out.println("ERROR... line with 0 distance!");
 			System.exit(0);

@@ -1,7 +1,10 @@
 package trafficsim.roads;
 
+import java.util.ArrayList;
+
 import lombok.Getter;
 import lombok.ToString;
+import paramatricCurves.ParametricCurve;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -18,24 +21,23 @@ public class Road {
 
 	/** The direction of a road, UPSTREAM is from pointA to pointB */
 	public enum Direction {
-		UPSTREAM,
-		DOWNSTREAM,
-		BOTH;
+		UPSTREAM, DOWNSTREAM, BOTH;
 	}
+
+	private ArrayList<Lane> AtoB;
+	private ArrayList<Lane> BtoA;
 
 	/** The left point */
 	private Vector2 pointA;
 	/** The right point */
 	private Vector2 pointB;
-	
-	//@formatter:off
-		/*
-		 * Given a road, points A and B are:
-		 *   ########################
-		 * -A#----------------------#-B
-		 *   ########################
-		 */
-		//@formatter:on
+
+	// @formatter:off
+	/*
+	 * Given a road, points A and B are: ########################
+	 * -A#----------------------#-B ########################
+	 */
+	// @formatter:on
 
 	/** Number of lanes in each direction */
 	private int numLanes;
@@ -44,18 +46,9 @@ public class Road {
 
 	private float speedLimit;
 
-	public Road(Vector2 pointA, Vector2 pointB, int numLanes, Direction direction, float speedLimit) {
-		// float angle = VectorUtils.getAngle(pointA, pointB);
-		// System.out.println(angle);
-		// if (angle < 180) {
-		// this.pointA = pointA;
-		// this.pointB = pointB;
-		// }
-		// else {
-		// // swap
-		// this.pointA = pointB;
-		// this.pointB = pointA;
-		// }
+	public Road(Vector2 pointA, Vector2 pointB, int numLanes,
+			Direction direction, float speedLimit) {
+
 		this.pointA = pointA;
 		this.pointB = pointB;
 		this.numLanes = numLanes;
@@ -63,39 +56,53 @@ public class Road {
 		this.speedLimit = speedLimit;
 	}
 
-	public Vector2 getPointC() {
-		Vector2 v = VectorUtils.getMidPoint(pointA, pointB);
+	public Road(ParametricCurve roadDef, int AtoBnum, int BtoAnum,
+			float speedLimit) {
 		
-		float angle = VectorUtils.getAngle(pointA, pointB);
-		angle+= 90.0;
+		this.pointA = roadDef.getPoint(roadDef.getR_t().getLow());
+		this.pointB = roadDef.getPoint(roadDef.getR_t().getHigh());
+		this.speedLimit = speedLimit;
 		
-		Vector2 vAdd = VectorUtils.getUnitVector(angle);
-		vAdd.x *= VectorUtils.getLength(pointA, pointB)/2;
-		vAdd.y *= VectorUtils.getLength(pointA, pointB)/2;
+		AtoB = new ArrayList<>();
+		BtoA = new ArrayList<>();
 		
-		v.add(vAdd);
-		
-		return v;
-		
-		
-		}
-	
-	public Vector2 getPointD() {
-		Vector2 v = VectorUtils.getMidPoint(pointA, pointB);
-		
-		float angle = VectorUtils.getAngle(pointA, pointB);
-		angle-= 90.0;
-		
-		Vector2 vAdd = VectorUtils.getUnitVector(angle);
-		vAdd.x *= VectorUtils.getLength(pointA, pointB)/2;
-		vAdd.y *= VectorUtils.getLength(pointA, pointB)/2;
-		
-		v.add(vAdd);
-		
-		return v;
+		for (int i = 0; i < AtoBnum; i++)
+			AtoB.add(LaneFactory.createLane(roadDef, i, pointA, pointB, +1));
+		for (int i = 0; i < BtoAnum; i++)
+			BtoA.add(LaneFactory.createLane(roadDef, i, pointA, pointB, -1));
+
+
 	}
 
+	public Vector2 getPointC() {
+		Vector2 v = VectorUtils.getMidPoint(pointA, pointB);
 
+		float angle = VectorUtils.getAngle(pointA, pointB);
+		angle += 90.0;
 
+		Vector2 vAdd = VectorUtils.getUnitVector(angle);
+		vAdd.x *= VectorUtils.getLength(pointA, pointB) / 2;
+		vAdd.y *= VectorUtils.getLength(pointA, pointB) / 2;
+
+		v.add(vAdd);
+
+		return v;
+
+	}
+
+	public Vector2 getPointD() {
+		Vector2 v = VectorUtils.getMidPoint(pointA, pointB);
+
+		float angle = VectorUtils.getAngle(pointA, pointB);
+		angle -= 90.0;
+
+		Vector2 vAdd = VectorUtils.getUnitVector(angle);
+		vAdd.x *= VectorUtils.getLength(pointA, pointB) / 2;
+		vAdd.y *= VectorUtils.getLength(pointA, pointB) / 2;
+
+		v.add(vAdd);
+
+		return v;
+	}
 
 }

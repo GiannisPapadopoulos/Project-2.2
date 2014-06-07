@@ -1,5 +1,6 @@
 package editor;
 
+import graph.Graph;
 import graph.Vertex;
 
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import paramatricCurves.curveDefs.C_Circular;
 import paramatricCurves.curveDefs.C_Linear;
 import trafficsim.TrafficSimConstants;
 import trafficsim.roads.CrossRoad;
+import trafficsim.roads.Lane;
+import trafficsim.roads.Road;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -104,7 +107,6 @@ public class WorldRenderer {
 				cr.getSize(), 50);
 		for (Double t : pc.getR_t().getDiscreteCover(100)) {
 			Vector2 v = pc.getPoint(t);
-			System.out.println(v);
 			gridRenderer.rect(v.x - LANE_WIDTH / 2, v.y - LANE_WIDTH / 2,
 					LANE_WIDTH, LANE_WIDTH);
 		}
@@ -116,8 +118,45 @@ public class WorldRenderer {
 						LANE_WIDTH, LANE_WIDTH);
 			}
 		}
-		System.out.println(pc.getR_t().getDiscreteCover(100));
 
+
+		gridRenderer.end();
+	}
+
+	public void debugHIGH(OrthographicCamera cam, Graph<Road> graph) {
+		gridRenderer.setProjectionMatrix(cam.combined);
+		gridRenderer.begin(ShapeType.Line);
+		gridRenderer.setColor(Color.RED);
+		float LANE_WIDTH = TrafficSimConstants.LANE_WIDTH;
+
+		
+		for(Vertex v : graph.getVertexList()) {
+			Object o = v.getData();
+			Road r = (Road)o;
+			if(r.getAtoB()!=null) {
+				for(Lane l:r.getAtoB()) {
+					ParametricCurve p = l.getTrajectory();
+						for (Double t : p.getR_t().getDiscreteCover(100)) {
+							Vector2 vec = p.getPoint(t);
+							gridRenderer.rect(vec.x - LANE_WIDTH / 2, vec.y - LANE_WIDTH / 2,
+									LANE_WIDTH, LANE_WIDTH);
+						}
+				
+				
+				}
+				for(Lane l:r.getBtoA()) {
+					ParametricCurve p = l.getTrajectory();
+						for (Double t : p.getR_t().getDiscreteCover(100)) {
+							Vector2 vec = p.getPoint(t);
+							gridRenderer.rect(vec.x - LANE_WIDTH / 2, vec.y - LANE_WIDTH / 2,
+									LANE_WIDTH, LANE_WIDTH);
+						}
+				
+				
+				}
+			}
+				
+		}
 		gridRenderer.end();
 	}
 

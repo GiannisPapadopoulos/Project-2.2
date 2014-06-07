@@ -27,6 +27,9 @@ public final class TrafficSimConstants {
 	/** Size of the main window */
 	public static final int WINDOW_WIDTH = 1366;
 	public static final int WINDOW_HEIGHT = 768;
+	
+	
+	public static final int SAMPLING_DENSITY = 100;
 
 	/**
 	 * Box2D Constants, used to convert between the 2 coordinate systems

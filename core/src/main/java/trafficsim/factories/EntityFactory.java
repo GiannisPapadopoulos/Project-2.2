@@ -31,6 +31,7 @@ import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
+import trafficsim.components.VehiclesOnRoadComponent;
 import trafficsim.movement.BrakeBehavior;
 import trafficsim.movement.SeekBehavior;
 import trafficsim.movement.WeightedBehavior;
@@ -176,7 +177,9 @@ public class EntityFactory {
 			vertexEntities.add(vertexEntity);
 		}
 		for (Edge<Road> edge : graph.getEdgeIterator()) {
-			createRoad(world, edge).addToWorld();
+			Entity roadEntity = createRoad(world, edge);
+			roadEntity.addComponent(new VehiclesOnRoadComponent());
+			roadEntity.addToWorld();
 		}
 		return vertexEntities;
 	}

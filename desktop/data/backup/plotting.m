@@ -2,7 +2,7 @@ poisson = importdata('poisson');
 uniform = importdata('uniform');
 
 % 1: distance, 2: time, 3: speed, 4 : % of time spent on traffic lights
-row = 2;
+row = 3;
 
 lengths = [length(poisson), length(uniform)];
 M = [mean(poisson(row:row,:)), mean(uniform(row:row,:))];

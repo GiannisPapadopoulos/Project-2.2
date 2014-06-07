@@ -35,6 +35,8 @@ public class GroupedTrafficLightComponent
 	private int index;
 	/** If the active light is currently green or orange */
 	private boolean green;
+	
+	int vertexID;
 	/**
 	 * If false, GroupedTrafficLightSystem.initialize() will be called on this intersection
 	 * If we modify the timers before the simulation starts (i.e. green wave) it should be set to true to avoid
@@ -79,6 +81,8 @@ public class GroupedTrafficLightComponent
 		private float greenTimer;
 		@Setter
 		private float orangeTimer;
+		
+		
 		
 		// //TODO
 		// public float getRedTimer(){

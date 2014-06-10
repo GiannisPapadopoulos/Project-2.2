@@ -47,8 +47,9 @@ public class GroupedTrafficLightComponent
 	/** If each traffic light belonging to the intersection has been mapped to the correct road */
 	private boolean mapped = false;
 
-	public GroupedTrafficLightComponent(List<List<GroupedTrafficLightData>> groupedLightsData) {
+	public GroupedTrafficLightComponent(List<List<GroupedTrafficLightData>> groupedLightsData, int vertexID) {
 		this.groupedLightsData = groupedLightsData;
+		this.vertexID = vertexID;
 	}
 
 	/** Assume that straight and left light are toggled at the same time */

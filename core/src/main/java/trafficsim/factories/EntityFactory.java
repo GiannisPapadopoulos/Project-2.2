@@ -219,7 +219,7 @@ public class EntityFactory {
 			// Entity vertexEntity = world.getEntity(world.getVertexToEntityMap().get(vertex.getID()));
 			Entity vertexEntity = vertexEntities.get(index);
 			if (groupedLights.size() > 0) {
-				vertexEntity.addComponent(new GroupedTrafficLightComponent(groupedLights));
+				vertexEntity.addComponent(new GroupedTrafficLightComponent(groupedLights, vertex.getID()));
 			}
 			index++;
 			// System.out.println(vertexEntity.getComponents(new Bag<Component>()));

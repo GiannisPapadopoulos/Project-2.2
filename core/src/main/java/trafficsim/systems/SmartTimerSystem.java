@@ -1,8 +1,12 @@
 package trafficsim.systems;
 
+import graph.Edge;
+import graph.Vertex;
+
 import java.util.List;
 
 import lombok.val;
+import trafficsim.TrafficSimWorld;
 import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.GroupedTrafficLightComponent;
 import trafficsim.components.GroupedTrafficLightComponent.GroupedTrafficLightData;
@@ -12,6 +16,7 @@ import trafficsim.components.SpriteComponent;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
 import trafficsim.components.VehiclesOnRoadComponent;
+import trafficsim.roads.Road;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -108,8 +113,30 @@ public class SmartTimerSystem extends EntitySystem {
 		else {
 			//find the road with the most cars on it
 			int vertexID = groupComp.getVertexID();
+			TrafficSimWorld simWorld = (TrafficSimWorld) world;
+			Vertex <Road> vertex = simWorld.getGraph().getVertex(vertexID);
+			int busiestRoadCarCount = 0;
+			int busiestEdge = 0;
+			int i = 0;
+			for(Edge<Road> edge : vertex.getAdjacentEdgeIterator()){
+				int edgeID = simWorld.getEdgeToEntityMap().get(edge.getID());
+				VehiclesOnRoadComponent vehiclesComp = vehiclesOnRoadComponent.get(simWorld.getEntity(edgeID));
+				int amountOfCars = vehiclesComp.getVehiclesOnRightLaneIDs().size();
+				if(amountOfCars > busiestRoadCarCount)
+				{ busiestEdge = i;
+				busiestRoadCarCount= amountOfCars;
+				}
+				i++;
+			}
+			int j = 0;
+			for(Edge<Road> edge : vertex.getAdjacentEdgeIterator()){
+				if(j == busiestEdge){
+					//change the light corresponding to this edge to green
+					
+				}
+				j++;
+			}
 			
-		
 			// Set rest to red
 			setGreen(groupComp);
 			groupComp.setGreen(true);

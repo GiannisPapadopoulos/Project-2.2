@@ -1,6 +1,7 @@
 package trafficsim.roads;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -19,61 +20,47 @@ import functions.VectorUtils;
 @ToString
 public class Road extends NavigationObject {
 
-	/** The direction of a road, UPSTREAM is from pointA to pointB */
-	public enum Direction {
-		UPSTREAM, DOWNSTREAM, BOTH;
-	}
-
-	private ArrayList<Lane> AtoB;
-	private ArrayList<Lane> BtoA;
+	private HashMap<CrossRoadTransition, SubSystem> rSubSystems;
 
 	/** The left point */
 	private Vector2 pointA;
 	/** The right point */
 	private Vector2 pointB;
 
-	// @formatter:off
-	/*
-	 * Given a road, points A and B are: ########################
-	 * -A#----------------------#-B ########################
-	 */
-	// @formatter:on
-
-	/** Number of lanes in each direction */
+	/** Number of lanes on this road */
 	private int numLanes;
-	/** The direction of the road */
-	private Direction direction;
 
 	private float speedLimit;
 
-	public Road(Vector2 pointA, Vector2 pointB, int numLanes,
-			Direction direction, float speedLimit) {
-
-		this.pointA = pointA;
-		this.pointB = pointB;
-		this.numLanes = numLanes;
-		this.direction = direction;
-		this.speedLimit = speedLimit;
+	public Road(ParametricCurve roadDef, int numLanes, float speedLimit,
+			CrossRoad origin, CrossRoad destination) {
+		ArrayList<ParametricCurve> roadDefAL = new ArrayList<ParametricCurve>();
+		roadDefAL.add(roadDef);
+		create(roadDefAL, numLanes, speedLimit, origin, destination);
 	}
 
-	public Road(ParametricCurve roadDef, int AtoBnum, int BtoAnum,
-			float speedLimit) {
-		
-		this.pointA = roadDef.getPoint(roadDef.getR_t().getLow());
-		this.pointB = roadDef.getPoint(roadDef.getR_t().getHigh());
-		this.speedLimit = speedLimit;
-		
-		AtoB = new ArrayList<>();
-		BtoA = new ArrayList<>();
-		
-		for (int i = 0; i < AtoBnum; i++)
-			AtoB.add(LaneFactory.createLane(roadDef, i, pointA, pointB, +1));
-		for (int i = 0; i < BtoAnum; i++)
-			BtoA.add(LaneFactory.createLane(roadDef, i, pointA, pointB, -1));
-
-
+	public Road(ArrayList<ParametricCurve> roadDef, int numLanes,
+			float speedLimit, CrossRoad origin, CrossRoad destination) {
+		create(roadDef, numLanes, speedLimit, origin, destination);
 	}
 
+	private void create(ArrayList<ParametricCurve> roadDef, int numLanes,
+			float speedLimit, CrossRoad origin, CrossRoad destination) {
+		this.pointA = roadDef.get(0).getPoint(roadDef.get(0).getR_t().getLow());
+		this.pointB = roadDef.get(roadDef.size() - 1).getPoint(
+				roadDef.get(roadDef.size() - 1).getR_t().getHigh());
+		this.speedLimit = speedLimit;
+
+		CrossRoadTransition crt = new CrossRoadTransition(origin, destination);
+		rSubSystems = new HashMap<CrossRoadTransition, SubSystem>();
+		rSubSystems.put(crt, new SubSystem());
+
+		for (int i = 0; i < numLanes; i++)
+			rSubSystems.get(crt).addSubsystem(
+					SubsystemFactory.createRoadSubsystem(roadDef, i));
+	}
+
+	// UNUSED ////////
 	public Vector2 getPointC() {
 		Vector2 v = VectorUtils.getMidPoint(pointA, pointB);
 

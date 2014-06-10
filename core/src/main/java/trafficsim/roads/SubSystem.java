@@ -2,14 +2,17 @@ package trafficsim.roads;
 
 import java.util.ArrayList;
 
+import lombok.Getter;
+
 import com.badlogic.gdx.math.Vector2;
 
-public class CrossRoadSubSystem {
+public class SubSystem {
 	
+	@Getter
 	private ArrayList<ArrayList<Lane>> lanes;
 	
 	
-	public CrossRoadSubSystem () {
+	public SubSystem () {
 		lanes = new ArrayList<ArrayList<Lane>>();
 	}
 	

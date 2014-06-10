@@ -58,6 +58,23 @@ public class VectorUtils {
 				MathUtils.sin(angle * MathUtils.degreesToRadians));
 	}
 
+	public static double getAbsAngleDifference(Vector2 v1, Vector2 v2) {
+		return Math.abs(v1.angle() - v2.angle());
+	}
+
+	public static Vector2 multiplyVector(Vector2 v, float a) {
+		v.x = v.x * a;
+		v.y = v.y * a;
+		return v;
+	}
+
+	public static Vector2 add2Vectors(Vector2 v1, Vector2 v2) {
+		Vector2 result = new Vector2();
+		result.x = v1.x + v2.x;
+		result.y = v1.y + v2.y;
+		return result;
+	}
+
 	// public static Vector2 getUnitPerpendicularVector(Vector2 vector) {
 	// return new Vector2(vector).nor().rotate(90);
 	// }

@@ -6,6 +6,7 @@ import graph.Graph;
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.data.DataGatherer;
+import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 
 import com.artemis.World;
@@ -33,7 +34,7 @@ public class TrafficSimWorld
 
 	/** The graph representing the roads and intersections */
 	@Setter
-	private Graph<Road> graph;
+	private Graph<NavigationObject> graph;
 
 	/** For gathering data related to the simulation */
 	private DataGatherer dataGatherer;

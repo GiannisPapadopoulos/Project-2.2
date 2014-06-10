@@ -1,8 +1,10 @@
 package paramatricCurves;
 
-import com.badlogic.gdx.math.Vector2;
+import java.util.ArrayList;
 
 import lombok.Getter;
+
+import com.badlogic.gdx.math.Vector2;
 
 public class ParametricCurve {
 
@@ -11,7 +13,9 @@ public class ParametricCurve {
 
 	@Getter
 	private RangeT r_t;
-	
+
+	private Vector2 startDir;
+	private Vector2 endDir;
 
 	public ParametricCurve(final CurveDefinition cd) {
 
@@ -21,7 +25,7 @@ public class ParametricCurve {
 				@Override
 				public double getFt(double t) {
 					if (cd.getParams()[2] instanceof String)
-						return t+(Float)cd.getParams()[5];
+						return t + (Float) cd.getParams()[5];
 					else if (cd.getParams()[2] instanceof Float)
 						return (Float) cd.getParams()[2];
 					else {
@@ -51,40 +55,61 @@ public class ParametricCurve {
 			r_t = new RangeT((Float) (cd.getParams()[0]),
 					(Float) (cd.getParams()[1]));
 
-			
-			
-			
-			
 		} else if (cd.getCurveType() == CurveType.CIRCULAR) {
 			u_t = new FunctionT(new Get_F_t() {
 
 				@Override
 				public double getFt(double t) {
-					
-					return ((Vector2)(cd.getParams()[2])).x+(Float)(cd.getParams()[3])*Math.cos(t);
+
+					return ((Vector2) (cd.getParams()[2])).x
+							+ (Float) (cd.getParams()[3]) * Math.cos(t);
 				}
-				
+
 			});
-			
+
 			v_t = new FunctionT(new Get_F_t() {
 
 				@Override
 				public double getFt(double t) {
-					
-					return ((Vector2)(cd.getParams()[2])).y+(Float)(cd.getParams()[3])*Math.sin(t);
+
+					return ((Vector2) (cd.getParams()[2])).y
+							+ (Float) (cd.getParams()[3]) * Math.sin(t);
 				}
-				
-				
+
 			});
 			r_t = new RangeT((Float) (cd.getParams()[0]),
 					(Float) (cd.getParams()[1]));
-			
+
 		} else {
 
 		}
 	}
-	
+
 	public Vector2 getPoint(double t) {
-		return new Vector2((float)u_t.getFt(t),(float)v_t.getFt(t));
+		return new Vector2((float) u_t.getFt(t), (float) v_t.getFt(t));
+	}
+
+	public Vector2 getStartDirection() {
+		if (startDir == null) {
+			ArrayList<Double> precise = r_t.getDiscreteCover(1000);
+			Vector2 a = getPoint(precise.get(0));
+			Vector2 b = getPoint(precise.get(1));
+			a.x = a.x - b.x;
+			a.y = a.y - b.y;
+			startDir = a;
+		}
+		return startDir;
+	}
+
+	public Vector2 getEndDirection() {
+		if (endDir == null) {
+			ArrayList<Double> precise = r_t.getDiscreteCover(1000);
+			Vector2 a = getPoint(precise.get(precise.size() - 1));
+			Vector2 b = getPoint(precise.get(precise.size() - 2));
+			a.x = a.x - b.x;
+			a.y = a.y - b.y;
+			startDir = a;
+		}
+		return endDir;
 	}
 }

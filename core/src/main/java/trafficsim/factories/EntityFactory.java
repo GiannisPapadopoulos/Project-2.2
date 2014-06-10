@@ -24,6 +24,7 @@ import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
+import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 import trafficsim.spawning.FixedIntervalSpawningStrategy;
 
@@ -91,16 +92,16 @@ public class EntityFactory {
 	 * @param angle The angle in degrees
 	 * @param name Must be the same as the name of the texture file
 	 */
-	public static Entity createRoad(TrafficSimWorld world, Element<Road> element) {
-		Road roadData = element.getData();
+	public static Entity createRoad(TrafficSimWorld world, Vertex<NavigationObject> vertex) {
+		Road roadData = vertex.getData();
 		String name;
 		Entity road = world.createEntity();
-		if (element.getClass() == Vertex.class) {
-			world.getVertexToEntityMap().put(element.getID(), road.getId());
+		if (vertex.getClass() == Vertex.class) {
+			world.getVertexToEntityMap().put(vertex.getID(), road.getId());
 			name = "intersection";
 		}
 		else {
-			world.getEdgeToEntityMap().put(element.getID(), road.getId());
+			world.getEdgeToEntityMap().put(vertex.getID(), road.getId());
 			road.addComponent(new AttachedLightsComponent());
 			name = "road1x1";
 		}
@@ -141,12 +142,12 @@ public class EntityFactory {
 		return angle;
 	}
 
-	public static void populateWorld(TrafficSimWorld world, Graph<Road> graph) {
+	public static void populateWorld(TrafficSimWorld world, Graph<NavigationObject> graph) {
 		world.setGraph(graph);
-		for (Vertex<Road> vertex : graph.getVertexIterator()) {
+		for (Vertex<NavigationObject> vertex : graph.getVertexIterator()) {
 			createRoad(world, vertex).addToWorld();
 		}
-		for (Edge<Road> edge : graph.getEdgeIterator()) {
+		for (Edge<NavigationObject> edge : graph.getEdgeIterator()) {
 			createRoad(world, edge).addToWorld();
 		}
 

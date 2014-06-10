@@ -17,6 +17,11 @@ public class Lane {
 		this.trajectory = trajectory;
 		this.width = width;
 	}
+	
+	public Lane(ParametricCurve trajectory) {
+		this.trajectory = trajectory;
+		this.width = TrafficSimConstants.LANE_WIDTH;
+	}
 
 	public boolean isInProximity(Vector2 object_pos) {
 		for (Double t : trajectory.getR_t().getDiscreteCover(

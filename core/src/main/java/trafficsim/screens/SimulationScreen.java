@@ -10,6 +10,7 @@ import lombok.Setter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
+import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
@@ -81,9 +82,9 @@ public class SimulationScreen extends SuperScreen {
 
 		EntityFactory.createBackground(world, "background").addToWorld();
 
-		Graph<Road> graph;
+		Graph<NavigationObject> graph;
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
-			graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
+			graph = GraphFactory.createNewSystem();
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);

@@ -96,7 +96,7 @@ public class SimulationScreen extends SuperScreen {
 
 		Graph<Road> graph;
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
-			graph = GraphFactory.createManhattanGraph(0, 0, 60, 0, 0);
+			graph = GraphFactory.createManhattanGraph(1, 3, 60, 0, 0);
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);

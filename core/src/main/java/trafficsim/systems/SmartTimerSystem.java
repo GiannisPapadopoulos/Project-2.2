@@ -70,7 +70,7 @@ public class SmartTimerSystem extends EntitySystem {
 			if (groupComp.getTimeElapsed() > groupComp.getTimer()) {
 				// increment index and toggle
 
-				toggle(groupComp);
+				toggleDirection(groupComp);
 				
 			}
 		}
@@ -102,7 +102,7 @@ public class SmartTimerSystem extends EntitySystem {
 		}
 		
 	
-	private void toggle(GroupedTrafficLightComponent groupComp) {
+	private void toggleDirection(GroupedTrafficLightComponent groupComp) {
 		// Set first light to green
 		if (groupComp.isGreen()) {
 			for (GroupedTrafficLightData lightData : groupComp.getGroupedLightsData().get(groupComp.getIndex())) {
@@ -131,7 +131,7 @@ public class SmartTimerSystem extends EntitySystem {
 			int j = 0;
 			for(Edge<Road> edge : vertex.getAdjacentEdgeIterator()){
 				if(j == busiestEdge){
-					//change the light corresponding to this edge to green
+					//
 					
 				}
 				j++;
@@ -144,6 +144,33 @@ public class SmartTimerSystem extends EntitySystem {
 		groupComp.setTimeElapsed(0);
 	}
 	
+	private void toggleTime(GroupedTrafficLightComponent groupComp) {
+		// Set first light to green
+		if (groupComp.isGreen()) {
+			for (GroupedTrafficLightData lightData : groupComp.getGroupedLightsData().get(groupComp.getIndex())) {
+				setLight(lightData, Status.ORANGE);
+			}
+			groupComp.setGreen(false);
+		}
+		else {
+			//find the road with the most cars on it
+			int vertexID = groupComp.getVertexID();
+			TrafficSimWorld simWorld = (TrafficSimWorld) world;
+			Vertex <Road> vertex = simWorld.getGraph().getVertex(vertexID);
+			//get the current green edge
+			//Edge <Road> edge = vertex.
+			int edgeID = simWorld.getEdgeToEntityMap().get(edge.getID());
+			VehiclesOnRoadComponent vehiclesComp = vehiclesOnRoadComponent.get(simWorld.getEntity(edgeID));
+			int amountOfCars = vehiclesComp.getVehiclesOnRightLaneIDs().size();
+			if(amountOfCars<1)
+			{
+				//add 3 seconds to the current lights timer.
+			}
+				
+		
+			
+		groupComp.setTimeElapsed(0);
+	}
 	private void setGreen(GroupedTrafficLightComponent groupComp) {
 		// Set first light to green
 		for (GroupedTrafficLightData lightData : groupComp.getGroupedLightsData().get(groupComp.getIndex())) {

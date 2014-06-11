@@ -45,11 +45,11 @@ public class EditorScreen extends SuperScreen {
 				.getWorld().getGraph());
 		ed = new EditorData(1000, 1000, -100, -100);
 		wr = new WorldRenderer(ed);
-		updatePOI(world.getGraph());
+		
 	}
 
 	private void updatePOI(Graph<Road> graph) {
-		POI = new PointsOfInterest(graph);
+		//POI = new PointsOfInterest(graph);
 	}
 
 	@Override
@@ -68,10 +68,9 @@ public class EditorScreen extends SuperScreen {
 		wr.renderGridUnderMouse(getCamera(), mousePosition.getGrid().getX(),
 				mousePosition.getGrid().getY());
 
-		wr.renderPOI(getCamera(), POI, getMousePosition().updateClosestPOI(POI));
+		//wr.renderPOI(getCamera(), POI, getMousePosition().updateClosestPOI(POI));
 		
-		wr.debugRENDER(getCamera());
-		wr.debugHIGH(getCamera(),world.getGraph());
+		wr.renderDEBUG(getCamera(),world.getGraph());
 
 		getWorldLayer().act(delta);
 		getUILayer().act(delta);

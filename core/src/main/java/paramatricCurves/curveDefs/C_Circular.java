@@ -39,21 +39,21 @@ public class C_Circular implements CurveDefinition {
 	
 	public C_Circular(Vector2 mid, float radius, Vector2 start,
 			Vector2 end,boolean clockwise) {
-		
+		params = new Object[5];
 		ParametricCurve dummy = new ParametricCurve(new C_Circular(mid,radius));
-		double low_t = -10000000;
-		double dist = Double.MAX_VALUE;
+		float low_t = -10000000;
+		float dist = Float.MAX_VALUE;
 		
-		for(Double d: dummy.getR_t().getDiscreteCover(1000))
+		for(Float d: dummy.getR_t().getDiscreteCover(1000))
 			if(VectorUtils.getLength(dummy.getPoint(d),start)<dist) {
 				low_t = d;
 				dist = VectorUtils.getLength(dummy.getPoint(d),start); 
 			}
 		
-	 double high_t = -1000000;
-	 dist = Double.MAX_VALUE;
+	 float high_t = -1000000;
+	 dist = Float.MAX_VALUE;
 		
-		for(Double d: dummy.getR_t().getDiscreteCover(1000))
+		for(Float d: dummy.getR_t().getDiscreteCover(1000))
 			if(VectorUtils.getLength(dummy.getPoint(d),end)<dist) {
 				high_t = d;
 				dist = VectorUtils.getLength(dummy.getPoint(d),end); 

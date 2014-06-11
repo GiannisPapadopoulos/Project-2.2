@@ -24,7 +24,7 @@ public class Lane {
 	}
 
 	public boolean isInProximity(Vector2 object_pos) {
-		for (Double t : trajectory.getR_t().getDiscreteCover(
+		for (Float t : trajectory.getR_t().getDiscreteCover(
 				TrafficSimConstants.SAMPLING_DENSITY))
 			if (euclid(object_pos, trajectory.getPoint(t)) < width)
 				return true;
@@ -33,7 +33,7 @@ public class Lane {
 
 	public double getDistance(Vector2 object_pos) {
 		double min_dist = Double.MAX_VALUE;
-		for (Double t : trajectory.getR_t().getDiscreteCover(
+		for (Float t : trajectory.getR_t().getDiscreteCover(
 				TrafficSimConstants.SAMPLING_DENSITY))
 			if (euclid(object_pos, trajectory.getPoint(t)) < min_dist)
 				min_dist = euclid(object_pos, trajectory.getPoint(t));
@@ -42,7 +42,7 @@ public class Lane {
 
 	public Vector2 getMinDistanceLocation(Vector2 object_pos) {
 		Vector2 min_dist_loc = null;
-		for (Double t : trajectory.getR_t().getDiscreteCover(
+		for (Float t : trajectory.getR_t().getDiscreteCover(
 				TrafficSimConstants.SAMPLING_DENSITY))
 			if (euclid(object_pos, trajectory.getPoint(t)) < euclid(object_pos,
 					min_dist_loc))

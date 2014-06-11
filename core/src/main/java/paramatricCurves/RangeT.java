@@ -9,14 +9,14 @@ import lombok.Data;
 @Data
 public class RangeT {
 
-	private double low;
-	private double high;
+	private Float low;
+	private Float high;
 	
-	public ArrayList<Double> getDiscreteCover(int precision) {
+	public ArrayList<Float> getDiscreteCover(int precision) {
 		double dif = (high-low)/precision;
-		ArrayList<Double> result = new ArrayList<Double>();
+		ArrayList<Float> result = new ArrayList<Float>();
 		for(int i=0;i<precision+1;i++)
-			result.add(low+dif*i);
+			result.add((float) (low+dif*i));
 		return result;
 	}
 }

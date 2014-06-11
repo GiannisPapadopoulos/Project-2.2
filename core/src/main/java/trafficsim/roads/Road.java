@@ -20,6 +20,7 @@ import functions.VectorUtils;
 @ToString
 public class Road extends NavigationObject {
 
+	@Getter
 	private HashMap<CrossRoadTransition, SubSystem> rSubSystems;
 
 	/** The left point */

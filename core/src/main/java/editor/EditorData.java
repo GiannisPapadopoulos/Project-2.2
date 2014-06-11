@@ -1,10 +1,17 @@
 package editor;
 
+import java.util.ArrayList;
+
+import com.badlogic.gdx.math.Vector2;
+
 import lombok.Data;
 
 @Data
 public class EditorData {
 
+	public static ArrayList<Vector2> debugPoints = new ArrayList<Vector2>();
+	public static ArrayList<Vector2> debugPoints2 = new ArrayList<Vector2>();
+	
 	private int height;
 	private int width;
 	private int h_shift;

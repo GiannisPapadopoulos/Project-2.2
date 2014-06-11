@@ -8,7 +8,7 @@ public class FunctionT {
 		this.def = def;
 	}
 	
-	public double getFt(double t) {
+	public float getFt(float t) {
 		return def.getFt(t);
 	}
 

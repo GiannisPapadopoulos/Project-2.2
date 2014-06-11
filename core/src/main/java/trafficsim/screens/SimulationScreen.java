@@ -93,7 +93,7 @@ public class SimulationScreen extends SuperScreen {
 		firstTimeSimulationRun = false;
 
 
-		EntityFactory.addTrafficLights(world, world.getGraph());
+		//EntityFactory.addTrafficLights(world, world.getGraph());
 
 
 		if (TIMER.isStarted())
@@ -102,7 +102,7 @@ public class SimulationScreen extends SuperScreen {
 		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		world.process();
 
-		EntityFactory.addSpawnPoints(world, graph);
+		//EntityFactory.addSpawnPoints(world, graph);
 
 	}
 

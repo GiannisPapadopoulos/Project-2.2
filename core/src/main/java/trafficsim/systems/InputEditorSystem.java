@@ -1,7 +1,9 @@
 package trafficsim.systems;
 
 import trafficsim.screens.EditorScreen;
+import utils.FileRead;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class InputEditorSystem extends InputSystem {
@@ -34,6 +36,20 @@ public class InputEditorSystem extends InputSystem {
 		previousDragY = screenY;
 
 		return true;
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		if (keycode == Keys.C) {
+			System.out.println("clear");
+			editorScreen.clearGraph();
+//			editorScreen.getWorld().setGraph(new Graph<Road>());
+			return true;
+		}
+		else if (keycode == Keys.S) {
+			FileRead.fileWrite(editorScreen.getWorld().getGraph(), "graphs/graph");
+		}
+		return false;
 	}
 
 }

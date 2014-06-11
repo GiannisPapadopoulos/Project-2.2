@@ -1,8 +1,6 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.DEBUG_FPS;
-import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
-import static trafficsim.TrafficSimConstants.TIMER;
+import static trafficsim.TrafficSimConstants.*;
 import graph.Graph;
 import graph.GraphFactory;
 
@@ -96,16 +94,17 @@ public class SimulationScreen extends SuperScreen {
 
 		Graph<Road> graph;
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
-			graph = GraphFactory.createManhattanGraph(1, 3, 60, 0, 0);
+			graph = GraphFactory.createManhattanGraph(3, 3, 60, 0, 0);
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);
 		
 
 		firstTimeSimulationRun = false;
+
+		// EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
-		EntityFactory.addSpawnPoints(world, graph, vertexEntities);
-		//GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		
 		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 

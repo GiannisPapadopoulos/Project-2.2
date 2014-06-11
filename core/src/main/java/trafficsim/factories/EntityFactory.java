@@ -2,12 +2,7 @@ package trafficsim.factories;
 
 import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.CAR_WIDTH;
-import static trafficsim.TrafficSimConstants.DEFAULT_BRAKING_FACTOR;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
-import static trafficsim.TrafficSimConstants.TRAFFIC_LIGHT_GREEN_INTERVAL;
-import static trafficsim.TrafficSimConstants.TRAFFIC_LIGHT_ORANGE_INTERVAL;
+import static trafficsim.TrafficSimConstants.*;
 import functions.VectorUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
@@ -120,24 +115,27 @@ public class EntityFactory {
 		Road roadData = element.getData();
 		String name;
 		Entity road = world.createEntity();
-		if (element.getClass() == Vertex.class) {
-			world.getVertexToEntityMap().put(element.getID(), road.getId());
-			name = "intersection";
-		}
-		else {
-			world.getEdgeToEntityMap().put(element.getID(), road.getId());
-			road.addComponent(new AttachedLightsComponent());
-			name = "road1x1";
-		}
-
 		Vector2 position = new Vector2((roadData.getPointB().x + roadData.getPointA().x) / 2,
 										(roadData.getPointB().y + roadData.getPointA().y) / 2);
 		float angle = VectorUtils.getAngle(roadData);
 
 		float length = VectorUtils.getLength(roadData);
+		if (element.getClass() == Vertex.class) {
+			world.getVertexToEntityMap().put(element.getID(), road.getId());
+			name = "intersection";
+			road.addComponent(new DimensionComponent(length, 2 * LANE_WIDTH * roadData.getNumLanes()));
+		}
+		else {
+			world.getEdgeToEntityMap().put(element.getID(), road.getId());
+			road.addComponent(new AttachedLightsComponent());
+			name = "road1x1";
+			road.addComponent(new DimensionComponent(length, LANE_WIDTH * roadData.getNumLanes()));
+		}
+
+
 
 		// TODO Check number of lanes here
-		road.addComponent(new DimensionComponent(length, LANE_WIDTH * 2));
+
 		angle *= MathUtils.degRad;
 
 		// boxShape takes the half width/height as input
@@ -198,6 +196,9 @@ public class EntityFactory {
 		int index = 0;
 
 		for (Vertex<Road> vertex : graph.getVertexIterator()) {
+			if (vertex.getID() != 3) {
+				continue;
+			}
 			// List<TIntList> groupedLightIDs = new ArrayList<TIntList>();
 			List<List<GroupedTrafficLightData>> groupedLights = new ArrayList<List<GroupedTrafficLightData>>();
 			int edgesPerVertex = vertex.getAdjacentEdges().size();
@@ -325,11 +326,13 @@ public class EntityFactory {
 			if (vertex.getAdjacentVertices().size() == 1) {
 				// Entity vertexEntity = world.getEntity(world.getVertexToEntityMap().get(vertex.getID()));
 				Entity vertexEntity = vertexEntities.get(index);
-				float interval = 2000;
-				// AbstractSpawnStrategy spawnStrategy = new FixedIntervalSpawningStrategy(interval);
-				AbstractSpawnStrategy spawnStrategy = new PoissonSpawnStrategy(1.0 / interval);
-				vertexEntity.addComponent(new SpawnComponent(vertex, spawnStrategy));
-				world.changedEntity(vertexEntity);
+				if (vertexEntity.getComponent(SpawnComponent.class) != null) {
+					float interval = 2000;
+					// AbstractSpawnStrategy spawnStrategy = new FixedIntervalSpawningStrategy(interval);
+					AbstractSpawnStrategy spawnStrategy = new PoissonSpawnStrategy(1.0 / interval);
+					vertexEntity.addComponent(new SpawnComponent(vertex, spawnStrategy));
+					// world.changedEntity(vertexEntity);
+				}
 			}
 			index++;
 		}

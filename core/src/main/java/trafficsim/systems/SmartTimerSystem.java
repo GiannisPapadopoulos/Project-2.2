@@ -44,9 +44,9 @@ public class SmartTimerSystem extends EntitySystem {
 	@Mapper
 	private ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
 
+	@SuppressWarnings("unchecked")
 	public SmartTimerSystem() {
 		super(Aspect.getAspectForAll(GroupedTrafficLightComponent.class));
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -111,32 +111,32 @@ public class SmartTimerSystem extends EntitySystem {
 			groupComp.setGreen(false);
 		}
 		else {
-			//find the road with the most cars on it
+			// find the road with the most cars on it
 			int vertexID = groupComp.getVertexID();
 			TrafficSimWorld simWorld = (TrafficSimWorld) world;
-			Vertex <Road> vertex = simWorld.getGraph().getVertex(vertexID);
+			Vertex<Road> vertex = simWorld.getGraph().getVertex(vertexID);
 			int busiestRoadCarCount = 0;
 			int busiestEdge = 0;
 			int i = 0;
-			for(Edge<Road> edge : vertex.getAdjacentEdgeIterator()){
+			for (Edge<Road> edge : vertex.getAdjacentEdgeIterator()) {
 				int edgeID = simWorld.getEdgeToEntityMap().get(edge.getID());
 				VehiclesOnRoadComponent vehiclesComp = vehiclesOnRoadComponent.get(simWorld.getEntity(edgeID));
 				int amountOfCars = vehiclesComp.getVehiclesOnRightLaneIDs().size();
-				if(amountOfCars > busiestRoadCarCount)
-				{ busiestEdge = i;
-				busiestRoadCarCount= amountOfCars;
+				if (amountOfCars > busiestRoadCarCount) {
+					busiestEdge = i;
+					busiestRoadCarCount = amountOfCars;
 				}
 				i++;
 			}
 			int j = 0;
-			for(Edge<Road> edge : vertex.getAdjacentEdgeIterator()){
-				if(j == busiestEdge){
+			for (Edge<Road> edge : vertex.getAdjacentEdgeIterator()) {
+				if (j == busiestEdge) {
 					//
-					
+
 				}
 				j++;
 			}
-			
+
 			// Set rest to red
 			setGreen(groupComp);
 			groupComp.setGreen(true);
@@ -153,24 +153,22 @@ public class SmartTimerSystem extends EntitySystem {
 			groupComp.setGreen(false);
 		}
 		else {
-			//find the road with the most cars on it
+			// find the road with the most cars on it
 			int vertexID = groupComp.getVertexID();
 			TrafficSimWorld simWorld = (TrafficSimWorld) world;
-			Vertex <Road> vertex = simWorld.getGraph().getVertex(vertexID);
-			//get the current green edge
-			//Edge <Road> edge = vertex.
-			int edgeID = simWorld.getEdgeToEntityMap().get(edge.getID());
+			Vertex<Road> vertex = simWorld.getGraph().getVertex(vertexID);
+			// TODO get the current green edge
+			// Edge <Road> edge = vertex.
+			int edgeID = 0;// simWorld.getEdgeToEntityMap().get(edge.getID());
 			VehiclesOnRoadComponent vehiclesComp = vehiclesOnRoadComponent.get(simWorld.getEntity(edgeID));
 			int amountOfCars = vehiclesComp.getVehiclesOnRightLaneIDs().size();
-			if(amountOfCars<1)
-			{
-				//add 3 seconds to the current lights timer.
+			if (amountOfCars < 1) {
+				// add 3 seconds to the current lights timer.
 			}
-				
-		
-			
-		groupComp.setTimeElapsed(0);
+			groupComp.setTimeElapsed(0);
+		}
 	}
+
 	private void setGreen(GroupedTrafficLightComponent groupComp) {
 		// Set first light to green
 		for (GroupedTrafficLightData lightData : groupComp.getGroupedLightsData().get(groupComp.getIndex())) {

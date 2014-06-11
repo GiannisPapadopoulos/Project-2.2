@@ -1,15 +1,18 @@
 package trafficsim.roads;
 
+import static trafficsim.TrafficSimConstants.DEGUG_SUBSYSTEMS;
+
 import java.util.ArrayList;
+
+import paramatricCurves.ParametricCurve;
+import paramatricCurves.curveDefs.C_Circular;
+import paramatricCurves.curveDefs.C_Linear;
+import trafficsim.TrafficSimConstants;
 
 import com.badlogic.gdx.math.Vector2;
 
 import editor.EditorData;
 import functions.VectorUtils;
-import paramatricCurves.ParametricCurve;
-import paramatricCurves.curveDefs.C_Circular;
-import paramatricCurves.curveDefs.C_Linear;
-import trafficsim.TrafficSimConstants;
 
 public class SubsystemFactory {
 
@@ -59,7 +62,8 @@ public class SubsystemFactory {
 
 	public static SubSystem createCrossRoadSubSystem(Road rIN, Road rOUT,
 			CrossRoad cr) {
-		System.out.println(" runned");
+		if (DEGUG_SUBSYSTEMS)
+			System.out.println(" runned");
 		int cIN = rIN.getNumLanes();
 		int cOUT = rOUT.getNumLanes();
 
@@ -106,8 +110,10 @@ public class SubsystemFactory {
 			for (Vector2 v : pOUT)
 				EditorData.debugPoints.add(v);
 
-			System.out.println(angleIN.x + " " + angleIN.y);
-			System.out.println(angleOUT.x + " " + angleOUT.y);
+			if (DEGUG_SUBSYSTEMS) {
+				System.out.println(angleIN.x + " " + angleIN.y);
+				System.out.println(angleOUT.x + " " + angleOUT.y);
+			}
 
 			if (Math.abs(VectorUtils.getAbsAngleDifference(angleIN, angleOUT) - 180.0) < SAME_DIR_LIMIT) {
 				SubSystem result = new SubSystem();
@@ -126,7 +132,9 @@ public class SubsystemFactory {
 							angleOUT) - 90 - 360) < SAME_DIR_LIMIT)
 					|| (Math.abs(VectorUtils.getAbsAngleDifference(angleIN,
 							angleOUT) + 90 - 360) < SAME_DIR_LIMIT)) {
-				System.out.println("yes");
+				if (DEGUG_SUBSYSTEMS) {
+					System.out.println("yes");
+				}
 				boolean clockwise = true;
 				angleIN.rotate(90.0f);
 				if (VectorUtils.getAbsAngleDifference(angleIN, angleOUT) < SAME_DIR_LIMIT) {
@@ -136,13 +144,18 @@ public class SubsystemFactory {
 				Vector2 side_rect_length = new Vector2();
 				side_rect_length.x = pIN.get(0).x - pOUT.get(0).x;
 				side_rect_length.y = pIN.get(0).y - pOUT.get(0).y;
-				System.out.println(pIN.get(0));
-				System.out.println(pOUT.get(0));
+
+				if (DEGUG_SUBSYSTEMS) {
+					System.out.println(pIN.get(0));
+					System.out.println(pOUT.get(0));
+				}
+
 				Vector2 vv = VectorUtils.multiplyVector(
 						VectorUtils.getUnitVector(angleIN.angle()),
 						(float) Math.sqrt(side_rect_length.len2() / 2.0));
-				System.out
-						.println((float) Math.sqrt(side_rect_length.len2() / 2.0));
+				if (DEGUG_SUBSYSTEMS) {
+					System.out.println((float) Math.sqrt(side_rect_length.len2() / 2.0));
+				}
 
 				Vector2 circleCenter = VectorUtils.add2Vectors(vv, pIN.get(0));
 				EditorData.debugPoints.add(circleCenter);
@@ -159,10 +172,10 @@ public class SubsystemFactory {
 				}
 				return result;
 			} else {
-				System.out.println((Math.abs(VectorUtils.getAbsAngleDifference(
-						angleIN, angleOUT) - 90)));
-				System.out.println((Math.abs(VectorUtils.getAbsAngleDifference(
-						angleIN, angleOUT) + 90)));
+				if (DEGUG_SUBSYSTEMS) {
+					System.out.println((Math.abs(VectorUtils.getAbsAngleDifference(angleIN, angleOUT) - 90)));
+					System.out.println((Math.abs(VectorUtils.getAbsAngleDifference(angleIN, angleOUT) + 90)));
+				}
 			}
 
 		} else if (cIN > cOUT) {

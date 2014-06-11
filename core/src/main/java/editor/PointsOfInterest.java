@@ -31,35 +31,41 @@ public class PointsOfInterest {
 	
 	private void updatePOI() {
 		boolean found = false;
-		for (Vertex<NavigationObject> v : graph.getVertexList())
-			for (Vector2 vec : new Vector2[] { v.getData().getPointA(),
-					v.getData().getPointB(), v.getData().getPointC(), v.getData().getPointD() }) {
-				found = false;
-				for (PointOfInterest poi : POI)
-					if (vec.x == poi.position.x && vec.y == poi.position.y) {
-						poi.vertices.add(v);
-						found = true;
-						break;
-					} else {
+		for (Vertex<NavigationObject> v : graph.getVertexList()) {
+
+			if (v.getData() instanceof Road) {
+				Road road = (Road) v.getData();
+				for (Vector2 vec : new Vector2[] { road.getPointA(), road.getPointB(), road.getPointC(),
+													road.getPointD() }) {
+					found = false;
+					for (PointOfInterest poi : POI)
+						if (vec.x == poi.position.x && vec.y == poi.position.y) {
+							poi.vertices.add(v);
+							found = true;
+							break;
+						}
+						else {
+						}
+					if (!found) {
+						PointOfInterest poi = new PointOfInterest(vec);
+						poi.addGraphObject(v);
+						POI.add(poi);
 					}
-				if (!found) {
-					PointOfInterest poi = new PointOfInterest(vec);
-					poi.addGraphObject(v);
-					POI.add(poi);
 				}
 			}
+		}
 	}
 
 	@Data
 	public class PointOfInterest {
 
 		private Vector2 position;
-		private ArrayList<Vertex<Road>> vertices;
+		private ArrayList<Vertex<NavigationObject>> vertices;
 		private ArrayList<Edge<Road>> edges;
 
 		public PointOfInterest(Vector2 position) {
 			this.position = position;
-			vertices = new ArrayList<Vertex<Road>>();
+			vertices = new ArrayList<Vertex<NavigationObject>>();
 			edges = new ArrayList<Edge<Road>>();
 		}
 
@@ -67,7 +73,7 @@ public class PointsOfInterest {
 			edges.add(e);
 		}
 
-		public void addGraphObject(Vertex<Road> v) {
+		public void addGraphObject(Vertex<NavigationObject> v) {
 			vertices.add(v);
 		}
 

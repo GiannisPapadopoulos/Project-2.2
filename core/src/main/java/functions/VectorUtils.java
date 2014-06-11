@@ -63,7 +63,6 @@ public class VectorUtils {
 	}
 
 	public static Vector2 multiplyVector(Vector2 v, float a) {
-		System.out.println(a);
 		v.x *= a;
 		v.y *= a;
 		return v;

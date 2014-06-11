@@ -3,7 +3,7 @@ package trafficsim.screens;
 import lombok.Getter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.factories.EntityFactory;
-import trafficsim.roads.Road;
+import trafficsim.roads.NavigationObject;
 import trafficsim.systems.InputEditorSystem;
 import trafficsim.systems.RenderSystem;
 
@@ -43,13 +43,14 @@ public class EditorScreen extends SuperScreen {
 		world.initialize();
 		EntityFactory.populateWorld(world, getScreens().getSimulationScreen()
 				.getWorld().getGraph());
+		updatePOI(world.getGraph());
 		ed = new EditorData(1000, 1000, -100, -100);
 		wr = new WorldRenderer(ed);
 		
 	}
 
-	private void updatePOI(Graph<Road> graph) {
-		//POI = new PointsOfInterest(graph);
+	private void updatePOI(Graph<NavigationObject> graph) {
+		POI = new PointsOfInterest(graph);
 	}
 
 	@Override

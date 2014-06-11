@@ -53,4 +53,6 @@ public final class TrafficSimConstants {
 	public static final StopWatch TIMER = new StopWatch();
 	
 	public static final boolean DEBUG_PRINT_LEVEL_0 = false;
+
+	public static final boolean DEGUG_SUBSYSTEMS = false;
 }

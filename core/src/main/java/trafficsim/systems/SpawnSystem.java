@@ -16,6 +16,7 @@ import trafficsim.callbacks.TrafficRayCastCallBack;
 import trafficsim.components.RouteComponent;
 import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
+import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 
 import com.artemis.Aspect;
@@ -51,14 +52,12 @@ public class SpawnSystem
 			SpawnComponent spawnComp = spawnComponentMapper.get(entity);
 			if (spawnComp.shouldSpawn(TIMER.getTime())) {
 
-				Vertex<Road> spawnVertex = spawnComp.getVertex();
-				Vertex<Road> connection = spawnVertex.getParent().getVertex(spawnVertex.getAdjacentVertices().get(0));
-				float angle = getAngle(spawnVertex.getData(), connection.getData()) * degRad;
+				Vertex<NavigationObject> spawnVertex = spawnComp.getVertex();
+				Vertex<NavigationObject> connection = spawnVertex.getParent().getVertex(spawnVertex.getAdjacentVertices().get(0));
+				float angle = 0.0f;//TODOgetAngle(spawnVertex.getData(), connection.getData()) * degRad;
 				
 				Vector2 position = VectorUtils.getMidPoint(spawnVertex.getData());
-				Vector2 laneCorrection = getVector(spawnVertex.getData(), connection.getData()).nor()
-																								.rotate(-90)
-																								.scl(LANE_WIDTH / 2);
+				Vector2 laneCorrection = null;//TODO
 				position.add(laneCorrection);
 				if (canSpawn(spawnComp, position, angle)) {
 					int randInt = RANDOM.nextInt(7) + 1;

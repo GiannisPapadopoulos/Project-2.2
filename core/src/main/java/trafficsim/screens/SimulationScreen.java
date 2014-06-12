@@ -83,8 +83,10 @@ public class SimulationScreen extends SuperScreen {
 		EntityFactory.createBackground(world, "background").addToWorld();
 
 		Graph<NavigationObject> graph;
-		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
-			graph = GraphFactory.createNewSystem();
+		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null) {
+			graph = GraphFactory.createManhattanGraph(10,10,100.0f,0,0);
+			//graph = GraphFactory.createNewSystem();
+		}
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);

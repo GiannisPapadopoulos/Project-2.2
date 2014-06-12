@@ -1,5 +1,7 @@
 package functions;
 
+import trafficsim.roads.CrossRoad;
+import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -43,8 +45,9 @@ public class VectorUtils {
 		return getAngle(getMidPoint(roadA), getMidPoint(roadB));
 	}
 
-	public static Vector2 getMidPoint(Road road) {
-		return getMidPoint(road.getPointA(), road.getPointB());
+	public static Vector2 getMidPoint(NavigationObject navObj) {
+		
+		return new Vector2(navObj.getPosition().x,navObj.getPosition().y);
 	}
 
 	public static Vector2 getMidPoint(Vector2 pointA, Vector2 pointB) {

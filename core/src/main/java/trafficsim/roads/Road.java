@@ -18,6 +18,8 @@ import functions.VectorUtils;
  */
 @Getter
 @ToString
+
+
 public class Road extends NavigationObject {
 
 	@Getter
@@ -38,11 +40,15 @@ public class Road extends NavigationObject {
 		ArrayList<ParametricCurve> roadDefAL = new ArrayList<ParametricCurve>();
 		roadDefAL.add(roadDef);
 		create(roadDefAL, numLanes, speedLimit, origin, destination);
+		origin.addConnection(this, false);
+		destination.addConnection(this, true);
 	}
 
 	public Road(ArrayList<ParametricCurve> roadDef, int numLanes,
 			float speedLimit, CrossRoad origin, CrossRoad destination) {
 		create(roadDef, numLanes, speedLimit, origin, destination);
+		origin.addConnection(this, false);
+		destination.addConnection(this, true);
 	}
 
 	private void create(ArrayList<ParametricCurve> roadDef, int numLanes,
@@ -59,6 +65,11 @@ public class Road extends NavigationObject {
 		for (int i = 0; i < numLanes; i++)
 			rSubSystems.get(crt).addSubsystem(
 					SubsystemFactory.createRoadSubsystem(roadDef, i));
+	}
+	
+	@Override
+	public Vector2 getPosition() {
+		return VectorUtils.getMidPoint(pointA, pointB).cpy();
 	}
 
 	// UNUSED ////////

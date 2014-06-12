@@ -110,8 +110,8 @@ public class WorldRenderer {
 								.getR_t().getDiscreteCover(30)) {
 							ParametricCurve pc = lanes.get(i).get(j)
 									.getTrajectory();
-							gridRenderer.rect(pc.getPoint(d).x,
-									pc.getPoint(d).y,
+							gridRenderer.rect(pc.getPoint(d).x-TrafficSimConstants.LANE_WIDTH/2,
+									pc.getPoint(d).y-TrafficSimConstants.LANE_WIDTH/2,
 									TrafficSimConstants.LANE_WIDTH,
 									TrafficSimConstants.LANE_WIDTH);
 						}
@@ -131,21 +131,23 @@ public class WorldRenderer {
 								.getR_t().getDiscreteCover(100)) {
 							ParametricCurve pc = lanes.get(i).get(j)
 									.getTrajectory();
-							gridRenderer.rect(pc.getPoint(d).x,
-									pc.getPoint(d).y,
+							gridRenderer.rect(pc.getPoint(d).x-TrafficSimConstants.LANE_WIDTH/2,
+									pc.getPoint(d).y-TrafficSimConstants.LANE_WIDTH/2,
 									TrafficSimConstants.LANE_WIDTH,
 									TrafficSimConstants.LANE_WIDTH);
 						}
 					}
 			}
 		
+		float blueSize = 0.3f;
+		float orangeSize = 0.5f;
 		gridRenderer.setColor(Color.BLUE);
 		for(Vector2 v: EditorData.debugPoints)
-			gridRenderer.rect(v.x, v.y, 0.3f, 0.3f);
+			gridRenderer.rect(v.x-blueSize/2, v.y-blueSize/2, blueSize, blueSize);
 		
 		gridRenderer.setColor(Color.ORANGE);
 		for(Vector2 v: EditorData.debugPoints2)
-			gridRenderer.rect(v.x, v.y, 0.5f, 0.5f);
+			gridRenderer.rect(v.x-orangeSize/2, v.y-orangeSize/2, orangeSize, orangeSize);
 			
 		
 		gridRenderer.end();

@@ -208,7 +208,7 @@ public class MovementSystem
 		// TODO Define maxForce in relation to mass
 		force.clamp(0, steeringComp.getMaxForce());
 		Vector2 newVel = physComp.getLinearVelocity().cpy().add(force);
-		float maxSpeed = Math.min(routeComp.getCurrentEdge().getData().getSpeedLimit(), maxSpeedComp.getSpeed());
+		float maxSpeed = Math.min(((Road) routeComp.getCurrentEdge().getData()).getSpeedLimit(), maxSpeedComp.getSpeed());
 		newVel.clamp(0, maxSpeed);
 		float deltaA = getAngleOfCurrentEdgeInRads(routeComp) - physComp.getAngle();
 		// float deltaA = getDeltaAngle(routeComp) - physComp.getAngle();
@@ -298,11 +298,11 @@ public class MovementSystem
 		if (routeComp.isLastEdge()) {
 			return 0;
 		}
-		Edge<Road> nextEdge = routeComp.getPath().getRoute().get(routeComp.getEdgeIndex() + 1).getEdge();
+		Edge<Road> nextEdge = null;
 		// float angle = VectorUtils.getAngle(nextEdge.getData())
 		// - VectorUtils.getAngle(routeComp.getCurrentEdge().getData());
-		Vertex<Road> vertex1 = routeComp.getNextVertex();
-		Vertex<Road> vertex2 = routeComp.getNextVertex().getNeighbor(nextEdge);
+		Vertex<Road> vertex1 = null;
+		Vertex<Road> vertex2 = null;
 		return getAngle(vertex1.getData(), vertex2.getData());
 	}
 
@@ -317,7 +317,7 @@ public class MovementSystem
 	}
 
 	private static float getAngleOfCurrentEdgeInRads(RouteComponent routeComp) {
-		Road road = routeComp.getCurrentEdge().getData();
+		Road road = (Road) routeComp.getCurrentEdge().getData();
 		Vector2 roadVector = VectorUtils.getVector(road);
 		if (!fromAtoB(routeComp)) {
 			roadVector.scl(-1);
@@ -331,9 +331,8 @@ public class MovementSystem
 
 	public static Vector2 getTarget(RouteComponent routeComp) {
 		// Vector2 target = VectorUtils.getMidPoint(routeComp.getNextVertex().getData());
-		Vector2 target = fromAtoB(routeComp) ? routeComp.getCurrentEdge().getData().getPointB().cpy()
-											: routeComp.getCurrentEdge().getData().getPointA().cpy();
-		Vector2 laneCorrection = getVector(routeComp.getCurrentEdge().getData()).cpy().nor().rotate(90);
+		Vector2 target = null;
+		Vector2 laneCorrection = getVector(null).cpy().nor().rotate(90);
 		// To reduce the chance of stepping on the lane
 		laneCorrection.scl(1.1f);
 

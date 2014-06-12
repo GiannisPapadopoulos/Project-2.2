@@ -11,28 +11,32 @@ import lombok.ToString;
 import pathfinding.GraphAction;
 import pathfinding.GraphState;
 import search.Path;
+import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
+import trafficsim.roads.NavigationObject;
 
 import com.artemis.Component;
+
+
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 @ToString
 public class RouteComponent
-		extends Component {
+ extends Component {
 
 	@NonNull
-	private Vertex<Road> source;
+	private Vertex<NavigationObject> source;
 
 	// @NonNull
-	private Vertex<Road> target;
+	private Vertex<NavigationObject> target;
 
 	@Delegate
 	private Path<GraphState, GraphAction> path;
 
 	/** */
-	private Vertex<Road> currentVertex;
+	private Vertex<NavigationObject> currentVertex;
 	/** */
 	private int edgeIndex;
 
@@ -42,18 +46,20 @@ public class RouteComponent
 	// /** */
 	// private boolean first = true;
 
-	public RouteComponent(Vertex<Road> source, Vertex<Road> target) {
+	public RouteComponent(Vertex<NavigationObject> source,
+			Vertex<NavigationObject> target) {
 		super();
 		this.source = source;
 		this.target = target;
 	}
 
-	public Edge<Road> getCurrentEdge() {
+	public Edge<NavigationObject> getCurrentEdge() {
 		return path.getRoute().get(edgeIndex).getEdge();
 	}
 
-	public Vertex<Road> getNextVertex() {
-		return currentVertex == target ? currentVertex : currentVertex.getNeighbor(getCurrentEdge());
+	public Vertex<NavigationObject> getNextVertex() {
+		return currentVertex == target ? currentVertex : currentVertex
+				.getNeighbor(getCurrentEdge());
 	}
 
 	public void update() {

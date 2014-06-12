@@ -3,6 +3,9 @@ package trafficsim.screens;
 import static trafficsim.TrafficSimConstants.*;
 import graph.Graph;
 import graph.GraphFactory;
+
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
@@ -23,6 +26,7 @@ import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -98,12 +102,12 @@ public class SimulationScreen extends SuperScreen {
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);
-		EntityFactory.populateWorld(world, graph);
+		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
 		
 		firstTimeSimulationRun = false;
 
 
-		//EntityFactory.addTrafficLights(world, world.getGraph());
+		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 
 
 		if (TIMER.isStarted())

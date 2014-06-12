@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.Setter;
-import trafficsim.roads.Road;
+import trafficsim.roads.NavigationObject;
 import trafficsim.spawning.AbstractSpawnStrategy;
 
 import com.artemis.Component;
@@ -23,7 +23,7 @@ public class SpawnComponent
 	 * The graph vertex where cards will be spawned.
 	 * The convention is that it will have only one adjacent edge
 	 */
-	private Vertex<Road> vertex;
+	private Vertex<NavigationObject> vertex;
 
 	@Delegate
 	@Setter

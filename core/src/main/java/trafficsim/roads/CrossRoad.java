@@ -15,7 +15,7 @@ public class CrossRoad extends NavigationObject {
 	private ArrayList<Road> roadsIN;
 	@Getter
 	private ArrayList<Road> roadsOUT;
-	@Getter
+	
 	private Vector2 position;
 	@Getter
 	private HashMap<RoadTransition, SubSystem> crSubSystems;
@@ -55,5 +55,9 @@ public class CrossRoad extends NavigationObject {
 			}
 			roadsOUT.add(r);
 		}
+	}
+	
+	public Vector2 getPosition(){
+		return position.cpy();
 	}
 }

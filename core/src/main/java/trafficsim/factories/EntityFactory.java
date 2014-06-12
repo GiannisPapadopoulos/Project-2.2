@@ -339,8 +339,8 @@ public class EntityFactory {
 		return trafficLight;
 	}
 
-	public static void addSpawnPoints(TrafficSimWorld world, Graph<Road> graph) {
-		for (Vertex<Road> vertex : graph.getVertexIterator()) {
+	public static void addSpawnPoints(TrafficSimWorld world, Graph<NavigationObject> graph) {
+		for (Vertex<NavigationObject> vertex : graph.getVertexIterator()) {
 			if (vertex.getAdjacentVertices().size() == 1) {
 				Entity vertexEntity = world.getEntity(world
 						.getVertexToEntityMap().get(vertex.getID()));

@@ -6,6 +6,7 @@ import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import search.SearchState;
+import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 
 @ToString
@@ -15,7 +16,7 @@ public class GraphState
 		extends SearchState {
 
 	@Delegate
-	private Vertex<Road> vertex;
+	private Vertex<NavigationObject> vertex;
 
 	@Override
 	public int hashCode() {
@@ -27,7 +28,7 @@ public class GraphState
 		if (o.getClass() != GraphState.class) {
 			return false;
 		}
-		Vertex<Road> other = ((GraphState) o).getVertex();
+		Vertex<NavigationObject> other = ((GraphState) o).getVertex();
 		if (other.getData().getClass() != Road.class) {
 			return false;
 		}

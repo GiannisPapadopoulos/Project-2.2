@@ -70,7 +70,10 @@ public class SubsystemFactory {
 		Vector2 angleIN = null;
 		Vector2 angleOUT = null;
 
-		if (cIN == cOUT) {
+		// TODO This is causing problems because at the time (eg) the in-edge is created, the out edge doesn't exist
+		// yet. Maybe this and addConnection() in CrossRoad should be called for all vertices after the creation of the
+		// graph is finished. For now I removed the check cIN == cOUT
+		if (cIN == cOUT || true) {
 			ArrayList<Vector2> pIN = new ArrayList<Vector2>();
 			ArrayList<Vector2> pOUT = new ArrayList<Vector2>();
 

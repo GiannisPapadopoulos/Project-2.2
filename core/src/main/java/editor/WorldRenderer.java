@@ -99,25 +99,21 @@ public class WorldRenderer {
 
 		
 
-		for (Vertex v : graph.getVertexList())
-			for (RoadTransition rt : ((CrossRoad) v.getData())
-					.getCrSubSystems().keySet()) {
-				ArrayList<ArrayList<Lane>> lanes = ((CrossRoad) v.getData())
-						.getCrSubSystems().get(rt).getLanes();
+		for (Vertex<NavigationObject> v : graph.getVertexList()) {
+			for (RoadTransition rt : ((CrossRoad) v.getData()).getCrSubSystems().keySet()) {
+				ArrayList<ArrayList<Lane>> lanes = ((CrossRoad) v.getData()).getCrSubSystems().get(rt).getLanes();
+
 				for (int i = 0; i < lanes.size(); i++)
 					for (int j = 0; j < lanes.get(i).size(); j++) {
-						for (Float d : lanes.get(i).get(j).getTrajectory()
-								.getR_t().getDiscreteCover(30)) {
-							ParametricCurve pc = lanes.get(i).get(j)
-									.getTrajectory();
-							gridRenderer.rect(pc.getPoint(d).x-TrafficSimConstants.LANE_WIDTH/2,
-									pc.getPoint(d).y-TrafficSimConstants.LANE_WIDTH/2,
-									TrafficSimConstants.LANE_WIDTH,
-									TrafficSimConstants.LANE_WIDTH);
+						for (Float d : lanes.get(i).get(j).getTrajectory().getR_t().getDiscreteCover(30)) {
+							ParametricCurve pc = lanes.get(i).get(j).getTrajectory();
+							gridRenderer.rect(	pc.getPoint(d).x - TrafficSimConstants.LANE_WIDTH / 2,
+												pc.getPoint(d).y - TrafficSimConstants.LANE_WIDTH / 2,
+												TrafficSimConstants.LANE_WIDTH, TrafficSimConstants.LANE_WIDTH);
 						}
 					}
-
 			}
+		}
 
 		gridRenderer.setColor(Color.PINK);
 		for (Edge e : graph.getEdgeList())

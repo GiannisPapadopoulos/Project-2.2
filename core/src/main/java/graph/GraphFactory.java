@@ -193,7 +193,6 @@ public class GraphFactory {
 				}
 			}
 		}
-		System.out.println(graph.getVertexCount() + " " + graph.getEdgeCount());
 		return graph;
 	}
 }

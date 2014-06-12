@@ -35,6 +35,8 @@ public class GroupedTrafficLightComponent
 	private int index;
 	/** If the active light is currently green or orange */
 	private boolean green;
+	
+	int vertexID;
 	/**
 	 * If false, GroupedTrafficLightSystem.initialize() will be called on this intersection
 	 * If we modify the timers before the simulation starts (i.e. green wave) it should be set to true to avoid
@@ -45,8 +47,9 @@ public class GroupedTrafficLightComponent
 	/** If each traffic light belonging to the intersection has been mapped to the correct road */
 	private boolean mapped = false;
 
-	public GroupedTrafficLightComponent(List<List<GroupedTrafficLightData>> groupedLightsData) {
+	public GroupedTrafficLightComponent(List<List<GroupedTrafficLightData>> groupedLightsData, int vertexID) {
 		this.groupedLightsData = groupedLightsData;
+		this.vertexID = vertexID;
 	}
 
 	/** Assume that straight and left light are toggled at the same time */
@@ -79,6 +82,10 @@ public class GroupedTrafficLightComponent
 		private float greenTimer;
 		@Setter
 		private float orangeTimer;
+		
+		/** The graph id of the edge the light is on */
+		private int edgeID;
+		
 		
 		// //TODO
 		// public float getRedTimer(){

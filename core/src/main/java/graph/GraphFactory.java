@@ -23,25 +23,28 @@ public class GraphFactory {
 		float length = 60;
 		int interval = 3000;
 
-		Vertex<Road> connection = graph.getVertex(0);
+		int[] indices = { 0, graph.getVertexCount() - 1, (int) Math.sqrt(graph.getVertexCount() - 1),
+							graph.getVertexCount() - (int) Math.sqrt(graph.getVertexCount()) };
+
+		Vertex<Road> connection = graph.getVertex(indices[0]);
 		Vector2 edgeB = connection.getData().getPointA();
 		Vector2 edgeA = new Vector2(edgeB.x - length, edgeB.y);
 		makeSpawnVertex(world, connection, graph, edgeA, edgeB, new Vector2(edgeA.x - 2 * LANE_WIDTH, edgeA.y), edgeA,
 						true, interval);
 
-		Vertex<Road> connection2 = graph.getVertex(29);
+		Vertex<Road> connection2 = graph.getVertex(indices[1]);
 		Vector2 edgeA2 = connection2.getData().getPointB();
 		Vector2 edgeB2 = new Vector2(edgeA2.x + length, edgeA2.y);
 		makeSpawnVertex(world, connection2, graph, edgeA2, edgeB2, edgeB2, new Vector2(edgeB2.x + 2 * LANE_WIDTH,
 																						edgeB2.y), false, interval);
 
-		Vertex<Road> connection3 = graph.getVertex(4);
+		Vertex<Road> connection3 = graph.getVertex(indices[2]);
 		Vector2 edgeB3 = connection3.getData().getPointA();
 		Vector2 edgeA3 = new Vector2(edgeB3.x - length, edgeB3.y);
 		makeSpawnVertex(world, connection3, graph, edgeA3, edgeB3, new Vector2(edgeA3.x - 2 * LANE_WIDTH, edgeA3.y),
 						edgeA3, true, interval);
 
-		Vertex<Road> connection4 = graph.getVertex(25);
+		Vertex<Road> connection4 = graph.getVertex(indices[3]);
 		Vector2 edgeA4 = connection4.getData().getPointB();
 		Vector2 edgeB4 = new Vector2(edgeA4.x + length, edgeA4.y);
 		makeSpawnVertex(world, connection4, graph, edgeA4, edgeB4, edgeB4, new Vector2(edgeB4.x + 2 * LANE_WIDTH,
@@ -96,19 +99,37 @@ public class GraphFactory {
 				if (i < width - 1) {
 					Vertex<Road> v2 = graph.getVertex((i + 1) * height + j);
 					Vector2 pointA = VectorUtils.getMidPoint(v1.getData());
-					pointA.set(pointA.x + LANE_WIDTH, pointA.y);
 					Vector2 pointB = VectorUtils.getMidPoint(v2.getData());
-					pointB.set(pointB.x - LANE_WIDTH, pointB.y);
 
-					graph.addEdge(new Road(pointA, pointB, 1, Direction.BOTH, CITY_SPEED_LIMIT), v1, v2, false);
+					Vector2 pointA1 = new Vector2(pointA.x + LANE_WIDTH, pointA.y - LANE_WIDTH / 2);
+					Vector2 pointB1 = new Vector2(pointB.x - LANE_WIDTH, pointB.y - LANE_WIDTH / 2);
+
+					Vector2 pointA2 = new Vector2(pointA.x + LANE_WIDTH, pointA.y + LANE_WIDTH / 2);
+					Vector2 pointB2 = new Vector2(pointB.x - LANE_WIDTH, pointB.y + LANE_WIDTH / 2);
+
+					// graph.addEdge(new Road(pointA, pointB, 1, Direction.BOTH, CITY_SPEED_LIMIT), v1, v2, false);
+
+					graph.addEdge(new Road(pointA1, pointB1, 1, Direction.DOWNSTREAM, CITY_SPEED_LIMIT), v1, v2, true);
+					graph.addEdge(new Road(pointB2, pointA2, 1, Direction.UPSTREAM, CITY_SPEED_LIMIT), v2, v1, true);
 				}
 				if (j < height - 1) {
 					Vertex<Road> v3 = graph.getVertex(i * height + j + 1);
 					Vector2 pointA = VectorUtils.getMidPoint(v1.getData());
 					Vector2 pointB = VectorUtils.getMidPoint(v3.getData());
+
+					Vector2 pointA1 = new Vector2(pointA.x + LANE_WIDTH / 2, pointA.y + LANE_WIDTH);
+					Vector2 pointB1 = new Vector2(pointB.x + LANE_WIDTH / 2, pointB.y - LANE_WIDTH);
+
+					Vector2 pointA2 = new Vector2(pointA.x - LANE_WIDTH / 2, pointA.y + LANE_WIDTH);
+					Vector2 pointB2 = new Vector2(pointB.x - LANE_WIDTH / 2, pointB.y - LANE_WIDTH);
+
 					pointA.set(pointA.x, pointA.y + LANE_WIDTH);
 					pointB.set(pointB.x, pointB.y - LANE_WIDTH);
-					graph.addEdge(new Road(pointA, pointB, 1, Direction.BOTH, CITY_SPEED_LIMIT), v1, v3, false);
+
+					// graph.addEdge(new Road(pointA, pointB, 1, Direction.BOTH, CITY_SPEED_LIMIT), v1, v3, false);
+
+					graph.addEdge(new Road(pointA1, pointB1, 1, Direction.DOWNSTREAM, CITY_SPEED_LIMIT), v1, v3, true);
+					graph.addEdge(new Road(pointB2, pointA2, 1, Direction.UPSTREAM, CITY_SPEED_LIMIT), v3, v1, true);
 				}
 			}
 		}

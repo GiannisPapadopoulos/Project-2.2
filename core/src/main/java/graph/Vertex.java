@@ -1,11 +1,25 @@
 package graph;
 
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
+import lombok.Getter;
+
 //@Getter
 //@Setter
 public class Vertex<E> extends Element<E> {
 
+	/** In-going edges, in case of directed graph */
+	@Getter
+	private TIntList incomingEdges;
+
 	protected Vertex(Graph<E> parent, int ID, E data) {
 		super(parent, ID, data);
+		incomingEdges = new TIntArrayList();
+	}
+
+	/** Returns an iterator over the in-going edges */
+	public EdgeIterator<E> getIncomingEdgeIterator() {
+		return new EdgeIterator<E>(parent, incomingEdges);
 	}
 
 	/**

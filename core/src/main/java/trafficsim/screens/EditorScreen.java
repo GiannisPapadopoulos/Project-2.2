@@ -1,15 +1,21 @@
 package trafficsim.screens;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import trafficsim.TrafficSimWorld;
+import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
 import trafficsim.systems.InputEditorSystem;
 import trafficsim.systems.RenderSystem;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 
 import editor.EditorData;
 import editor.PointsOfInterest;
@@ -74,7 +80,26 @@ public class EditorScreen extends SuperScreen {
 		getUILayer().act(delta);
 		getWorldLayer().draw();
 		getUILayer().draw();
+	}
 
+	/** Resets the graph */
+	public void clearGraph() {
+		List<Entity> entitiesToDelete = new ArrayList<Entity>();
+		for (int i = 0; i < world.getGraph().getVertexCount(); i++) {
+			int vertexEntityID = world.getVertexToEntityMap().get(i);
+			entitiesToDelete.add(world.getEntity(vertexEntityID));
+		}
+		for (int i = 0; i < world.getGraph().getEdgeCount(); i++) {
+			int edgeEntityID = world.getEdgeToEntityMap().get(i);
+			entitiesToDelete.add(world.getEntity(edgeEntityID));
+		}
+		for (Entity e : entitiesToDelete) {
+			Body body = e.getComponent(PhysicsBodyComponent.class).getBody();
+			world.getBox2dWorld().destroyBody(body);
+			e.deleteFromWorld();
+		}
+		world.setGraph(new Graph<Road>());
+		updatePOI(world.getGraph());
 	}
 
 	@Override

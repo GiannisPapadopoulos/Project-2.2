@@ -1,8 +1,6 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.DEBUG_FPS;
-import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
-import static trafficsim.TrafficSimConstants.TIMER;
+import static trafficsim.TrafficSimConstants.*;
 import graph.Graph;
 import graph.GraphFactory;
 
@@ -14,6 +12,7 @@ import trafficsim.TrafficSimWorld;
 import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.Road;
+import trafficsim.systems.AbstractToggleStrategy;
 import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
@@ -23,6 +22,7 @@ import trafficsim.systems.ManageMovementBehaviorsSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
+import trafficsim.systems.PriorityToggleStrategy;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
@@ -75,7 +75,9 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
-		world.setSystem(new GroupedTrafficLightSystem());
+		// AbstractToggleStrategy toggleStrategy = new BasicToggleStrategy();
+		AbstractToggleStrategy toggleStrategy = new PriorityToggleStrategy();
+		world.setSystem(new GroupedTrafficLightSystem(toggleStrategy));
 		world.setSystem(new ExpirySystem());
 
 		world.setSystem(new RoutingSystem());
@@ -96,7 +98,7 @@ public class SimulationScreen extends SuperScreen {
 
 		Graph<Road> graph;
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
-			graph = GraphFactory.createManhattanGraph(6, 5, 60, 0, 0);
+			graph = GraphFactory.createManhattanGraph(3, 3, 60, 0, 0);
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);
@@ -104,11 +106,12 @@ public class SimulationScreen extends SuperScreen {
 
 		firstTimeSimulationRun = false;
 
-		// EntityFactory.addSpawnPoints(world, graph, vertexEntities);
-		GraphFactory.addSpawnPointsTest(world, world.getGraph());
-		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
-		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 
+		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
+		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
+		EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+		
+		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 
 		if (TIMER.isStarted())
 			TIMER.reset();

@@ -1,9 +1,6 @@
 package trafficsim.systems;
 
-import static com.badlogic.gdx.math.MathUtils.PI;
-import static com.badlogic.gdx.math.MathUtils.cos;
-import static com.badlogic.gdx.math.MathUtils.degRad;
-import static com.badlogic.gdx.math.MathUtils.sin;
+import static com.badlogic.gdx.math.MathUtils.*;
 import static functions.VectorUtils.getAngle;
 import static functions.VectorUtils.getVector;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
@@ -330,9 +327,9 @@ public class MovementSystem
 	}
 
 	public static Vector2 getTarget(RouteComponent routeComp) {
-		// Vector2 target = VectorUtils.getMidPoint(routeComp.getNextVertex().getData());
-		Vector2 target = null;
-		Vector2 laneCorrection = getVector(null).cpy().nor().rotate(90);
+		Vector2 target = routeComp.getNextVertex().getData().getPosition();
+		Road road = (Road) routeComp.getCurrentEdge().getData();
+		Vector2 laneCorrection = getVector(road).cpy().nor().rotate(90);
 		// To reduce the chance of stepping on the lane
 		laneCorrection.scl(1.1f);
 

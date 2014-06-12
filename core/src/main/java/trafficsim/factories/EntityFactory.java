@@ -2,9 +2,7 @@ package trafficsim.factories;
 
 import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.CAR_WIDTH;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import static trafficsim.TrafficSimConstants.*;
 import functions.VectorUtils;
 import graph.Edge;
 import graph.Graph;
@@ -138,7 +136,7 @@ public class EntityFactory {
 		String name;
 		Entity crossRoad = world.createEntity();
 
-		world.getEdgeToEntityMap().put(vertex.getID(), crossRoad.getId());
+		world.getVertexToEntityMap().put(vertex.getID(), crossRoad.getId());
 		crossRoad.addComponent(new AttachedLightsComponent());
 		name = "road1x1";
 
@@ -148,7 +146,7 @@ public class EntityFactory {
 		float length = crossRoadData.getSize();
 
 		// TODO Check number of lanes here
-		crossRoad.addComponent(new DimensionComponent(length, LANE_WIDTH * 2));
+		crossRoad.addComponent(new DimensionComponent(length, length));
 		angle *= MathUtils.degRad;
 
 		// boxShape takes the half width/height as input
@@ -166,6 +164,9 @@ public class EntityFactory {
 
 		SpriteComponent sprite = new SpriteComponent(name);
 		crossRoad.addComponent(sprite);
+		if (vertex.getID() == 0) {
+			crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(2000)));
+		}
 		return crossRoad;
 	}
 

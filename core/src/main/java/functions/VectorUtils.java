@@ -1,6 +1,5 @@
 package functions;
 
-import trafficsim.roads.CrossRoad;
 import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 
@@ -17,8 +16,8 @@ public class VectorUtils {
 		return pointA.dst(pointB);
 	}
 
-	public static float calculateExpectedTime(Road road) {
-		return getLength(road) / road.getSpeedLimit();
+	public static float calculateExpectedTime(NavigationObject road) {
+		return road.getLength() / road.getSpeedLimit();
 	}
 
 	public static Vector2 getVector(Road road) {

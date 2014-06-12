@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.ToString;
 import search.SearchState;
 import trafficsim.roads.NavigationObject;
-import trafficsim.roads.Road;
 
 @ToString
 @Getter
@@ -29,9 +28,10 @@ public class GraphState
 			return false;
 		}
 		Vertex<NavigationObject> other = ((GraphState) o).getVertex();
-		if (other.getData().getClass() != Road.class) {
-			return false;
-		}
+		// TODO was this necessary?
+		// if (other.getData().getClass() != NavigationObject.class) {
+		// return false;
+		// }
 		return this.getVertex().getID() == other.getID();
 	}
 

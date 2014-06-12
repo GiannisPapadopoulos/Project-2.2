@@ -1,14 +1,9 @@
 package trafficsim.systems;
 
-import static com.badlogic.gdx.math.MathUtils.cos;
-import static com.badlogic.gdx.math.MathUtils.degRad;
-import static com.badlogic.gdx.math.MathUtils.sin;
+import static com.badlogic.gdx.math.MathUtils.*;
 import static functions.VectorUtils.getAngle;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
-import static trafficsim.TrafficSimConstants.RANDOM;
-import static trafficsim.TrafficSimConstants.TIMER;
+import static trafficsim.TrafficSimConstants.*;
 import functions.VectorUtils;
 import graph.Vertex;
 import trafficsim.TrafficSimWorld;
@@ -17,7 +12,6 @@ import trafficsim.components.RouteComponent;
 import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.NavigationObject;
-import trafficsim.roads.Road;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -54,10 +48,13 @@ public class SpawnSystem
 
 				Vertex<NavigationObject> spawnVertex = spawnComp.getVertex();
 				Vertex<NavigationObject> connection = spawnVertex.getParent().getVertex(spawnVertex.getAdjacentVertices().get(0));
-				float angle = 0.0f;//TODOgetAngle(spawnVertex.getData(), connection.getData()) * degRad;
 				
+				float angle = getAngle(spawnVertex.getData().getPosition(), connection.getData().getPosition())
+								* degRad;
 				Vector2 position = VectorUtils.getMidPoint(spawnVertex.getData());
-				Vector2 laneCorrection = null;//TODO
+				Vector2 connectionVector = getVector(spawnVertex.getData().getPosition(), connection.getData()
+																									.getPosition());
+				Vector2 laneCorrection = connectionVector.cpy().nor().rotate(-90).scl(LANE_WIDTH / 2);
 				position.add(laneCorrection);
 				if (canSpawn(spawnComp, position, angle)) {
 					int randInt = RANDOM.nextInt(7) + 1;

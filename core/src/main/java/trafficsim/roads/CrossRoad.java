@@ -60,4 +60,16 @@ public class CrossRoad extends NavigationObject {
 	public Vector2 getPosition(){
 		return position.cpy();
 	}
+
+	@Override
+	public float getLength() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public float getSpeedLimit() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

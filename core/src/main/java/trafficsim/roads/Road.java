@@ -104,4 +104,9 @@ public class Road extends NavigationObject {
 		return v;
 	}
 
+	@Override
+	public float getLength() {
+		return VectorUtils.getLength(this);
+	}
+
 }

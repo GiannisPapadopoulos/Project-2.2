@@ -1,5 +1,6 @@
 package editor;
 
+import static trafficsim.TrafficSimConstants.LANE_WIDTH;
 import functions.VectorUtils;
 import graph.Edge;
 import graph.Graph;
@@ -108,7 +109,25 @@ public class PointsOfInterest {
 
 		updatePOI();
 
-		//TODO graph.addEdge(new Road(poi1.position, poi2.position,1,  TrafficSimConstants.CITY_SPEED_LIMIT),poi1.getVertices().get(0),poi2.getVertices().get(0),false);
+		// graph.addEdge(new Road(poi1.position, poi2.position,1, Direction.BOTH,
+		// TrafficSimConstants.CITY_SPEED_LIMIT),poi1.getVertices().get(0),poi2.getVertices().get(0),false);
+
+		Vector2 roadVector = poi1.position.cpy().sub(poi2.position);
+		Vector2 perpendicular = roadVector.cpy().rotate(90).nor().scl(LANE_WIDTH / 2);
+
+		Vector2 pointA1 = poi1.position.cpy().add(perpendicular);
+		Vector2 pointB1 = poi2.position.cpy().add(perpendicular);
+
+		Vector2 pointA2 = poi1.position.cpy().sub(perpendicular);
+		Vector2 pointB2 = poi2.position.cpy().sub(perpendicular);
+
+		graph.addEdge(	new Road(pointA1, pointB1, 1, Direction.DOWNSTREAM,
+								TrafficSimConstants.CITY_SPEED_LIMIT), poi1.getVertices().get(0), poi2.getVertices()
+																										.get(0), true);
+		graph.addEdge(	new Road(pointB2, pointA2, 1, Direction.UPSTREAM,
+								TrafficSimConstants.CITY_SPEED_LIMIT), poi2.getVertices().get(0), poi1.getVertices()
+																										.get(0), true);
+
 		return graph;
 	}
 }

@@ -13,7 +13,6 @@ public class TrafficLightComponent
 
 	// The time the light is green
 	private float timerGreen;
-
 	// The time the light is orange
 	private float timerOrange;
 	// The time the light is red
@@ -60,22 +59,22 @@ public class TrafficLightComponent
 		}
 	}
 
-	public void ColorChanger() {
-		if (timeElapsed >= timer()) {
-			if (status == Status.GREEN) {
-				status = Status.ORANGE;
-				timeElapsed = 0;
-			}
-			else if (status == Status.ORANGE) {
-				status = Status.RED;
-				timeElapsed = 0;
-			}
-			else {
-				status = Status.GREEN;
-				timeElapsed = 0;
-			}
-		}
-	}
+	// public void ColorChanger() {
+	// if (timeElapsed >= timer()) {
+	// if (status == Status.GREEN) {
+	// status = Status.ORANGE;
+	// timeElapsed = 0;
+	// }
+	// else if (status == Status.ORANGE) {
+	// status = Status.RED;
+	// timeElapsed = 0;
+	// }
+	// else {
+	// status = Status.GREEN;
+	// timeElapsed = 0;
+	// }
+	// }
+	// }
 
 	public String getTextureName() {
 		return left ? status.getLeftLightTexture() : status.getStraightLightTexture();

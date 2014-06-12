@@ -56,7 +56,8 @@ public class SpawnSystem
 																									.getPosition());
 				Vector2 laneCorrection = connectionVector.cpy().nor().rotate(-90).scl(LANE_WIDTH / 2);
 				position.add(laneCorrection);
-				if (canSpawn(spawnComp, position, angle)) {
+				Vector2 castPostion = position.cpy().sub(connectionVector.cpy().nor().scl(CAR_LENGTH));
+				if (canSpawn(spawnComp, castPostion, angle)) {
 					int randInt = RANDOM.nextInt(7) + 1;
 					Entity car = EntityFactory.createCar((TrafficSimWorld) world, position, 1f, 40, angle, "car"
 																											+ randInt);

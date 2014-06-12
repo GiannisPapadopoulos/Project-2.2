@@ -32,6 +32,10 @@ public class VectorUtils {
 		return getVector(getMidPoint(roadA), getMidPoint(roadB));
 	}
 
+	public static Vector2 getVector(Element<Road> element) {
+		return getVector(element.getData());
+	}
+
 	public static float getAngle(Road road) {
 		return getVector(road).angle();
 	}

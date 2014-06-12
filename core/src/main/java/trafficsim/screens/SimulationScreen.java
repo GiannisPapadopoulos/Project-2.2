@@ -3,15 +3,22 @@ package trafficsim.screens;
 import static trafficsim.TrafficSimConstants.*;
 import graph.Graph;
 import graph.GraphFactory;
+
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
-import trafficsim.roads.NavigationObject;
+import trafficsim.roads.Road;
+import trafficsim.systems.AbstractToggleStrategy;
+import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
+import trafficsim.systems.GroupedTrafficLightSystem;
 import trafficsim.systems.InputSystem;
+import trafficsim.systems.ManageMovementBehaviorsSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
@@ -64,6 +71,8 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
+		// AbstractToggleStrategy toggleStrategy = new BasicToggleStrategy();
+		AbstractToggleStrategy toggleStrategy = new PriorityToggleStrategy();
 		world.setSystem(new TrafficLightSystem());
 		world.setSystem(new ExpirySystem());
 

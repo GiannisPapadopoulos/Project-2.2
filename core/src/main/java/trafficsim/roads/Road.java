@@ -71,6 +71,11 @@ public class Road extends NavigationObject {
 	public Vector2 getPosition() {
 		return VectorUtils.getMidPoint(pointA, pointB).cpy();
 	}
+	/*public Rectangle2D getRectangle(){
+		
+		new Rectangle2D.Float(pointA.x-LANE_WIDTH*Math.cos(getAngle(this)), pointA.y-LANE_WIDTH*Math.sin(getAngle(this)), LANE_WIDTH*numLanes,)
+	}
+	*/
 
 	// UNUSED ////////
 	public Vector2 getPointC() {

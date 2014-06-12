@@ -1,11 +1,25 @@
 package graph;
 
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
+import lombok.Getter;
+
 //@Getter
 //@Setter
 public class Vertex<E> extends Element<E> {
 
+	/** In-going edges, in case of directed graph */
+	@Getter
+	private TIntList incomingEdges;
+
 	protected Vertex(Graph<E> parent, int ID, E data) {
 		super(parent, ID, data);
+		incomingEdges = new TIntArrayList();
+	}
+
+	/** Returns an iterator over the in-going edges */
+	public EdgeIterator<E> getIncomingEdgeIterator() {
+		return new EdgeIterator<E>(parent, incomingEdges);
 	}
 	
 	//TEST ONLY
@@ -13,13 +27,26 @@ public class Vertex<E> extends Element<E> {
 		super(null,0,null);
 	}
 
-	/** Returns the other vertex of the given edge or null if this vertex is not part of the edge */
+	/**
+	 * Returns the other vertex of the given edge or null if this vertex is not
+	 * part of the edge
+	 */
 	public Vertex<E> getNeighbor(Edge<E> edge) {
 		Vertex<E> v1 = parent.getVertex(edge.getAdjacentVertices().get(0));
 		Vertex<E> v2 = parent.getVertex(edge.getAdjacentVertices().get(1));
 		if (v1 != this && v2 != this)
 			return null;
 		return v1 == this ? v2 : v1;
+	}
+
+	/** Returns the edge connecting this and vertex, or null. Does not take direction of edges into account */
+	public Edge<E> getNeighbor(Vertex<E> vertex) {
+		for (Edge<E> edge : parent.getEdgeIterator()) {
+			if (edge.isAdjacentVertex(vertex)) {
+				return edge;
+			}
+		}
+		return null;
 	}
 
 	// public void notifyVertexAddition(Edge<E> newEdge) {
@@ -36,7 +63,6 @@ public class Vertex<E> extends Element<E> {
 	// System.out.println("Vertex to be deleted is not neighbor of this!");
 	// }
 
-
 	// public void destroy() {
 	// for (val e : neighboringEdges) {
 	// //e.destroy();
@@ -46,6 +72,6 @@ public class Vertex<E> extends Element<E> {
 
 	@Override
 	public String toString() {
-		return "Vertex " + getID() + " Adjacent: " +getAdjacentVertices();
+		return "Vertex " + getID() + " Adjacent: " + getAdjacentVertices();
 	}
 }

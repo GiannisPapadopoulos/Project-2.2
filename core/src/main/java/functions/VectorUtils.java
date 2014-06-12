@@ -1,5 +1,6 @@
 package functions;
 
+import graph.Element;
 import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 

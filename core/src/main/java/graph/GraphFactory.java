@@ -9,9 +9,7 @@ import trafficsim.roads.Road;
 
 import com.badlogic.gdx.math.Vector2;
 
-import de.matthiasmann.twlthemeeditor.gui.CollapsiblePanel.Direction;
 import editor.EditorData;
-import functions.VectorUtils;
 
 public class GraphFactory {
 
@@ -194,8 +192,8 @@ public class GraphFactory {
 									.getData()), v3, v1, false);
 				}
 			}
-
 		}
+		System.out.println(graph.getVertexCount() + " " + graph.getEdgeCount());
 		return graph;
 	}
 }

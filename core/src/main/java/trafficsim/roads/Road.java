@@ -42,6 +42,7 @@ public class Road extends NavigationObject {
 		create(roadDefAL, numLanes, speedLimit, origin, destination);
 		origin.addConnection(this, false);
 		destination.addConnection(this, true);
+		this.numLanes = numLanes;
 	}
 
 	public Road(ArrayList<ParametricCurve> roadDef, int numLanes,

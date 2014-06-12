@@ -9,7 +9,7 @@ import trafficsim.components.GroupedTrafficLightComponent;
 import trafficsim.components.GroupedTrafficLightComponent.GroupedTrafficLightData;
 import trafficsim.components.TrafficLightComponent.Status;
 import trafficsim.components.VehiclesOnRoadComponent;
-import trafficsim.roads.Road;
+import trafficsim.roads.NavigationObject;
 
 /** This strategy sets the next green traffic light on the road with most cars waiting */
 public class PriorityToggleStrategy
@@ -39,7 +39,7 @@ public class PriorityToggleStrategy
 				int amountOfCars = vehiclesComp.getVehiclesOnLaneIDs().size();
 
 				int vertexID = groupComp.getVertexID();
-				Vertex<Road> vertex = simWorld.getGraph().getVertex(vertexID);
+				Vertex<NavigationObject> vertex = simWorld.getGraph().getVertex(vertexID);
 				// System.out.println("strategy: edge " + edgeID + " id " + edgeEntityID + " vehicles " + amountOfCars);
 
 				if (amountOfCars > busiestRoadCarCount) {

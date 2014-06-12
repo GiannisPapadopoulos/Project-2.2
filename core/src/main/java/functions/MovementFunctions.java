@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import trafficsim.components.RouteComponent;
+import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -31,16 +32,16 @@ public class MovementFunctions {
 		if (routeComp.isLastEdge()) {
 			return 0;
 		}
-		Edge<Road> nextEdge = routeComp.getPath().getRoute().get(routeComp.getEdgeIndex() + 1).getEdge();
+		Edge<NavigationObject> nextEdge = routeComp.getPath().getRoute().get(routeComp.getEdgeIndex() + 1).getEdge();
 		// float angle = VectorUtils.getAngle(nextEdge.getData())
 		// - VectorUtils.getAngle(routeComp.getCurrentEdge().getData());
-		Vertex<Road> vertex1 = routeComp.getNextVertex();
-		Vertex<Road> vertex2 = routeComp.getNextVertex().getNeighbor(nextEdge);
-		return getAngle(vertex1.getData(), vertex2.getData());
+		Vertex<NavigationObject> vertex1 = routeComp.getNextVertex();
+		Vertex<NavigationObject> vertex2 = routeComp.getNextVertex().getNeighbor(nextEdge);
+		return getAngle(vertex1.getData().getPosition(), vertex2.getData().getPosition());
 	}
 
 	public static float getAngleOfCurrentEdgeInRads(RouteComponent routeComp) {
-		Road road = routeComp.getCurrentEdge().getData();
+		Road road = (Road) routeComp.getCurrentEdge().getData();
 		Vector2 roadVector = VectorUtils.getVector(road);
 		if (!fromAtoB(routeComp)) {
 			roadVector.scl(-1);
@@ -62,7 +63,7 @@ public class MovementFunctions {
 	public static List<Vector2> buildWaypoints(RouteComponent routeComp, int number) {
 		List<Vector2> waypoints = new ArrayList<Vector2>();
 		boolean fromAtoB = fromAtoB(routeComp);
-		Road road = routeComp.getCurrentEdge().getData();
+		Road road = (Road) routeComp.getCurrentEdge().getData();
 		Vector2 start = fromAtoB ? road.getPointA().cpy() : road.getPointB().cpy();
 		Vector2 finish = fromAtoB ? road.getPointB().cpy() : road.getPointA().cpy();
 		// Vector2 laneCorrection = getVector(road).cpy().nor().rotate(90).scl(LANE_WIDTH / 2.0f);
@@ -90,19 +91,14 @@ public class MovementFunctions {
 	public static Vector2 getTarget(RouteComponent routeComp) {
 		boolean fromAtoB = fromAtoB(routeComp);
 		// Vector2 target = VectorUtils.getMidPoint(routeComp.getNextVertex().getData());
-		Vector2 target = fromAtoB ? routeComp.getCurrentEdge().getData().getPointB().cpy() : routeComp.getCurrentEdge()
-																										.getData()
-																										.getPointA()
-																										.cpy();
+		Road road = (Road) routeComp.getCurrentEdge().getData();
+		Vector2 target = (road).getPointB().cpy();
 		// Vector2 corr = getVector(routeComp.getCurrentEdge().getData()).cpy().nor().scl(3);
 		// if (!fromAtoB) {
 		// corr.scl(-1);
 		// }
 		// target.add(corr);
-		Vector2 laneCorrection = getVector(routeComp.getCurrentEdge().getData()).cpy()
-																				.nor()
-																				.rotate(90)
-																				.scl(LANE_WIDTH / 2.0f);
+		Vector2 laneCorrection = getVector(road).cpy().nor().rotate(90).scl(LANE_WIDTH / 2.0f);
 		// To reduce the chance of stepping on the lane
 		// laneCorrection.scl(1.1f);
 

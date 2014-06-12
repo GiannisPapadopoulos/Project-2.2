@@ -30,16 +30,15 @@ import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
-
-import trafficsim.roads.CrossRoad;
-import trafficsim.roads.NavigationObject;
 import trafficsim.components.VehiclesOnRoadComponent;
 import trafficsim.movement.BrakeBehavior;
 import trafficsim.movement.SeekBehavior;
 import trafficsim.movement.WeightedBehavior;
->>>>>>> refs/remotes/origin/develop
+import trafficsim.roads.CrossRoad;
+import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 import trafficsim.spawning.AbstractSpawnStrategy;
+import trafficsim.spawning.FixedIntervalSpawningStrategy;
 import trafficsim.spawning.PoissonSpawnStrategy;
 
 import com.artemis.Entity;
@@ -126,24 +125,28 @@ public class EntityFactory {
 				(roadData.getPointB().y + roadData.getPointA().y) / 2);
 		float angle = VectorUtils.getAngle(roadData);
 
-
-
-		// TODO Check number of lanes here
-
-		angle *= MathUtils.degRad;
-
 		// boxShape takes the half width/height as input
 		// TODO Check number of lanes here
-		FixtureDefBuilder fixtureDef = new FixtureDefBuilder()
-				.boxShape(length / 2, LANE_WIDTH * 2 / 2).density(1.0f)
-				.restitution(1.0f).friction(0f).sensor(true) // There should be
-																// a better way
-				.groupIndex((short) -1);
+		float length = VectorUtils.getLength(roadData);
+		road.addComponent(new DimensionComponent(length, LANE_WIDTH * roadData.getNumLanes()));
+		angle *= MathUtils.degRad;
+
+
+		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, LANE_WIDTH * 2 / 2)
+																.density(1.0f)
+																.restitution(1.0f)
+																.friction(0f)
+																.sensor(true)
+																.groupIndex((short) -1);
 		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
-				.type(BodyType.StaticBody).position(position).angle(angle)
-				.build();
+															.type(BodyType.StaticBody)
+															.position(position)
+															.angle(angle)
+															.build();
 		road.addComponent(new PhysicsBodyComponent(body));
 		// road.addComponent(new PositionComponent(position));
+
+		road.addComponent(new VehiclesOnRoadComponent());
 
 		SpriteComponent sprite = new SpriteComponent(name);
 		road.addComponent(sprite);
@@ -171,14 +174,17 @@ public class EntityFactory {
 
 		// boxShape takes the half width/height as input
 		// TODO Check number of lanes here
-		FixtureDefBuilder fixtureDef = new FixtureDefBuilder()
-				.boxShape(length / 2, LANE_WIDTH * 2 / 2).density(1.0f)
-				.restitution(1.0f).friction(0f).sensor(true) // There should be
-																// a better way
-				.groupIndex((short) -1);
+		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, LANE_WIDTH * 2 / 2)
+																.density(1.0f)
+																.restitution(1.0f)
+																.friction(0f)
+																.sensor(true)
+																.groupIndex((short) -1);
 		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
-				.type(BodyType.StaticBody).position(position).angle(angle)
-				.build();
+															.type(BodyType.StaticBody)
+															.position(position)
+															.angle(angle)
+															.build();
 		crossRoad.addComponent(new PhysicsBodyComponent(body));
 		// road.addComponent(new PositionComponent(position));
 
@@ -204,7 +210,8 @@ public class EntityFactory {
 		for (Edge<NavigationObject> edge : graph.getEdgeIterator()) {
 			createRoad(world, edge).addToWorld();
 		}
-		return vertexEntities;
+		// TODO return vertexEntities
+		// return vertexEntities;
 	}
 
 
@@ -340,9 +347,9 @@ public class EntityFactory {
 		return trafficLight;
 	}
 
-	public static void addSpawnPoints(TrafficSimWorld world, Graph<Road> graph, List<Entity> vertexEntities) {
+	public static void addSpawnPoints(TrafficSimWorld world, Graph<NavigationObject> graph, List<Entity> vertexEntities) {
 		int index = 0; // iterator
-		for (Vertex<Road> vertex : graph.getVertexIterator()) {
+		for (Vertex<NavigationObject> vertex : graph.getVertexIterator()) {
 			if (vertex.getAdjacentVertices().size() == 1) {
 				// Entity vertexEntity = world.getEntity(world.getVertexToEntityMap().get(vertex.getID()));
 				Entity vertexEntity = vertexEntities.get(index);

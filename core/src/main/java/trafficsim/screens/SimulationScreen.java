@@ -3,17 +3,13 @@ package trafficsim.screens;
 import static trafficsim.TrafficSimConstants.*;
 import graph.Graph;
 import graph.GraphFactory;
-
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
-import trafficsim.roads.Road;
+import trafficsim.roads.NavigationObject;
 import trafficsim.systems.AbstractToggleStrategy;
-import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.GroupedTrafficLightSystem;
@@ -22,11 +18,11 @@ import trafficsim.systems.ManageMovementBehaviorsSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
+import trafficsim.systems.PriorityToggleStrategy;
 import trafficsim.systems.RenderSystem;
+import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
-import trafficsim.systems.TrafficLightSystem;
 
-import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -49,12 +45,14 @@ public class SimulationScreen extends SuperScreen {
 
 	private boolean firstTimeSimulationRun = true;
 
+	@Getter
+	@Setter
+	// TODO it's not perfectly functional
+	private boolean paused;
+
 	public SimulationScreen(Screens screens) {
 		super(screens);
-
 	}
-
-	Entity car = null;
 
 	@Override
 	public void show() {
@@ -66,15 +64,19 @@ public class SimulationScreen extends SuperScreen {
 		// Add systems
 		world.setSystem(new DataSystem());
 		world.setSystem(new RenderSystem(getCamera()));
-		world.setSystem(new MovementSystem());
+
 		world.setSystem(new PhysicsSystem());
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
 		// AbstractToggleStrategy toggleStrategy = new BasicToggleStrategy();
 		AbstractToggleStrategy toggleStrategy = new PriorityToggleStrategy();
-		world.setSystem(new TrafficLightSystem());
+		world.setSystem(new GroupedTrafficLightSystem(toggleStrategy));
 		world.setSystem(new ExpirySystem());
+
+		world.setSystem(new RoutingSystem());
+		world.setSystem(new MovementSystem());
+		world.setSystem(new ManageMovementBehaviorsSystem());
 
 		// Temporary hack
 		// world.setSystem(new CollisionDisablingSystem());

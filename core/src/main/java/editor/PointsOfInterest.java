@@ -121,12 +121,14 @@ public class PointsOfInterest {
 		Vector2 pointA2 = poi1.position.cpy().sub(perpendicular);
 		Vector2 pointB2 = poi2.position.cpy().sub(perpendicular);
 
-		graph.addEdge(	new Road(pointA1, pointB1, 1, Direction.DOWNSTREAM,
-								TrafficSimConstants.CITY_SPEED_LIMIT), poi1.getVertices().get(0), poi2.getVertices()
-																										.get(0), true);
-		graph.addEdge(	new Road(pointB2, pointA2, 1, Direction.UPSTREAM,
-								TrafficSimConstants.CITY_SPEED_LIMIT), poi2.getVertices().get(0), poi1.getVertices()
-																										.get(0), true);
+		// TODO
+
+		// graph.addEdge( new Road(pointA1, pointB1, 1, Direction.DOWNSTREAM,
+		// TrafficSimConstants.CITY_SPEED_LIMIT), poi1.getVertices().get(0), poi2.getVertices()
+		// .get(0), true);
+		// graph.addEdge( new Road(pointB2, pointA2, 1, Direction.UPSTREAM,
+		// TrafficSimConstants.CITY_SPEED_LIMIT), poi2.getVertices().get(0), poi1.getVertices()
+		// .get(0), true);
 
 		return graph;
 	}

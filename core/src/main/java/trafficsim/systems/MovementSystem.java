@@ -1,14 +1,10 @@
 package trafficsim.systems;
 
 
-import static com.badlogic.gdx.math.MathUtils.*;
-import static functions.VectorUtils.getAngle;
-
 import static functions.MovementFunctions.constrainAngle;
 import static functions.MovementFunctions.getAngleOfCurrentEdgeInRads;
->>>>>>> refs/remotes/origin/develop
-import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.*;
+import static trafficsim.TrafficSimConstants.DELTA_TIME;
+import static trafficsim.TrafficSimConstants.SPEED_SCALING_FACTOR;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -147,16 +143,18 @@ public class MovementSystem
 		assert totalCars >= 0;
 	}
 
+	// UNUSED
 	private void correctionVectors(RouteComponent routeComp, PhysicsBodyComponent physComp) {
-		Vector2 roadVector = getVector(routeComp.getCurrentEdge());
-		// The vector in world coordinates
-		Vector2 worldRoadVector = routeComp.getCurrentEdge().getData().getPointA().cpy().add(roadVector);
+		// Vector2 roadVector = getVector(routeComp.getCurrentEdge());
+		// // The vector in world coordinates
+		// Vector2 worldRoadVector = routeComp.getCurrentEdge().getData().getPointA().cpy().add(roadVector);
+		//
+		// Vector2 roadLeft = worldRoadVector.cpy().add(roadVector.cpy().rotate(90).nor().scl(LANE_WIDTH));
+		// Vector2 roadRight = worldRoadVector.cpy().add(roadVector.cpy().rotate(-90).nor().scl(LANE_WIDTH));
+		// Vector2 adjust = roadVector.cpy().rotate(-90).nor().scl(LANE_WIDTH);
+		// float length = physComp.getPosition().cpy().dot(roadLeft) / roadLeft.len2();
+		// Vector2 projection = roadLeft.cpy().scl(length);
 
-		Vector2 roadLeft = worldRoadVector.cpy().add(roadVector.cpy().rotate(90).nor().scl(LANE_WIDTH));
-		Vector2 roadRight = worldRoadVector.cpy().add(roadVector.cpy().rotate(-90).nor().scl(LANE_WIDTH));
-		Vector2 adjust = roadVector.cpy().rotate(-90).nor().scl(LANE_WIDTH);
-		float length = physComp.getPosition().cpy().dot(roadLeft) / roadLeft.len2();
-		Vector2 projection = roadLeft.cpy().scl(length);
 		// System.out.println("v " + roadVector + " w  " + worldRoadVector + " r " + roadRight + "l " + roadLeft
 		// + " p " + projection);
 		// System.out.println(projection);

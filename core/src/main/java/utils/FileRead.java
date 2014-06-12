@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import trafficsim.roads.Road;
-import trafficsim.roads.Road.Direction;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -66,7 +65,6 @@ public class FileRead {
 					+ " ");
 			writer.write(road.getPointB().x + " " + road.getPointB().y
 					+ " ");
-			writer.write(road.getDirection() + " ");
 			writer.write((road.getNumLanes() + " "));
 			writer.write(road.getSpeedLimit() + "\n");
 		} catch (IOException e) {
@@ -82,7 +80,6 @@ public class FileRead {
 			fr = new Scanner(new File(fileName));
 			  int amountOfVertexes = fr.nextInt();
 		      int amountOfEdges = fr.nextInt();
-		      Direction tja;
 		      
 		      Graph<Road> graph = new Graph<Road>();
 		      
@@ -95,9 +92,9 @@ public class FileRead {
 		      for (int i = 0; i <amountOfEdges;i++){
 		    	  int edgeA = fr.nextInt();
 
-					int edgeB = fr.nextInt();
-					Road road = readRoadOrSomething(fr);
-					graph.addEdge(road, graph.getVertex(edgeA), graph.getVertex(edgeB), road.getDirection() == Direction.BOTH);
+				int edgeB = fr.nextInt();
+				Road road = readRoadOrSomething(fr);
+				graph.addEdge(road, graph.getVertex(edgeA), graph.getVertex(edgeB), true);
 		      }
 
 		      fr.close();
@@ -110,7 +107,6 @@ public class FileRead {
 	}
 
 	private static Road readRoadOrSomething(Scanner fr) {
-		Direction tja;
 		float pointAX = fr.nextFloat();
 		float pointAY = fr.nextFloat();
 		Vector2 pointA = new Vector2(pointAX,pointAY);
@@ -120,18 +116,18 @@ public class FileRead {
 		String direction = fr.next();
 		int numberOfLanes = fr.nextInt();
 		float speedLimit = fr.nextFloat();
-		if(direction == "BOTH"){
-			tja = Direction.BOTH;
-		}
-		else if(direction == "UPSTREAM"){
-			tja = Direction.UPSTREAM;
-		}
-		else{
-			tja = Direction.DOWNSTREAM;
-		}
+		// if(direction == "BOTH"){
+		// tja = Direction.BOTH;
+		// }
+		// else if(direction == "UPSTREAM"){
+		// tja = Direction.UPSTREAM;
+		// }
+		// else{
+		// tja = Direction.DOWNSTREAM;
+		// }
 
 		
-		Road road = new Road(pointA,pointB,numberOfLanes,tja,speedLimit);
+		Road road = null;// new Road(pointA, pointB, numberOfLanes, speedLimit);
 		return road;
 	}
 }

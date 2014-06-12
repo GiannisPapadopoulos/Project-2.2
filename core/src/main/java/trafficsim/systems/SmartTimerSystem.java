@@ -15,7 +15,7 @@ import trafficsim.components.SpriteComponent;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
 import trafficsim.components.VehiclesOnRoadComponent;
-import trafficsim.roads.Road;
+import trafficsim.roads.NavigationObject;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -113,7 +113,7 @@ public class SmartTimerSystem extends EntitySystem {
 			// find the road with the most cars on it
 			int vertexID = groupComp.getVertexID();
 			TrafficSimWorld simWorld = (TrafficSimWorld) world;
-			Vertex<Road> vertex = simWorld.getGraph().getVertex(vertexID);
+			Vertex<NavigationObject> vertex = simWorld.getGraph().getVertex(vertexID);
 			int busiestRoadCarCount = 0;
 			int busiestIndex = 0;
 			int index = 0;
@@ -165,7 +165,7 @@ public class SmartTimerSystem extends EntitySystem {
 			// find the road with the most cars on it
 			int vertexID = groupComp.getVertexID();
 			TrafficSimWorld simWorld = (TrafficSimWorld) world;
-			Vertex<Road> vertex = simWorld.getGraph().getVertex(vertexID);
+			Vertex<NavigationObject> vertex = simWorld.getGraph().getVertex(vertexID);
 			// TODO get the current green edge
 			// Edge <Road> edge = vertex.
 			int edgeID = groupComp.getGroupedLightsData().get(groupComp.getIndex()).get(0).getEdgeID();

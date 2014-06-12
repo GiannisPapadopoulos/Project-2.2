@@ -101,7 +101,7 @@ public class EditorScreen extends SuperScreen {
 			world.getBox2dWorld().destroyBody(body);
 			e.deleteFromWorld();
 		}
-		world.setGraph(new Graph<Road>());
+		world.setGraph(new Graph<NavigationObject>());
 		updatePOI(world.getGraph());
 	}
 

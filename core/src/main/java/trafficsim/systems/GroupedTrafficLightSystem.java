@@ -3,6 +3,7 @@ package trafficsim.systems;
 import java.util.List;
 
 import lombok.val;
+import trafficsim.TrafficSimWorld;
 import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.GroupedTrafficLightComponent;
 import trafficsim.components.GroupedTrafficLightComponent.GroupedTrafficLightData;
@@ -11,6 +12,7 @@ import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.SpriteComponent;
 import trafficsim.components.TrafficLightComponent;
 import trafficsim.components.TrafficLightComponent.Status;
+import trafficsim.components.VehiclesOnRoadComponent;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -38,16 +40,29 @@ public class GroupedTrafficLightSystem
 	private ComponentMapper<SpriteComponent> spriteMapper;
 
 	@Mapper
+	private ComponentMapper<VehiclesOnRoadComponent> vehiclesOnRoadMapper;
+
+	@Mapper
 	private ComponentMapper<LightToRoadMappingComponent> lightToRoadMapper;
 	@Mapper
 	private ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
 
+	private AbstractToggleStrategy toggleStrategy;
 
 	@SuppressWarnings("unchecked")
-	public GroupedTrafficLightSystem() {
+	public GroupedTrafficLightSystem(AbstractToggleStrategy toggleStrategy) {
 		super(Aspect.getAspectForAll(GroupedTrafficLightComponent.class, PhysicsBodyComponent.class));
+		this.toggleStrategy = toggleStrategy;
 	}
 	
+	public TrafficSimWorld getWorld() {
+		return (TrafficSimWorld) world;
+	}
+
+	public ComponentMapper<VehiclesOnRoadComponent> getVehiclesOnRoadMapper() {
+		return vehiclesOnRoadMapper;
+	}
+
 	protected void initialize(GroupedTrafficLightComponent groupComp) {
 		for (List<GroupedTrafficLightData> list : groupComp.getGroupedLightsData()) {
 			for (GroupedTrafficLightData groupedData : list) {
@@ -69,7 +84,7 @@ public class GroupedTrafficLightSystem
 	}
 
 	/** Sets the lights at the current index to green, rest to red */
-	private void setGreen(GroupedTrafficLightComponent groupComp) {
+	protected void setGreen(GroupedTrafficLightComponent groupComp) {
 		// Set first light to green
 		for (GroupedTrafficLightData lightData : groupComp.getGroupedLightsData().get(groupComp.getIndex())) {
 			setLight(lightData, Status.GREEN);
@@ -85,25 +100,28 @@ public class GroupedTrafficLightSystem
 		groupComp.setTimeElapsed(0);
 	}
 
-	/** Sets the lights at the current index to green, rest to red */
-	private void toggle(GroupedTrafficLightComponent groupComp) {
-		// Set first light to green
-		if (groupComp.isGreen()) {
-			for (GroupedTrafficLightData lightData : groupComp.getGroupedLightsData().get(groupComp.getIndex())) {
-				setLight(lightData, Status.ORANGE);
-			}
-			groupComp.setGreen(false);
-		}
-		else {
-			groupComp.setIndex((groupComp.getIndex() + 1) % groupComp.getGroupedLightsData().size());
-			// Set rest to red
-			setGreen(groupComp);
-			groupComp.setGreen(true);
-		}
-		groupComp.setTimeElapsed(0);
+	public void toggle(GroupedTrafficLightComponent groupComp) {
 	}
 
-	private void setLight(GroupedTrafficLightData lightData, Status status) {
+	// /** Sets the lights at the current index to green, rest to red */
+	// private void toggle(GroupedTrafficLightComponent groupComp) {
+	// // Set first light to green
+	// if (groupComp.isGreen()) {
+	// for (GroupedTrafficLightData lightData : groupComp.getGroupedLightsData().get(groupComp.getIndex())) {
+	// setLight(lightData, Status.ORANGE);
+	// }
+	// groupComp.setGreen(false);
+	// }
+	// else {
+	// groupComp.setIndex((groupComp.getIndex() + 1) % groupComp.getGroupedLightsData().size());
+	// // Set rest to red
+	// setGreen(groupComp);
+	// groupComp.setGreen(true);
+	// }
+	// groupComp.setTimeElapsed(0);
+	// }
+
+	protected void setLight(GroupedTrafficLightData lightData, Status status) {
 		Entity trafficLight = world.getEntity(lightData.getID());
 		TrafficLightComponent lightComp = trafficLightMapper.get(trafficLight);
 		lightComp.setStatus(status);
@@ -127,9 +145,7 @@ public class GroupedTrafficLightSystem
 			groupComp.setTimeElapsed(groupComp.getTimeElapsed() + world.getDelta());
 			if (groupComp.getTimeElapsed() > groupComp.getTimer()) {
 				// increment index and toggle
-
-				toggle(groupComp);
-				
+				toggleStrategy.toggle(this, groupComp);
 			}
 		}
 	}

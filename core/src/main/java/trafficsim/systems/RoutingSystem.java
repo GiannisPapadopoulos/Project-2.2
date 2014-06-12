@@ -1,7 +1,6 @@
 package trafficsim.systems;
 
 import static functions.MovementFunctions.buildWaypoints;
-import static functions.MovementFunctions.fromAtoB;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
@@ -63,7 +62,7 @@ public class RoutingSystem
 				Vector2 target = routeComp.getNextWaypoint();
 				float distanceToTarget = target.dst(physComp.getPosition());
 				if (distanceToTarget < threshold) {
-					updatePath(routeComp, steeringComp, i);
+					updatePath(routeComp, steeringComp, car.getId());
 					// System.out.println(routeComp.getEdgeIndex() + " w " + routeComp.getWayPointIndex() + " "
 					// + routeComp.getNextWaypoint());
 				}
@@ -92,15 +91,18 @@ public class RoutingSystem
 	}
 
 	private void updateRoadReference(RouteComponent routeComp, int carID, boolean remove) {
-		int edgeEntityID = ((TrafficSimWorld) world).getEdgeToEntityMap().get(routeComp.getEdgeIndex());
+		int edgeIndex = routeComp.getCurrentEdge().getID();
+		int edgeEntityID = ((TrafficSimWorld) world).getEdgeToEntityMap().get(edgeIndex);
 		VehiclesOnRoadComponent vehiclesOnRoad = vehiclesOnRoadComponentMapper.get(world.getEntity(edgeEntityID));
-		if (fromAtoB(routeComp)) {
-			boolean b = remove	? vehiclesOnRoad.getVehiclesOnRightLaneIDs().remove(carID)
-								: vehiclesOnRoad.getVehiclesOnRightLaneIDs().add(carID);
+		if (remove) {
+			boolean b = vehiclesOnRoad.getVehiclesOnLaneIDs().remove(carID);
+			// System.out.println("edge " + edgeIndex + " " + b + " v " + " c " + carID + " "
+			// + vehiclesOnRoad.getVehiclesOnLaneIDs());
+			assert b;
 		}
 		else {
-			boolean b = remove	? vehiclesOnRoad.getVehiclesOnLeftLaneIDs().remove(carID)
-								: vehiclesOnRoad.getVehiclesOnLeftLaneIDs().add(carID);
+			// System.out.println("adding " + "edge " + edgeIndex + " id " + carID);
+			vehiclesOnRoad.getVehiclesOnLaneIDs().add(carID);
 		}
 	}
 

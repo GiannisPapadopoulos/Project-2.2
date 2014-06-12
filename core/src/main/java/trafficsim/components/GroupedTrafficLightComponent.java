@@ -83,6 +83,8 @@ public class GroupedTrafficLightComponent
 		@Setter
 		private float orangeTimer;
 		
+		/** The graph id of the edge the light is on */
+		private int edgeID;
 		
 		
 		// //TODO

@@ -5,7 +5,9 @@ import pathfinding.GraphAction;
 import pathfinding.GraphBasedAstar;
 import pathfinding.GraphState;
 import search.Path;
+import trafficsim.TrafficSimWorld;
 import trafficsim.components.RouteComponent;
+import trafficsim.components.VehiclesOnRoadComponent;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -25,7 +27,9 @@ public class PathFindingSystem
 		extends EntitySystem {
 
 	@Mapper
-	ComponentMapper<RouteComponent> routeComponentMapper;
+	private ComponentMapper<RouteComponent> routeComponentMapper;
+	@Mapper
+	private ComponentMapper<VehiclesOnRoadComponent> vehiclesOnRoadComponentMapper;
 
 	@SuppressWarnings("unchecked")
 	public PathFindingSystem() {
@@ -35,22 +39,30 @@ public class PathFindingSystem
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
 		for (int i = 0; i < entities.size(); i++) {
-			Entity entity = entities.get(i);
-			if (routeComponentMapper.has(entity)) {
-				RouteComponent routeComp = routeComponentMapper.get(entity);
+			Entity car = entities.get(i);
+			if (routeComponentMapper.has(car)) {
+				RouteComponent routeComp = routeComponentMapper.get(car);
 				if (!routeComp.isSet() && routeComp.getSource() != null && routeComp.getTarget() != null) {
 					Path<GraphState, GraphAction> path = new GraphBasedAstar().findRoute(	routeComp.getSource(),
 																							routeComp.getTarget());
-					assert path.isValidPath() : " No valid path found!" + entity + " " + routeComp;
+					assert path.isValidPath() : " No valid path found!" + car + " " + routeComp;
 					routeComp.setPath(path);
 					routeComp.setSet(true);
 					routeComp.setCurrentVertex(routeComp.getSource());
 					routeComp.setEdgeIndex(0);
 					// TODO not tested
 					routeComp.setWayPoints(buildWaypoints(routeComp));
+					updateRoadReference(routeComp, car.getId());
 				}
 			}
 		}
+	}
+
+	private void updateRoadReference(RouteComponent routeComp, int carID) {
+		int edgeIndex = routeComp.getCurrentEdge().getID();
+		int edgeEntityID = ((TrafficSimWorld) world).getEdgeToEntityMap().get(edgeIndex);
+		VehiclesOnRoadComponent vehiclesOnRoad = vehiclesOnRoadComponentMapper.get(world.getEntity(edgeEntityID));
+		vehiclesOnRoad.getVehiclesOnLaneIDs().add(carID);
 	}
 
 	@Override

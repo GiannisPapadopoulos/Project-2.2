@@ -96,7 +96,7 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 		else {
 			superScreen.getMousePosition().update(camera);
 			Coordinates coords = superScreen.getMousePosition().getAbsolute();
-			System.out.println("x " + coords.getX() + " y " + coords.getY());
+			// System.out.println("x " + coords.getX() + " y " + coords.getY());
 		}
 		return true;
 	}

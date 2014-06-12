@@ -196,13 +196,13 @@ public class EntityFactory {
 		int index = 0;
 
 		for (Vertex<Road> vertex : graph.getVertexIterator()) {
-			if (vertex.getID() != 3) {
-				continue;
+			if (vertex.getID() != 0) {
+				// continue;
 			}
 			// List<TIntList> groupedLightIDs = new ArrayList<TIntList>();
 			List<List<GroupedTrafficLightData>> groupedLights = new ArrayList<List<GroupedTrafficLightData>>();
 			int edgesPerVertex = vertex.getAdjacentEdges().size();
-			for (Edge<Road> edge : vertex.getAdjacentEdgeIterator()) {
+			for (Edge<Road> edge : vertex.getIncomingEdgeIterator()) {
 
 				// val iterator2 = edge.getAdjacentVertexIterator();
 				boolean onPointA = edge.getAdjacentVertices().get(0) == vertex.getID();
@@ -212,7 +212,7 @@ public class EntityFactory {
 				if (lightIDs.size() > 0) {
 					for (int i = 0; i < lightIDs.size(); i++) {
 						leftAndStraightData.add(new GroupedTrafficLightData(lightIDs.get(i), interval - orangeInterval,
-																			orangeInterval));
+																			orangeInterval, edge.getID()));
 					}
 					groupedLights.add(leftAndStraightData);
 				}
@@ -247,7 +247,8 @@ public class EntityFactory {
 				roadVector.scl(-1);
 			float angle = roadVector.angle() * degRad;
 
-			Entity entityStraight = EntityFactory.createTrafficLight(	world, pos.cpy().add(corr.cpy().scl(2f)),
+			// .add(corr.cpy().scl(2f))
+			Entity entityStraight = EntityFactory.createTrafficLight(	world, pos.cpy(),
 																		(interval - 1), 1, (interval * 3), Status.RED,
 																		true, onPointA, angle);
 			entityStraight.addComponent(new LightToRoadMappingComponent(entityStraight.getId(),
@@ -326,10 +327,10 @@ public class EntityFactory {
 			if (vertex.getAdjacentVertices().size() == 1) {
 				// Entity vertexEntity = world.getEntity(world.getVertexToEntityMap().get(vertex.getID()));
 				Entity vertexEntity = vertexEntities.get(index);
-				if (vertexEntity.getComponent(SpawnComponent.class) != null) {
+				if (vertexEntity.getComponent(SpawnComponent.class) == null) {
 					float interval = 2000;
 					// AbstractSpawnStrategy spawnStrategy = new FixedIntervalSpawningStrategy(interval);
-					AbstractSpawnStrategy spawnStrategy = new PoissonSpawnStrategy(1.0 / interval);
+					AbstractSpawnStrategy spawnStrategy = new PoissonSpawnStrategy(interval);
 					vertexEntity.addComponent(new SpawnComponent(vertex, spawnStrategy));
 					// world.changedEntity(vertexEntity);
 				}

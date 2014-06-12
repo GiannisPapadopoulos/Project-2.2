@@ -18,7 +18,7 @@ public class VehiclesOnRoadComponent
 		extends Component {
 
 	/** Vehicles going from pointA to pointB */
-	private TIntList vehiclesOnRightLaneIDs = new TIntArrayList();
-	/** Vehicles going from pointB to pointA */
-	private TIntList vehiclesOnLeftLaneIDs = new TIntArrayList();
+	private TIntList vehiclesOnLaneIDs = new TIntArrayList();
+	// /** Vehicles going from pointB to pointA */
+	// private TIntList vehiclesOnLeftLaneIDs = new TIntArrayList();
 }

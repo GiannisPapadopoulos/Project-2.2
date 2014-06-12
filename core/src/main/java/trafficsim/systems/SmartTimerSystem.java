@@ -1,6 +1,5 @@
 package trafficsim.systems;
 
-import graph.Edge;
 import graph.Vertex;
 
 import java.util.List;
@@ -51,9 +50,9 @@ public class SmartTimerSystem extends EntitySystem {
 
 	@Override
 	protected boolean checkProcessing() {
-		// TODO Auto-generated method stub
 		return true;
 	}
+
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
 		for (int i = 0; i < entities.size(); i++) {
@@ -116,26 +115,32 @@ public class SmartTimerSystem extends EntitySystem {
 			TrafficSimWorld simWorld = (TrafficSimWorld) world;
 			Vertex<Road> vertex = simWorld.getGraph().getVertex(vertexID);
 			int busiestRoadCarCount = 0;
-			int busiestEdge = 0;
-			int i = 0;
-			for (Edge<Road> edge : vertex.getAdjacentEdgeIterator()) {
-				int edgeID = simWorld.getEdgeToEntityMap().get(edge.getID());
-				VehiclesOnRoadComponent vehiclesComp = vehiclesOnRoadComponent.get(simWorld.getEntity(edgeID));
-				int amountOfCars = vehiclesComp.getVehiclesOnRightLaneIDs().size();
+			int busiestIndex = 0;
+			int index = 0;
+			// for (Edge<Road> edge : vertex.getIncomingEdgeIterator()) {
+			// int edgeID = simWorld.getEdgeToEntityMap().get(edge.getID());
+			// VehiclesOnRoadComponent vehiclesComp = vehiclesOnRoadComponent.get(simWorld.getEntity(edgeID));
+			// int amountOfCars = vehiclesComp.getVehiclesOnLaneIDs().size();
+			// if (amountOfCars > busiestRoadCarCount) {
+			// busiestEdge = i;
+			// busiestRoadCarCount = amountOfCars;
+			// }
+			// i++;
+			// }
+
+			for (List<GroupedTrafficLightData> lighListData : groupComp.getGroupedLightsData()) {
+				int edgeID = lighListData.get(0).getEdgeID();
+				int edgeEntityID = simWorld.getEdgeToEntityMap().get(edgeID);
+				VehiclesOnRoadComponent vehiclesComp = vehiclesOnRoadComponent.get(simWorld.getEntity(edgeEntityID));
+				int amountOfCars = vehiclesComp.getVehiclesOnLaneIDs().size();
 				if (amountOfCars > busiestRoadCarCount) {
-					busiestEdge = i;
+					busiestIndex = index;
 					busiestRoadCarCount = amountOfCars;
 				}
-				i++;
+				index++;
 			}
-			int j = 0;
-			for (Edge<Road> edge : vertex.getAdjacentEdgeIterator()) {
-				if (j == busiestEdge) {
-					//
 
-				}
-				j++;
-			}
+			groupComp.setIndex(busiestIndex);
 
 			// Set rest to red
 			setGreen(groupComp);
@@ -145,6 +150,10 @@ public class SmartTimerSystem extends EntitySystem {
 	}
 	
 	private void toggleTime(GroupedTrafficLightComponent groupComp) {
+		
+		// The green timer will speed up by this amount if the road with the currently green light is empty
+		float timeToAdd = 2f;
+		
 		// Set first light to green
 		if (groupComp.isGreen()) {
 			for (GroupedTrafficLightData lightData : groupComp.getGroupedLightsData().get(groupComp.getIndex())) {
@@ -159,11 +168,13 @@ public class SmartTimerSystem extends EntitySystem {
 			Vertex<Road> vertex = simWorld.getGraph().getVertex(vertexID);
 			// TODO get the current green edge
 			// Edge <Road> edge = vertex.
-			int edgeID = 0;// simWorld.getEdgeToEntityMap().get(edge.getID());
-			VehiclesOnRoadComponent vehiclesComp = vehiclesOnRoadComponent.get(simWorld.getEntity(edgeID));
-			int amountOfCars = vehiclesComp.getVehiclesOnRightLaneIDs().size();
+			int edgeID = groupComp.getGroupedLightsData().get(groupComp.getIndex()).get(0).getEdgeID();
+			int edgeEntityID = simWorld.getEdgeToEntityMap().get(edgeID);
+			VehiclesOnRoadComponent vehiclesComp = vehiclesOnRoadComponent.get(simWorld.getEntity(edgeEntityID));
+			int amountOfCars = vehiclesComp.getVehiclesOnLaneIDs().size();
 			if (amountOfCars < 1) {
 				// add 3 seconds to the current lights timer.
+				groupComp.setTimeElapsed(groupComp.getTimeElapsed() + timeToAdd);
 			}
 			groupComp.setTimeElapsed(0);
 		}

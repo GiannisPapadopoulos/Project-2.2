@@ -96,15 +96,18 @@ public class SimulationScreen extends SuperScreen {
 
 		Graph<NavigationObject> graph;
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null) {
-			graph = GraphFactory.createManhattanGraph(10,10,100.0f,0,0);
+			graph = GraphFactory.createManhattanGraph(10, 10, 100.0f, 0, 0);
 			//graph = GraphFactory.createNewSystem();
 		}
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);
+		// EntityFactory.addSpawnPointsTest(world, world.getGraph());
+		// EntityFactory.addSpawnPoints(world, graph);
 		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
 		
 		firstTimeSimulationRun = false;
+
 
 
 		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
@@ -113,11 +116,11 @@ public class SimulationScreen extends SuperScreen {
 		if (TIMER.isStarted())
 			TIMER.reset();
 		TIMER.start();
-		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
+
 		world.process();
 
 
-		//EntityFactory.addSpawnPoints(world, graph);
+
 
 	}
 

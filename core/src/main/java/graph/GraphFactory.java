@@ -1,12 +1,14 @@
 package graph;
 
 import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import lombok.val;
 import paramatricCurves.ParametricCurve;
 import paramatricCurves.curveDefs.C_Linear;
 import trafficsim.TrafficSimConstants;
 import trafficsim.roads.CrossRoad;
 import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
+import trafficsim.roads.SubSystem;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -134,19 +136,19 @@ public class GraphFactory {
 
 		return graph;
 	}
-
-	public static Graph<NavigationObject> createManhattanGraph(int width,
-			int height, float distance, float startX, float startY) {
+	
+	public static Graph<NavigationObject> createManhattanGraph(int width, int height, float distance, float startX,
+			float startY) {
 		Graph<NavigationObject> graph = new Graph<NavigationObject>();
-		float halfW = TrafficSimConstants.LANE_WIDTH;
+		float halfW = TrafficSimConstants.LANE_WIDTH * 2;
 		// Create vertices
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				// float x = startX + i * distance;
-				float x = startX + i * distance + halfW;
+				float x = startX + i * distance;
 				float y = startY + j * distance;
 
-				graph.addVertex(new CrossRoad(2 * LANE_WIDTH, new Vector2(x, y)));
+				float crossroadSize = 4 * LANE_WIDTH;
+				graph.addVertex(new CrossRoad(crossroadSize, new Vector2(x, y)));
 
 			}
 		}
@@ -156,49 +158,110 @@ public class GraphFactory {
 			for (int j = 0; j < height; j++) {
 				Vertex<NavigationObject> v1 = graph.getVertex(i * height + j);
 				if (i < width - 1) {
-					Vertex<NavigationObject> v2 = graph.getVertex((i + 1)
-							* height + j);
-
+					Vertex<NavigationObject> v2 = graph.getVertex((i + 1) * height + j);
 					Vector2 pointA = new Vector2(v1.getData().getPosition());
+					pointA.set(pointA.x + halfW, pointA.y);
 					Vector2 pointB = new Vector2(v2.getData().getPosition());
+					pointB.set(pointB.x - halfW, pointB.y);
 
-					// TODO this has to change for multiple lanes
-
-					Vector2 pointA1 = new Vector2(pointA.x + LANE_WIDTH, pointA.y - LANE_WIDTH / 2);
-					Vector2 pointB1 = new Vector2(pointB.x - LANE_WIDTH, pointB.y - LANE_WIDTH / 2);
-
-					Vector2 pointA2 = new Vector2(pointA.x + LANE_WIDTH, pointA.y + LANE_WIDTH / 2);
-					Vector2 pointB2 = new Vector2(pointB.x - LANE_WIDTH, pointB.y + LANE_WIDTH / 2);
-
-					graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointA1, pointB1)), 1,
+					graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointA, pointB)), 1,
 											TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) v1.getData(),
-											(CrossRoad) v2.getData()), v1, v2, true);
-					graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointB2, pointA2)), 1,
+											(CrossRoad) v2.getData()), v1, v2, false);
+					graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointB, pointA)), 1,
 											TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) v2.getData(),
-											(CrossRoad) v1.getData()), v2, v1, true);
+											(CrossRoad) v1.getData()), v2, v1, false);
 				}
 				if (j < height - 1) {
 					Vertex<NavigationObject> v3 = graph.getVertex(i * height + j + 1);
 					Vector2 pointA = v1.getData().getPosition();
 					Vector2 pointB = v3.getData().getPosition();
-
-					// TODO this has to change for multiple lanes
-
-					Vector2 pointA1 = new Vector2(pointA.x + LANE_WIDTH / 2, pointA.y + LANE_WIDTH);
-					Vector2 pointB1 = new Vector2(pointB.x + LANE_WIDTH / 2, pointB.y - LANE_WIDTH);
-
-					Vector2 pointA2 = new Vector2(pointA.x - LANE_WIDTH / 2, pointA.y + LANE_WIDTH);
-					Vector2 pointB2 = new Vector2(pointB.x - LANE_WIDTH / 2, pointB.y - LANE_WIDTH);
-
-					graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointA1, pointB1)), 1,
-											TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) v1.getData(),
-											(CrossRoad) v3.getData()), v1, v3, true);
-					graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointB2, pointA2)), 1,
-											TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) v3.getData(),
-											(CrossRoad) v1.getData()), v3, v1, true);
+					pointA.set(pointA.x, pointA.y + halfW);
+					pointB.set(pointB.x, pointB.y - halfW);
+					Edge<NavigationObject> e1 = graph.addEdge(	new Road(new ParametricCurve(new C_Linear(pointA,
+																											pointB)),
+																			1, TrafficSimConstants.CITY_SPEED_LIMIT,
+																			(CrossRoad) v1.getData(),
+																			(CrossRoad) v3.getData()), v1, v3, false);
+					Edge<NavigationObject> e2 = graph.addEdge(	new Road(new ParametricCurve(new C_Linear(pointB,
+																											pointA)),
+																			1, TrafficSimConstants.CITY_SPEED_LIMIT,
+																			(CrossRoad) v3.getData(),
+																			(CrossRoad) v1.getData()), v3, v1, false);
+					Road r1 = (Road) e1.getData();
+					for (val key : r1.getRSubSystems().keySet()) {
+						SubSystem system = r1.getRSubSystems().get(key);
+						System.out.println(system.getLanes().get(0));
+					}
 				}
 			}
+
 		}
 		return graph;
 	}
+
+	// public static Graph<NavigationObject> createManhattanGraph(int width, int height, float distance, float startX,
+	// float startY) {
+	// Graph<NavigationObject> graph = new Graph<NavigationObject>();
+	// float halfW = TrafficSimConstants.LANE_WIDTH;
+	// // Create vertices
+	// for (int i = 0; i < width; i++) {
+	// for (int j = 0; j < height; j++) {
+	// // float x = startX + i * distance;
+	// float x = startX + i * distance + halfW;
+	// float y = startY + j * distance;
+	//
+	// graph.addVertex(new CrossRoad(2 * LANE_WIDTH, new Vector2(x, y)));
+	//
+	// }
+	// }
+	//
+	// // Create edges
+	// for (int i = 0; i < width; i++) {
+	// for (int j = 0; j < height; j++) {
+	// Vertex<NavigationObject> v1 = graph.getVertex(i * height + j);
+	// if (i < width - 1) {
+	// Vertex<NavigationObject> v2 = graph.getVertex((i + 1) * height + j);
+	//
+	// Vector2 pointA = new Vector2(v1.getData().getPosition());
+	// Vector2 pointB = new Vector2(v2.getData().getPosition());
+	//
+	// // TODO this has to change for multiple lanes
+	//
+	// Vector2 pointA1 = new Vector2(pointA.x + LANE_WIDTH, pointA.y - LANE_WIDTH / 2);
+	// Vector2 pointB1 = new Vector2(pointB.x - LANE_WIDTH, pointB.y - LANE_WIDTH / 2);
+	//
+	// Vector2 pointA2 = new Vector2(pointA.x + LANE_WIDTH, pointA.y + LANE_WIDTH / 2);
+	// Vector2 pointB2 = new Vector2(pointB.x - LANE_WIDTH, pointB.y + LANE_WIDTH / 2);
+	//
+	// graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointA1, pointB1)), 1,
+	// TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) v1.getData(),
+	// (CrossRoad) v2.getData()), v1, v2, true);
+	// graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointB2, pointA2)), 1,
+	// TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) v2.getData(),
+	// (CrossRoad) v1.getData()), v2, v1, true);
+	// }
+	// if (j < height - 1) {
+	// Vertex<NavigationObject> v3 = graph.getVertex(i * height + j + 1);
+	// Vector2 pointA = v1.getData().getPosition();
+	// Vector2 pointB = v3.getData().getPosition();
+	//
+	// // TODO this has to change for multiple lanes
+	//
+	// Vector2 pointA1 = new Vector2(pointA.x + LANE_WIDTH / 2, pointA.y + LANE_WIDTH);
+	// Vector2 pointB1 = new Vector2(pointB.x + LANE_WIDTH / 2, pointB.y - LANE_WIDTH);
+	//
+	// Vector2 pointA2 = new Vector2(pointA.x - LANE_WIDTH / 2, pointA.y + LANE_WIDTH);
+	// Vector2 pointB2 = new Vector2(pointB.x - LANE_WIDTH / 2, pointB.y - LANE_WIDTH);
+	//
+	// graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointA1, pointB1)), 1,
+	// TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) v1.getData(),
+	// (CrossRoad) v3.getData()), v1, v3, true);
+	// graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointB2, pointA2)), 1,
+	// TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) v3.getData(),
+	// (CrossRoad) v1.getData()), v3, v1, true);
+	// }
+	// }
+	// }
+	// return graph;
+	// }
 }

@@ -12,4 +12,9 @@ public class FunctionT {
 		return def.getFt(t);
 	}
 
+	@Override
+	public String toString() {
+		return "FunctionT [def=" + def + "]";
+	}
+
 }

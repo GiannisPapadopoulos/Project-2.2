@@ -1,6 +1,7 @@
 package trafficsim.factories;
 
 import static com.badlogic.gdx.math.MathUtils.degRad;
+import static functions.VectorUtils.getMidPoint;
 import static functions.VectorUtils.getVector;
 import static trafficsim.TrafficSimConstants.*;
 import functions.VectorUtils;
@@ -13,6 +14,9 @@ import graph.Vertex;
 import java.util.ArrayList;
 import java.util.List;
 
+import paramatricCurves.ParametricCurve;
+import paramatricCurves.curveDefs.C_Linear;
+import trafficsim.TrafficSimConstants;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.DataComponent;
@@ -128,7 +132,7 @@ public class EntityFactory {
 		// boxShape takes the half width/height as input
 		// TODO Check number of lanes here
 		float length = VectorUtils.getLength(roadData);
-		road.addComponent(new DimensionComponent(length, LANE_WIDTH * roadData.getNumLanes()));
+		road.addComponent(new DimensionComponent(length, 2 * LANE_WIDTH * roadData.getNumLanes()));
 		angle *= MathUtils.degRad;
 
 
@@ -190,7 +194,7 @@ public class EntityFactory {
 
 		SpriteComponent sprite = new SpriteComponent(name);
 		crossRoad.addComponent(sprite);
-		if (vertex.getID() == 0) {
+		if (vertex.getID() == 0 || vertex.getID() == vertex.getParent().getVertexCount() - 1) {
 			crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(2000)));
 		}
 		return crossRoad;
@@ -352,65 +356,93 @@ public class EntityFactory {
 		return trafficLight;
 	}
 
-	// public static void addSpawnPointsTest(TrafficSimWorld world, Graph<NavigationObject> graph) {
-	//
-	// float length = 60;
-	// int interval = 3000;
-	//
-	// int[] indices = { 0, graph.getVertexCount() - 1, (int) Math.sqrt(graph.getVertexCount() - 1),
-	// graph.getVertexCount() - (int) Math.sqrt(graph.getVertexCount()) };
-	//
-	// Vertex<NavigationObject> connection = graph.getVertex(indices[0]);
-	// // Vector2 edgeB = connection.getData().getPointA();
-	// Vector2 edgeB = connection.getData().getPosition();
-	// Vector2 edgeA = new Vector2(edgeB.x - length, edgeB.y);
-	// makeSpawnVertex(world, connection, graph, edgeA, edgeB, new Vector2(edgeA.x - 2 * LANE_WIDTH, edgeA.y), edgeA,
-	// true, interval);
-	//
-	// Vertex<Road> connection2 = graph.getVertex(indices[1]);
-	// Vector2 edgeA2 = connection2.getData().getPointB();
-	// Vector2 edgeB2 = new Vector2(edgeA2.x + length, edgeA2.y);
-	// makeSpawnVertex(world, connection2, graph, edgeA2, edgeB2, edgeB2, new Vector2(edgeB2.x + 2 * LANE_WIDTH,
-	// edgeB2.y), false, interval);
-	//
-	// Vertex<Road> connection3 = graph.getVertex(indices[2]);
-	// Vector2 edgeB3 = connection3.getData().getPointA();
-	// Vector2 edgeA3 = new Vector2(edgeB3.x - length, edgeB3.y);
-	// makeSpawnVertex(world, connection3, graph, edgeA3, edgeB3, new Vector2(edgeA3.x - 2 * LANE_WIDTH, edgeA3.y),
-	// edgeA3, true, interval);
-	//
-	// Vertex<Road> connection4 = graph.getVertex(indices[3]);
-	// Vector2 edgeA4 = connection4.getData().getPointB();
-	// Vector2 edgeB4 = new Vector2(edgeA4.x + length, edgeA4.y);
-	// makeSpawnVertex(world, connection4, graph, edgeA4, edgeB4, edgeB4, new Vector2(edgeB4.x + 2 * LANE_WIDTH,
-	// edgeB4.y), false, interval);
-	// }
-	//
-	// public static boolean poisson = true;
-	//
-	// // TODO Refactor this mess
-	// public static Vertex<Road> makeSpawnVertex(TrafficSimWorld world, Vertex<NavigationObject> connection,
-	// Graph<Road> graph,
-	// Vector2 edgeA, Vector2 edgeB, Vector2 vertexA, Vector2 vertexB, boolean AtoB, int interval) {
-	// NavigationObject intersection = new Road(vertexA, vertexB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
-	// Vertex<NavigationObject> spawn1 = graph.addVertex(intersection);
-	// NavigationObject edge = new Road(edgeA, edgeB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
-	// // System.out.println(VectorUtils.getAngle(intersection) + " " + VectorUtils.getAngle(edge));
-	// Edge<NavigationObject> roadEdge;
-	// if (AtoB)
-	// roadEdge = graph.addEdge(edge, spawn1, connection, false);
-	// else
-	// roadEdge = graph.addEdge(edge, connection, spawn1, false);
-	// EntityFactory.createRoad(world, spawn1).addToWorld();
-	// EntityFactory.createRoad(world, roadEdge).addToWorld();
-	// Entity spawnPoint = world.createEntity();
-	// AbstractSpawnStrategy spawnStrategy = poisson ? new PoissonSpawnStrategy(interval)
-	// : new FixedIntervalSpawningStrategy(interval);
-	// // AbstractSpawnStrategy spawnStrategy = new PoissonSpawnStrategy(interval);
-	// spawnPoint.addComponent(new SpawnComponent(spawn1, spawnStrategy));
-	// spawnPoint.addToWorld();
-	// return spawn1;
-	// }
+	public static void addSpawnPointsTest(TrafficSimWorld world, Graph<NavigationObject> graph) {
+
+		float length = 60;
+		int interval = 3000;
+
+		int[] indices = { 0, graph.getVertexCount() - 1, (int) Math.sqrt(graph.getVertexCount() - 1),
+							graph.getVertexCount() - (int) Math.sqrt(graph.getVertexCount()) };
+
+		Vertex<NavigationObject> connection = graph.getVertex(indices[0]);
+		// Vector2 edgeB = connection.getData().getPointA();
+		Vector2 edgeB = connection.getData().getPosition();
+		Vector2 edgeA = new Vector2(edgeB.x - length, edgeB.y);
+		makeSpawnVertex(world, connection, graph, edgeA, edgeB, new Vector2(edgeA.x - 2 * LANE_WIDTH, edgeA.y), edgeA,
+						true, interval);
+
+		Vertex<NavigationObject> connection2 = graph.getVertex(indices[1]);
+		// Vector2 edgeA2 = connection2.getData().getPointB();
+		Vector2 edgeA2 = connection2.getData().getPosition();
+		Vector2 edgeB2 = new Vector2(edgeA2.x + length, edgeA2.y);
+		makeSpawnVertex(world, connection2, graph, edgeA2, edgeB2, edgeB2, new Vector2(edgeB2.x + 2 * LANE_WIDTH,
+																						edgeB2.y), false, interval);
+
+		Vertex<NavigationObject> connection3 = graph.getVertex(indices[2]);
+		// Vector2 edgeB3 = connection3.getData().getPointA();
+		Vector2 edgeB3 = connection3.getData().getPosition();
+		Vector2 edgeA3 = new Vector2(edgeB3.x - length, edgeB3.y);
+		makeSpawnVertex(world, connection3, graph, edgeA3, edgeB3, new Vector2(edgeA3.x - 2 * LANE_WIDTH, edgeA3.y),
+						edgeA3, true, interval);
+
+		Vertex<NavigationObject> connection4 = graph.getVertex(indices[3]);
+		// Vector2 edgeA4 = connection4.getData().getPointB();
+		Vector2 edgeA4 = connection4.getData().getPosition();
+		Vector2 edgeB4 = new Vector2(edgeA4.x + length, edgeA4.y);
+		makeSpawnVertex(world, connection4, graph, edgeA4, edgeB4, edgeB4, new Vector2(edgeB4.x + 2 * LANE_WIDTH,
+																						edgeB4.y), false, interval);
+	}
+
+	public static boolean poisson = true;
+
+	// TODO Refactor this mess
+	public static Vertex<NavigationObject> makeSpawnVertex(TrafficSimWorld world, Vertex<NavigationObject> connection,
+			Graph<NavigationObject> graph, Vector2 edgeA, Vector2 edgeB, Vector2 vertexA, Vector2 vertexB,
+			boolean AtoB,
+			int interval) {
+		// NavigationObject intersection = new Road(vertexA, vertexB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
+		Vertex<NavigationObject> spawn1 = graph.addVertex(new CrossRoad(2 * LANE_WIDTH,
+																		new Vector2(getMidPoint(vertexA, vertexB))));
+		// NavigationObject edge = new Road(edgeA, edgeB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
+
+		Vector2 pointA1 = new Vector2(edgeA.x + LANE_WIDTH, edgeA.y - LANE_WIDTH / 2);
+		Vector2 pointB1 = new Vector2(edgeB.x - LANE_WIDTH, edgeB.y - LANE_WIDTH / 2);
+
+		Vector2 pointA2 = new Vector2(edgeA.x + LANE_WIDTH, edgeA.y + LANE_WIDTH / 2);
+		Vector2 pointB2 = new Vector2(edgeB.x - LANE_WIDTH, edgeB.y + LANE_WIDTH / 2);
+
+		Edge<NavigationObject> roadEdge1 = graph.addEdge(	new Road(
+																		new ParametricCurve(new C_Linear(pointA1,
+																											pointB1)),
+																		1, TrafficSimConstants.CITY_SPEED_LIMIT,
+																		(CrossRoad) spawn1.getData(),
+																		(CrossRoad) connection.getData()), spawn1,
+															connection, true);
+		Edge<NavigationObject> roadEdge2 = graph.addEdge(	new Road(
+																		new ParametricCurve(new C_Linear(pointB2,
+																											pointA2)),
+																		1, TrafficSimConstants.CITY_SPEED_LIMIT,
+																		(CrossRoad) connection.getData(),
+																		(CrossRoad) spawn1.getData()), connection,
+															spawn1,
+															true);
+		// System.out.println(VectorUtils.getAngle(intersection) + " " + VectorUtils.getAngle(edge));
+		// Edge<NavigationObject> roadEdge;
+		// if (AtoB)
+		// roadEdge = graph.addEdge(edge, spawn1, connection, false);
+		// else
+		// roadEdge = graph.addEdge(edge, connection, spawn1, false);
+		EntityFactory.createCrossRoad(world, spawn1).addToWorld();
+		EntityFactory.createRoad(world, roadEdge1).addToWorld();
+		EntityFactory.createRoad(world, roadEdge2).addToWorld();
+		Entity spawnPoint = world.createEntity();
+		AbstractSpawnStrategy spawnStrategy = poisson	? new PoissonSpawnStrategy(interval)
+														: new FixedIntervalSpawningStrategy(interval);
+		// AbstractSpawnStrategy spawnStrategy = new PoissonSpawnStrategy(interval);
+		spawnPoint.addComponent(new SpawnComponent(spawn1, spawnStrategy));
+		spawnPoint.addToWorld();
+		return spawn1;
+	}
 
 	public static void addSpawnPoints(TrafficSimWorld world, Graph<NavigationObject> graph, List<Entity> vertexEntities) {
 		int index = 0; // iterator

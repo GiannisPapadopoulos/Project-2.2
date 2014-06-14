@@ -119,4 +119,10 @@ public class ParametricCurve {
 		result.y = endDir.y;
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return "ParametricCurve [u_t=" + u_t + ", v_t=" + v_t + ", r_t=" + r_t + ", startDir=" + startDir + ", endDir="
+				+ endDir + "]";
+	}
 }

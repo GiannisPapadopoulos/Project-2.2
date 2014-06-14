@@ -18,8 +18,6 @@ import functions.VectorUtils;
  */
 @Getter
 @ToString
-
-
 public class Road extends NavigationObject {
 
 	@Getter

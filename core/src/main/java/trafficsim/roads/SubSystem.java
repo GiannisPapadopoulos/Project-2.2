@@ -45,5 +45,10 @@ public class SubSystem {
 						closest = lane_elem;
 		return closest;
 	}
+
+	@Override
+	public String toString() {
+		return "SubSystem [lanes=" + lanes + "]";
+	}
 	
 }

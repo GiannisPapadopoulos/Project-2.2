@@ -1,10 +1,11 @@
 package ui.tables;
 
+import java.util.ArrayList;
+
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimConstants;
 import trafficsim.TrafficSimWorld;
-import trafficsim.systems.MovementSystem;
 import utils.Assets;
 
 import com.badlogic.gdx.Gdx;
@@ -20,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -42,7 +42,8 @@ public class SidePanels extends Table {
 				slimitmin,
 				carsOnRoad,
 				panelwidth,
-				avtimewait;		
+				avtimewait,
+				currentSimPageIndex;		
 
 	@Getter
 	private TextButton roundabout, standardRoad, intersection, showhidetext,simleft, simright;
@@ -59,7 +60,12 @@ public class SidePanels extends Table {
 	@Getter
 	private Table worldStatistics,worldVariables,expandCollapse, switchPanel, editorPanel,sidepanel,hide,tabbed1,tabbed2,tabbed3;	
 	
+	private ArrayList<Table> simPageList;
+	
 	public SidePanels() {
+		currentSimPageIndex=0;
+		
+		simPageList = new ArrayList<Table>();
 		this.world = new TrafficSimWorld();
 		TextureAtlas atlas = new TextureAtlas("assets/packed-textures/ui-textures.pack");
 	//	TextStyle style = new TextStyle();
@@ -156,22 +162,50 @@ public class SidePanels extends Table {
 		expandCollapse = new Table();		
 		expandCollapse.add(simTools).size(80); // button with image		
 		expandCollapse.add(editMode).size(80);
+		expandCollapse.row();
 		
-		/** World Variables Table */		
-		worldVariables = new Table();
-	
-		Label worldVariablesLabel = new Label("Simulation Tools",style);
+	Label worldVariablesLabel = new Label("Simulation Tools",style);
 		
 
 		simleft = new TextButton("<", Assets.skin);
+		
+		simleft.addListener(new ClickListener(){
+			
+			public void clicked(InputEvent event, float x, float y) {
+				
+				prevSimPage();
+				
+				}
+		    }
+			
+		);
+		
 		simright = new TextButton(">", Assets.skin);
+		
+		simright.addListener(new ClickListener(){
+			
+			public void clicked(InputEvent event, float x, float y) {
+				
+				nextSimPage();
+				
+				}
+		    }
+			
+		);
 		Table simt = new Table();
 		
 		simt.add(simleft).left();
 		simt.add(worldVariablesLabel).pad(20);
 		simt.add(simright).right();
 		
-		worldVariables.add(simt).fillX();
+		
+		expandCollapse.add(simt);
+		
+		/** World Variables Table */		
+		worldVariables = new Table();
+	
+	
+		//worldVariables.add(simt).fillX();
 		worldVariables.row();
 		worldVariables.add(new Label("Car Spawning Rate", Assets.skin)); // first adjusting tool
 		worldVariables.row();
@@ -185,8 +219,6 @@ public class SidePanels extends Table {
 		worldVariables.add(slimitcompanion).width(90).left();
 		worldVariables.row();
 		
-		
-	
 		
 		/** Second Page Sim Panel */
 		
@@ -256,6 +288,10 @@ public class SidePanels extends Table {
 			
 		);
 		
+		//sim page lists initialised
+		simPageList.add(worldVariables);
+		simPageList.add(secondPage);
+		
 		Drawable background = new TextureRegionDrawable(atlas.findRegion("bg"));
 		
 		sidepanel.setBackground(background);
@@ -311,6 +347,30 @@ public class SidePanels extends Table {
 		return new Button(style);
 		
 		
+	}
+	
+	private void nextSimPage(){
+		if(currentSimPageIndex < simPageList.size()-1){
+		
+		currentSimPageIndex++;
+		
+		switchPanel.clearChildren();
+		switchPanel.add(simPageList.get(currentSimPageIndex));
+		}
+				
+		
+	}
+	
+private void prevSimPage(){
+	
+		if(currentSimPageIndex > 0){
+			currentSimPageIndex--;
+		
+		
+		switchPanel.clearChildren();
+		switchPanel.add(simPageList.get(currentSimPageIndex));
+				
+		}
 	}
 	
 	

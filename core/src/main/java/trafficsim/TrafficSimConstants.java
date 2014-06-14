@@ -25,7 +25,7 @@ public final class TrafficSimConstants {
 	public static boolean DEBUG_RENDER = false;
 
 	/** Whether to debug the ui tables */
-	public static boolean DEBUG_TABLES = true;
+	public static boolean DEBUG_TABLES = false;
 
 	/** Constant used by world.step() in box2d. Higher values mean higher accuracy, 8 is standard */
 	public static final int VELOCITY_ITERATIONS = 8;
@@ -51,7 +51,7 @@ public final class TrafficSimConstants {
 
 	/** Speed limit for simple (1-lane) roads in meters per second */
 	@Setter
-	public static float CITY_SPEED_LIMIT = 150 / 3.6f;
+	public static float CITY_SPEED_LIMIT = 100 / 3.6f;
 	
 
 	/** When braking, velocity will become brakingFactor * velocity (but also take into account the scaling factor) */

@@ -98,7 +98,7 @@ public class SimulationScreen extends SuperScreen {
 
 		Graph<Road> graph;
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
-			graph = GraphFactory.createManhattanGraph(3, 3, 60, 0, 0);
+			graph = GraphFactory.createManhattanGraph(6, 6, 60, 0, 0);
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);
@@ -107,7 +107,7 @@ public class SimulationScreen extends SuperScreen {
 		firstTimeSimulationRun = false;
 
 
-		// GraphFactory.addSpawnPointsTest(world, world.getGraph());
+		GraphFactory.addSpawnPointsTest(world, world.getGraph());
 		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
 		EntityFactory.addSpawnPoints(world, graph, vertexEntities);
 		

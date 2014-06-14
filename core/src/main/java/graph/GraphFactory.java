@@ -37,6 +37,8 @@ public class GraphFactory {
 		Vector2 edgeB2 = new Vector2(edgeA2.x + length, edgeA2.y);
 		makeSpawnVertex(world, connection2, graph, edgeA2, edgeB2, edgeB2, new Vector2(edgeB2.x + 2 * LANE_WIDTH,
 																						edgeB2.y), false, interval);
+		// makeSpawnVertex(world, connection2, graph, edgeA2, edgeB2, new Vector2(edgeB2.x + 2 * LANE_WIDTH, edgeB2.y),
+		// edgeB2, false, interval);
 
 		Vertex<Road> connection3 = graph.getVertex(indices[2]);
 		Vector2 edgeB3 = connection3.getData().getPointA();
@@ -47,6 +49,8 @@ public class GraphFactory {
 		Vertex<Road> connection4 = graph.getVertex(indices[3]);
 		Vector2 edgeA4 = connection4.getData().getPointB();
 		Vector2 edgeB4 = new Vector2(edgeA4.x + length, edgeA4.y);
+		// makeSpawnVertex(world, connection4, graph, edgeA4, edgeB4, edgeB4, new Vector2(edgeB4.x + 2 * LANE_WIDTH,
+		// edgeB4.y), false, interval);
 		makeSpawnVertex(world, connection4, graph, edgeA4, edgeB4, edgeB4, new Vector2(edgeB4.x + 2 * LANE_WIDTH,
 																						edgeB4.y), false, interval);
 	}
@@ -58,15 +62,39 @@ public class GraphFactory {
 			Vector2 edgeA, Vector2 edgeB, Vector2 vertexA, Vector2 vertexB, boolean AtoB, int interval) {
 		Road intersection = new Road(vertexA, vertexB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
 		Vertex<Road> spawn1 = graph.addVertex(intersection);
-		Road edge = new Road(edgeA, edgeB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
+
+		Vector2 pointA1 = new Vector2(edgeA.x, edgeA.y - LANE_WIDTH / 2);
+		Vector2 pointB1 = new Vector2(edgeB.x, edgeB.y - LANE_WIDTH / 2);
+
+		Vector2 pointA2 = new Vector2(edgeA.x, edgeA.y + LANE_WIDTH / 2);
+		Vector2 pointB2 = new Vector2(edgeB.x, edgeB.y + LANE_WIDTH / 2);
+
+		Road edge1;
+		Road edge2;
+
+		if (AtoB) {
+
+			edge1 = new Road(pointA1, pointB1, 1, Direction.BOTH, CITY_SPEED_LIMIT);
+			edge2 = new Road(pointB2, pointA2, 1, Direction.BOTH, CITY_SPEED_LIMIT);
+		}
+		else {
+			edge1 = new Road(pointA1, pointB1, 1, Direction.BOTH, CITY_SPEED_LIMIT);
+			edge2 = new Road(pointB2, pointA2, 1, Direction.BOTH, CITY_SPEED_LIMIT);
+		}
 		// System.out.println(VectorUtils.getAngle(intersection) + " " + VectorUtils.getAngle(edge));
-		Edge<Road> roadEdge;
-		if (AtoB)
-			roadEdge = graph.addEdge(edge, spawn1, connection, false);
-		else
-			roadEdge = graph.addEdge(edge, connection, spawn1, false);
+		Edge<Road> roadEdge1;
+		Edge<Road> roadEdge2;
+		if (AtoB) {
+			roadEdge1 = graph.addEdge(edge1, spawn1, connection, true);
+			roadEdge2 = graph.addEdge(edge2, connection, spawn1, true);
+		}
+		 else {
+		 roadEdge1 = graph.addEdge(edge1, connection, spawn1, true);
+		 roadEdge2 = graph.addEdge(edge2, spawn1, connection, true);
+		 }
 		EntityFactory.createRoad(world, spawn1).addToWorld();
-		EntityFactory.createRoad(world, roadEdge).addToWorld();
+		EntityFactory.createRoad(world, roadEdge1).addToWorld();
+		EntityFactory.createRoad(world, roadEdge2).addToWorld();
 		Entity spawnPoint = world.createEntity();
 		AbstractSpawnStrategy spawnStrategy = poisson	? new PoissonSpawnStrategy(interval)
 														: new FixedIntervalSpawningStrategy(interval);

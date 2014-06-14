@@ -1,10 +1,10 @@
 package trafficsim.screens;
 
 import static trafficsim.TrafficSimConstants.DEBUG_TABLES;
+
 import java.util.ArrayList;
 import java.util.List;
 
->>>>>>> refs/heads/develop
 import lombok.Getter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.PhysicsBodyComponent;
@@ -18,8 +18,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import editor.EditorData;
 import editor.PointsOfInterest;
@@ -93,6 +93,7 @@ public class EditorScreen extends SuperScreen {
 		getUILayer().draw();
 		if (DEBUG_TABLES)
 			Table.drawDebug(getUILayer());
+	}
 
 	/** Resets the graph */
 	public void clearGraph() {

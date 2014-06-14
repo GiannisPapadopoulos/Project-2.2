@@ -146,7 +146,7 @@ public class SimulationScreen extends SuperScreen {
 		if (DEBUG_RENDER)
 			debugRenderer.render(world.getBox2dWorld(), getCamera().combined);
 
-		// wr.renderDEBUG(getCamera(), world.getGraph());
+		wr.renderDEBUG(getCamera(), world.getGraph());
 
 		getWorldLayer().act(delta);
 		getUILayer().act(delta);

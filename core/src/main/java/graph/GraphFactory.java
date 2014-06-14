@@ -153,7 +153,7 @@ public class GraphFactory {
 				float y = startY + j * distance;
 
 				float crossroadSize = 4 * LANE_WIDTH;
-				if ((i + j) % 5 == 0)
+				if ((i + j) % 5 == 1)
 					graph.addVertex(new CrossRoad(crossroadSize, new Vector2(x,
 							y), CrossRoad.CR_TYPE.Roundabout));
 				else

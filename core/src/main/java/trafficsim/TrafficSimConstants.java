@@ -51,7 +51,7 @@ public final class TrafficSimConstants {
 
 	/** Speed limit for simple (1-lane) roads in meters per second */
 	@Setter
-	public static float CITY_SPEED_LIMIT = 2; //50 / 3.6f;
+	public static float CITY_SPEED_LIMIT = 150 / 3.6f;
 	
 
 	/** When braking, velocity will become brakingFactor * velocity (but also take into account the scaling factor) */

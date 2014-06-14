@@ -3,7 +3,6 @@ package ui.tables;
 import lombok.AllArgsConstructor;
 import trafficsim.components.DataComponent;
 import trafficsim.components.PhysicsBodyComponent;
-import trafficsim.components.PositionComponent;
 import trafficsim.components.RouteComponent;
 import utils.Assets;
 
@@ -50,7 +49,7 @@ public class InfoPop {
 	public void render()
 	{
 		
-		if (entityToRender != null)
+		if (entityToRender != null && entityToRender.isActive())
 		{
 			
 			// Draw entity info
@@ -106,6 +105,10 @@ public class InfoPop {
 	public void drawPath(Entity entity){
 		
 		RouteComponent entityRoute = entity.getComponent(RouteComponent.class);
+		if (entityRoute == null || !entityRoute.isSet() ||
+				entityRoute.getRoute() == null) {
+			return;
+		}
 		
 		 ShapeRenderer sr = new ShapeRenderer();
 		 

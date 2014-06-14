@@ -65,12 +65,12 @@ public class MovementFunctions {
 		Road road = routeComp.getCurrentEdge().getData();
 		Vector2 start = fromAtoB ? road.getPointA().cpy() : road.getPointB().cpy();
 		Vector2 finish = fromAtoB ? road.getPointB().cpy() : road.getPointA().cpy();
-		Vector2 laneCorrection = getVector(road).cpy().nor().rotate(90).scl(LANE_WIDTH / 2.0f);
-		if (fromAtoB) {
-			laneCorrection.scl(-1);
-		}
-		start.add(laneCorrection);
-		finish.add(laneCorrection);
+		// Vector2 laneCorrection = getVector(road).cpy().nor().rotate(90).scl(LANE_WIDTH / 2.0f);
+		// if (fromAtoB) {
+		// laneCorrection.scl(-1);
+		// }
+		// start.add(laneCorrection);
+		// finish.add(laneCorrection);
 		waypoints.add(start);
 		Vector2 lane = finish.cpy().sub(start);
 		Vector2 step = lane.cpy().scl(1.0f / (number - 1));

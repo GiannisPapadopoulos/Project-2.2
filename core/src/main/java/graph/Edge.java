@@ -15,6 +15,9 @@ public class Edge<E>
 		adjacentVertices.add(v2.getID());
 		v1.getAdjacentVertices().add(v2.getID());
 		v1.getAdjacentEdges().add(ID);
+
+		v2.getIncomingEdges().add(ID);
+
 		if (!directed) {
 			v2.getAdjacentVertices().add(v1.getID());
 			v2.getAdjacentEdges().add(ID);

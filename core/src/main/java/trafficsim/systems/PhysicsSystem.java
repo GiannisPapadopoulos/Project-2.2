@@ -1,7 +1,6 @@
 package trafficsim.systems;
 
-import static trafficsim.TrafficSimConstants.POSITION_ITERATIONS;
-import static trafficsim.TrafficSimConstants.VELOCITY_ITERATIONS;
+import static trafficsim.TrafficSimConstants.*;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.PhysicsBodyComponent;
 
@@ -38,7 +37,7 @@ public class PhysicsSystem
 	@Override
 	protected void end() {
 		World world2D = ((TrafficSimWorld) world).getBox2dWorld();
-		world2D.step(world.delta, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+		world2D.step(DELTA_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 	}
 
 }

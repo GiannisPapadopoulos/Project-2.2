@@ -1,14 +1,9 @@
 package trafficsim.systems;
 
-import static com.badlogic.gdx.math.MathUtils.cos;
-import static com.badlogic.gdx.math.MathUtils.degRad;
-import static com.badlogic.gdx.math.MathUtils.sin;
+import static com.badlogic.gdx.math.MathUtils.*;
 import static functions.VectorUtils.getAngle;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
-import static trafficsim.TrafficSimConstants.RANDOM;
-import static trafficsim.TrafficSimConstants.TIMER;
+import static trafficsim.TrafficSimConstants.*;
 import functions.VectorUtils;
 import graph.Vertex;
 import trafficsim.TrafficSimWorld;
@@ -56,11 +51,11 @@ public class SpawnSystem
 				float angle = getAngle(spawnVertex.getData(), connection.getData()) * degRad;
 				
 				Vector2 position = VectorUtils.getMidPoint(spawnVertex.getData());
-				Vector2 laneCorrection = getVector(spawnVertex.getData(), connection.getData()).nor()
-																								.rotate(-90)
-																								.scl(LANE_WIDTH / 2);
+				Vector2 connectionVector = getVector(spawnVertex.getData(), connection.getData());
+				Vector2 laneCorrection = connectionVector.cpy().nor().rotate(-90).scl(LANE_WIDTH / 2);
 				position.add(laneCorrection);
-				if (canSpawn(spawnComp, position, angle)) {
+				Vector2 castPostion = position.cpy().sub(connectionVector.cpy().nor().scl(CAR_LENGTH));
+				if (canSpawn(spawnComp, castPostion, angle)) {
 					int randInt = RANDOM.nextInt(7) + 1;
 					Entity car = EntityFactory.createCar((TrafficSimWorld) world, position, 1f, 40, angle, "car"
 																											+ randInt);

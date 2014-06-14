@@ -1,11 +1,13 @@
 package trafficsim.systems;
 
 import static functions.MovementFunctions.buildWaypoints;
+import trafficsim.TrafficSimWorld;
 import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
 import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
+import trafficsim.components.VehiclesOnRoadComponent;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -31,6 +33,8 @@ public class RoutingSystem
 	private ComponentMapper<PhysicsBodyComponent> physicsBodyMapper;
 	@Mapper
 	private ComponentMapper<MovementComponent> movementComponentMapper;
+	@Mapper
+	private ComponentMapper<VehiclesOnRoadComponent> vehiclesOnRoadComponentMapper;
 
 	// Start turning left
 	private float leftTurnThreshold = 0.2f;
@@ -58,7 +62,7 @@ public class RoutingSystem
 				Vector2 target = routeComp.getNextWaypoint();
 				float distanceToTarget = target.dst(physComp.getPosition());
 				if (distanceToTarget < threshold) {
-					updatePath(routeComp, steeringComp);
+					updatePath(routeComp, steeringComp, car.getId());
 					// System.out.println(routeComp.getEdgeIndex() + " w " + routeComp.getWayPointIndex() + " "
 					// + routeComp.getNextWaypoint());
 				}
@@ -66,21 +70,39 @@ public class RoutingSystem
 		}
 	}
 
-	private void updatePath(RouteComponent routeComp, SteeringComponent steeringComp) {
+	private void updatePath(RouteComponent routeComp, SteeringComponent steeringComp, int carID) {
 		if (routeComp.getWayPointIndex() < routeComp.getWayPoints().size() - 1) {
 			routeComp.incrementWaypointIndex();
 		}
 		else {
+			updateRoadReference(routeComp, carID, true);
 			if (!routeComp.isLastEdge()) {
 				routeComp.setCurrentVertex(routeComp.getNextVertex());
 				routeComp.incrementEdgeIndex();
 				routeComp.setWayPoints(buildWaypoints(routeComp));
 				routeComp.setWayPointIndex(0);
+				updateRoadReference(routeComp, carID, false);
 			}
 			else {
 				// TODO arrival behavior
 				steeringComp.setState(State.ARRIVED);
 			}
+		}
+	}
+
+	private void updateRoadReference(RouteComponent routeComp, int carID, boolean remove) {
+		int edgeIndex = routeComp.getCurrentEdge().getID();
+		int edgeEntityID = ((TrafficSimWorld) world).getEdgeToEntityMap().get(edgeIndex);
+		VehiclesOnRoadComponent vehiclesOnRoad = vehiclesOnRoadComponentMapper.get(world.getEntity(edgeEntityID));
+		if (remove) {
+			boolean b = vehiclesOnRoad.getVehiclesOnLaneIDs().remove(carID);
+			// System.out.println("edge " + edgeIndex + " " + b + " v " + " c " + carID + " "
+			// + vehiclesOnRoad.getVehiclesOnLaneIDs());
+			assert b;
+		}
+		else {
+			// System.out.println("adding " + "edge " + edgeIndex + " id " + carID);
+			vehiclesOnRoad.getVehiclesOnLaneIDs().add(carID);
 		}
 	}
 

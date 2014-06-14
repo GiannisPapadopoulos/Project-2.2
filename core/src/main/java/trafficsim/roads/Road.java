@@ -20,8 +20,9 @@ import functions.VectorUtils;
 @ToString
 public class Road extends NavigationObject {
 
-	@Getter
 	private HashMap<CrossRoadTransition, SubSystem> rSubSystems;
+
+	private SubSystem subSystem;
 
 	/** The left point */
 	private Vector2 pointA;
@@ -43,11 +44,23 @@ public class Road extends NavigationObject {
 		this.numLanes = numLanes;
 	}
 
+	// UNUSED
 	public Road(ArrayList<ParametricCurve> roadDef, int numLanes,
 			float speedLimit, CrossRoad origin, CrossRoad destination) {
 		create(roadDef, numLanes, speedLimit, origin, destination);
 		origin.addConnection(this, false);
 		destination.addConnection(this, true);
+	}
+
+	@Override
+	public SubSystem requestTransitionPath(NavigationObject origin, NavigationObject destination) {
+		assert rSubSystems.keySet().size() > 0;
+		for (CrossRoadTransition rt : rSubSystems.keySet()) {
+			if (rt.getOrigin() == origin && rt.getDestination() == destination)
+				return rSubSystems.get(rt);
+		}
+		System.out.println("Something went wrong in Crossroad subsystems!");
+		return null;
 	}
 
 	private void create(ArrayList<ParametricCurve> roadDef, int numLanes,
@@ -64,6 +77,8 @@ public class Road extends NavigationObject {
 		for (int i = 0; i < numLanes; i++)
 			rSubSystems.get(crt).addSubsystem(
 					SubsystemFactory.createRoadSubsystem(roadDef, i));
+
+		subSystem = rSubSystems.get(crt);
 	}
 	
 	@Override

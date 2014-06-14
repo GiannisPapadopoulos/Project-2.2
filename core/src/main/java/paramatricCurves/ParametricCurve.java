@@ -1,6 +1,7 @@
 package paramatricCurves;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 
@@ -87,6 +88,15 @@ public class ParametricCurve {
 
 	public Vector2 getPoint(float t) {
 		return new Vector2((float) u_t.getFt(t), (float) v_t.getFt(t));
+	}
+
+	public List<Vector2> getSamplePoints(int numPoints) {
+		List<Vector2> samplePoints = new ArrayList<Vector2>();
+		List<Float> range = r_t.getDiscreteCover(numPoints);
+		for (Float value : range) {
+			samplePoints.add(getPoint(value));
+		}
+		return samplePoints;
 	}
 
 	public Vector2 getStartDirection() {

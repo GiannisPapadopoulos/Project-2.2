@@ -1,6 +1,11 @@
 package trafficsim.systems;
 
-import static functions.MovementFunctions.buildWaypoints;
+import static functions.MovementFunctions.buildWaypointsParametric;
+import graph.Edge;
+
+import java.util.List;
+
+import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
@@ -8,6 +13,7 @@ import trafficsim.components.RouteComponent;
 import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.VehiclesOnRoadComponent;
+import trafficsim.roads.NavigationObject;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -77,11 +83,21 @@ public class RoutingSystem
 		else {
 			updateRoadReference(routeComp, carID, true);
 			if (!routeComp.isLastEdge()) {
+				NavigationObject nextEdge;
+				Edge<NavigationObject> currentEdge = routeComp.getCurrentEdge();
 				routeComp.setCurrentVertex(routeComp.getNextVertex());
 				routeComp.incrementEdgeIndex();
-				routeComp.setWayPoints(buildWaypoints(routeComp));
+				val trans = routeComp.getCurrentVertex()
+							.getData()
+							.requestTransitionPath(currentEdge.getData(), routeComp.getCurrentEdge().getData());
+
+				// assert trans != null;
+				// List<Vector2> waypoints = buildWaypoints(routeComp);
+				List<Vector2> waypoints = buildWaypointsParametric(routeComp);
+				routeComp.setWayPoints(waypoints);
 				routeComp.setWayPointIndex(0);
 				updateRoadReference(routeComp, carID, false);
+				System.out.println(routeComp.getCurrentVertex());
 			}
 			else {
 				// TODO arrival behavior

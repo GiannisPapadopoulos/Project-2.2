@@ -195,7 +195,7 @@ public class EntityFactory {
 		SpriteComponent sprite = new SpriteComponent(name);
 		crossRoad.addComponent(sprite);
 		if (vertex.getID() == 0 || vertex.getID() == vertex.getParent().getVertexCount() - 1) {
-			crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(2000)));
+			crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(2000 * 1000)));
 		}
 		return crossRoad;
 	}

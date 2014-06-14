@@ -3,6 +3,7 @@ package trafficsim.components;
 import graph.Edge;
 import graph.Vertex;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Delegate;
@@ -14,8 +15,6 @@ import lombok.ToString;
 import pathfinding.GraphAction;
 import pathfinding.GraphState;
 import search.Path;
-import trafficsim.roads.NavigationObject;
-import trafficsim.roads.Road;
 import trafficsim.roads.NavigationObject;
 
 import com.artemis.Component;
@@ -89,6 +88,17 @@ public class RouteComponent
 
 	public void incrementEdgeIndex() {
 		edgeIndex++;
+	}
+
+	public List<Vector2> getAllVertices() {
+		List<Vector2> remainingVertices = new ArrayList<Vector2>();
+		Vertex<NavigationObject> v = currentVertex;
+		for (int i = edgeIndex; i < path.getRoute().size(); i++) {
+			Edge<NavigationObject> edge = path.getRoute().get(i).getEdge();
+			remainingVertices.add(v.getData().getPosition());
+			v = v.getNeighbor(edge);
+		}
+		return remainingVertices;
 	}
 
 	// public void update() {

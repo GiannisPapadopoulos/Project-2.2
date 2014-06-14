@@ -28,7 +28,7 @@ public class CrossRoad extends NavigationObject {
 		this.crSubSystems = new HashMap<RoadTransition, SubSystem>();
 	}
 
-	public SubSystem requestTransitionPath(Road origin, Road destination) {
+	public SubSystem requestTransitionPath(NavigationObject origin, NavigationObject destination) {
 		for (RoadTransition rt : crSubSystems.keySet()) {
 			if (rt.getOrigin() == origin && rt.getDestination() == destination)
 				return crSubSystems.get(rt);

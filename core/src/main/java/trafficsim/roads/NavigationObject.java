@@ -9,4 +9,6 @@ public abstract class NavigationObject {
 	public abstract float getLength();
 
 	public abstract float getSpeedLimit();
+
+	public abstract SubSystem requestTransitionPath(NavigationObject origin, NavigationObject destination);
 }

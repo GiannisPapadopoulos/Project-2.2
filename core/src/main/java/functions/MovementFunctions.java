@@ -14,6 +14,7 @@ import java.util.List;
 import trafficsim.components.RouteComponent;
 import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
+import trafficsim.roads.SubSystem;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -26,6 +27,10 @@ public class MovementFunctions {
 		// 0.001 is for floating point accuracy
 		boolean leftTurn = angle < -0.001 || angle > PI + 0.001;
 		return leftTurn;
+	}
+
+	public static Road getRoad(Edge<NavigationObject> edge) {
+		return (Road) edge.getData();
 	}
 
 	public static float getDeltaAngle(RouteComponent routeComp) {
@@ -52,6 +57,23 @@ public class MovementFunctions {
 	// TODO make this robust
 	public static boolean fromAtoB(RouteComponent routeComp) {
 		return routeComp.getCurrentVertex() == routeComp.getCurrentEdge().getAdjacentVertexIterator().next();
+	}
+
+	public static List<Vector2> buildWaypointsParametric(RouteComponent routeComp) {
+		return buildWaypointsParametric(routeComp, 10);
+	}
+
+	public static List<Vector2> buildWaypointsParametric(RouteComponent routeComp, int numPoints) {
+		Road road = getRoad(routeComp.getCurrentEdge());
+		SubSystem transitionPath = road.getSubSystem();
+
+		Vertex<NavigationObject> v1 = routeComp.getCurrentVertex();
+		Vertex<NavigationObject> v2 = v1.getNeighbor(routeComp.getCurrentEdge());
+		SubSystem transitionPath2 = road.requestTransitionPath(v2.getData(), v1.getData());
+		// System.out.println(transitionPath2 != null);
+		// System.out.println("tp ");
+		List<Vector2> waypoints = transitionPath.getLanes().get(0).get(0).getTrajectory().getSamplePoints(numPoints);
+		return waypoints;
 	}
 
 	/** Builds waypoints for the current edge */

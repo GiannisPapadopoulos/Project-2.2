@@ -190,7 +190,7 @@ public class GraphFactory {
 					Road r1 = (Road) e1.getData();
 					for (val key : r1.getRSubSystems().keySet()) {
 						SubSystem system = r1.getRSubSystems().get(key);
-						System.out.println(system.getLanes().get(0));
+						// System.out.println(system.getLanes().get(0));
 					}
 				}
 			}

@@ -153,7 +153,7 @@ public class GraphFactory {
 				float y = startY + j * distance;
 
 				float crossroadSize = 4 * LANE_WIDTH;
-				if ((i + j) % 5 == 1)
+				if ((i + j) % 5 == 2)
 					graph.addVertex(new CrossRoad(crossroadSize, new Vector2(x,
 							y), CrossRoad.CR_TYPE.Roundabout));
 				else
@@ -168,45 +168,35 @@ public class GraphFactory {
 			for (int j = 0; j < height; j++) {
 				Vertex<NavigationObject> v1 = graph.getVertex(i * height + j);
 				if (i < width - 1) {
-					Vertex<NavigationObject> v2 = graph.getVertex((i + 1)
-							* height + j);
+					Vertex<NavigationObject> v2 = graph.getVertex((i + 1) * height + j);
 					Vector2 pointA = new Vector2(v1.getData().getPosition());
 					pointA.set(pointA.x + halfW, pointA.y);
 					Vector2 pointB = new Vector2(v2.getData().getPosition());
 					pointB.set(pointB.x - halfW, pointB.y);
 
-					graph.addEdge(
-							new Road(new ParametricCurve(new C_Linear(pointA,
-									pointB)), 1,
-									TrafficSimConstants.CITY_SPEED_LIMIT,
-									(CrossRoad) v1.getData(), (CrossRoad) v2
-											.getData()), v1, v2, false);
-					graph.addEdge(
-							new Road(new ParametricCurve(new C_Linear(pointB,
-									pointA)), 1,
-									TrafficSimConstants.CITY_SPEED_LIMIT,
-									(CrossRoad) v2.getData(), (CrossRoad) v1
-											.getData()), v2, v1, false);
+					graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointA, pointB)), 1,
+											TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) v1.getData(),
+											(CrossRoad) v2.getData()), v1, v2, true);
+					graph.addEdge(new Road(new ParametricCurve(new C_Linear(pointB, pointA)), 1,
+											TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) v2.getData(),
+											(CrossRoad) v1.getData()), v2, v1, true);
 				}
 				if (j < height - 1) {
-					Vertex<NavigationObject> v3 = graph.getVertex(i * height
-							+ j + 1);
+					Vertex<NavigationObject> v3 = graph.getVertex(i * height + j + 1);
 					Vector2 pointA = v1.getData().getPosition();
 					Vector2 pointB = v3.getData().getPosition();
 					pointA.set(pointA.x, pointA.y + halfW);
 					pointB.set(pointB.x, pointB.y - halfW);
-					Edge<NavigationObject> e1 = graph.addEdge(
-							new Road(new ParametricCurve(new C_Linear(pointA,
-									pointB)), 1,
-									TrafficSimConstants.CITY_SPEED_LIMIT,
-									(CrossRoad) v1.getData(), (CrossRoad) v3
-											.getData()), v1, v3, false);
-					Edge<NavigationObject> e2 = graph.addEdge(
-							new Road(new ParametricCurve(new C_Linear(pointB,
-									pointA)), 1,
-									TrafficSimConstants.CITY_SPEED_LIMIT,
-									(CrossRoad) v3.getData(), (CrossRoad) v1
-											.getData()), v3, v1, false);
+					Edge<NavigationObject> e1 = graph.addEdge(	new Road(new ParametricCurve(new C_Linear(pointA,
+																											pointB)),
+																			1, TrafficSimConstants.CITY_SPEED_LIMIT,
+																			(CrossRoad) v1.getData(),
+																			(CrossRoad) v3.getData()), v1, v3, true);
+					Edge<NavigationObject> e2 = graph.addEdge(	new Road(new ParametricCurve(new C_Linear(pointB,
+																											pointA)),
+																			1, TrafficSimConstants.CITY_SPEED_LIMIT,
+																			(CrossRoad) v3.getData(),
+																			(CrossRoad) v1.getData()), v3, v1, true);
 					Road r1 = (Road) e1.getData();
 					for (val key : r1.getRSubSystems().keySet()) {
 						SubSystem system = r1.getRSubSystems().get(key);

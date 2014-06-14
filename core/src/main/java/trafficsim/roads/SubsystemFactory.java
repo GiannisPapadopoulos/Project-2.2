@@ -36,7 +36,7 @@ public class SubsystemFactory {
 
 		float angle = VectorUtils.getAngle(A, B);
 		angle -= 90.0;
-		Vector2 vShift = VectorUtils.getUnitVector(angle);
+		Vector2 vShift = VectorUtils.getUnitVectorDegrees(angle);
 		vShift.x *= (shift * TrafficSimConstants.LANE_WIDTH + TrafficSimConstants.LANE_WIDTH / 2);
 		vShift.y *= (shift * TrafficSimConstants.LANE_WIDTH + TrafficSimConstants.LANE_WIDTH / 2);
 
@@ -154,7 +154,7 @@ public class SubsystemFactory {
 				}
 
 				Vector2 vv = VectorUtils.multiplyVector(
-						VectorUtils.getUnitVector(angleIN.angle()),
+						VectorUtils.getUnitVectorDegrees(angleIN.angle()),
 						(float) Math.sqrt(side_rect_length.len2() / 2.0));
 				if (DEGUG_SUBSYSTEMS) {
 					System.out.println((float) Math.sqrt(side_rect_length.len2() / 2.0));

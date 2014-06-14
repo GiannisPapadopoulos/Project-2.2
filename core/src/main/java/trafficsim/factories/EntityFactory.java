@@ -39,7 +39,6 @@ import trafficsim.movement.BrakeBehavior;
 import trafficsim.movement.SeekBehavior;
 import trafficsim.movement.WeightedBehavior;
 import trafficsim.roads.CrossRoad;
-import trafficsim.roads.CrossRoad.CR_TYPE;
 import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 import trafficsim.spawning.AbstractSpawnStrategy;
@@ -196,7 +195,7 @@ public class EntityFactory {
 		SpriteComponent sprite = new SpriteComponent(name);
 		crossRoad.addComponent(sprite);
 		// || vertex.getID() == vertex.getParent().getVertexCount() - 1
-		if (vertex.getID() == 0) {
+		if (vertex.getID() == 0 || vertex.getID() == vertex.getParent().getVertexCount() - 5) {
 			crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(2000 * 1000)));
 		}
 		return crossRoad;
@@ -232,10 +231,6 @@ public class EntityFactory {
 		int index = 0;
 
 		for (Vertex<NavigationObject> vertex : graph.getVertexIterator()) {
-			if (vertex.getID() != 0) {
-				// continue;
-			}
-			// List<TIntList> groupedLightIDs = new ArrayList<TIntList>();
 			List<List<GroupedTrafficLightData>> groupedLights = new ArrayList<List<GroupedTrafficLightData>>();
 			int edgesPerVertex = vertex.getAdjacentEdges().size();
 			for (Edge<NavigationObject> edge : vertex.getIncomingEdgeIterator()) {

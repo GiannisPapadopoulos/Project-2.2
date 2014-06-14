@@ -60,9 +60,14 @@ public class VectorUtils {
 		return new Vector2(xm, ym);
 	}
 
-	public static Vector2 getUnitVector(float angle) {
-		return new Vector2(MathUtils.cos(angle * MathUtils.degreesToRadians),
-				MathUtils.sin(angle * MathUtils.degreesToRadians));
+	public static Vector2 getUnitVectorDegrees(float angleInDegrees) {
+		return new Vector2(MathUtils.cos(angleInDegrees * MathUtils.degreesToRadians),
+							MathUtils.sin(angleInDegrees * MathUtils.degreesToRadians));
+	}
+
+	public static Vector2 getUnitVectorRads(float angleInRads) {
+		return new Vector2(MathUtils.cos(angleInRads * MathUtils.degreesToRadians),
+							MathUtils.sin(angleInRads * MathUtils.degreesToRadians));
 	}
 
 	public static double getAbsAngleDifference(Vector2 v1, Vector2 v2) {

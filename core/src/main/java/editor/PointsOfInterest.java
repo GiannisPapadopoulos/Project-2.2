@@ -92,7 +92,7 @@ public class PointsOfInterest {
 		
 		if(poi1.getVertices().size()==0) {
 			angle = VectorUtils.getAngle(poi2.position, poi1.position);
-			Vector2 endPoint = VectorUtils.getUnitVector(angle);
+			Vector2 endPoint = VectorUtils.getUnitVectorDegrees(angle);
 			endPoint.x*=TrafficSimConstants.LANE_WIDTH*2;
 			endPoint.y*=TrafficSimConstants.LANE_WIDTH*2;
 			endPoint.add(poi1.position);
@@ -100,7 +100,7 @@ public class PointsOfInterest {
 		}
 		if(poi2.getVertices().size()==0) {
 			angle = VectorUtils.getAngle(poi1.position, poi2.position);
-			Vector2 endPoint = VectorUtils.getUnitVector(angle);
+			Vector2 endPoint = VectorUtils.getUnitVectorDegrees(angle);
 			endPoint.x*=TrafficSimConstants.LANE_WIDTH*2;
 			endPoint.y*=TrafficSimConstants.LANE_WIDTH*2;
 			endPoint.add(poi2.position);

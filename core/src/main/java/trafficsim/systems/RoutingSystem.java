@@ -76,9 +76,15 @@ public class RoutingSystem
 		}
 	}
 
+	/**
+	 * Updates the path, by setting the next waypoint or building new waypoints if necessary
+	 * The assumption is that the path is always vertex, edge, vertex etc
+	 */
 	private void updatePath(RouteComponent routeComp, SteeringComponent steeringComp, int carID) {
 		if (routeComp.getWayPointIndex() < routeComp.getWayPoints().size() - 1) {
 			routeComp.incrementWaypointIndex();
+			System.out.println(carID + " " + routeComp.getEdgeIndex() + " " + routeComp.getCurrentEdge() + " w "
+								+ routeComp.getWayPoints());
 		}
 		else {
 			updateRoadReference(routeComp, carID, true);
@@ -95,7 +101,8 @@ public class RoutingSystem
 				// System.out.println("vertex " + routeComp.getCurrentVertex());
 				assert trans != null : "e " + routeComp.getEdgeIndex() + " v " + routeComp.getCurrentVertex();
 				List<Vector2> waypoints = buildWaypointsParametric(routeComp);
-				waypoints = buildWaypointsParametric(trans);
+				// waypoints = buildWaypointsParametric(trans);
+
 				routeComp.setWayPoints(waypoints);
 				routeComp.setWayPointIndex(0);
 				updateRoadReference(routeComp, carID, false);

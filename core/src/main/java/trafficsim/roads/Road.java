@@ -98,7 +98,7 @@ public class Road extends NavigationObject {
 		float angle = VectorUtils.getAngle(pointA, pointB);
 		angle += 90.0;
 
-		Vector2 vAdd = VectorUtils.getUnitVector(angle);
+		Vector2 vAdd = VectorUtils.getUnitVectorDegrees(angle);
 		vAdd.x *= VectorUtils.getLength(pointA, pointB) / 2;
 		vAdd.y *= VectorUtils.getLength(pointA, pointB) / 2;
 
@@ -114,7 +114,7 @@ public class Road extends NavigationObject {
 		float angle = VectorUtils.getAngle(pointA, pointB);
 		angle -= 90.0;
 
-		Vector2 vAdd = VectorUtils.getUnitVector(angle);
+		Vector2 vAdd = VectorUtils.getUnitVectorDegrees(angle);
 		vAdd.x *= VectorUtils.getLength(pointA, pointB) / 2;
 		vAdd.y *= VectorUtils.getLength(pointA, pointB) / 2;
 

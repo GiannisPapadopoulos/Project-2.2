@@ -420,20 +420,150 @@ public class GraphFactory {
 
 		// CROSS_DEBUG
 
+		// outer left round
+		CrossRoad mtcleft = new CrossRoad(30.0f, VectorUtils.add2Vectors(pMLC,
+				new Vector2(-400f, 1f)), CrossRoad.CR_TYPE.Roundabout);
+		Vertex<NavigationObject> vmtcleft = g.addVertex(mtcleft);
+
+		// outer bottom round
+		CrossRoad mtcbottom = new CrossRoad(30.0f, VectorUtils.add2Vectors(
+				pBMC, new Vector2(1f, -400.0f)), CrossRoad.CR_TYPE.Roundabout);
+		Vertex<NavigationObject> vmtcbottom = g.addVertex(mtcbottom);
+
+		// outer right round
+		CrossRoad mtcright = new CrossRoad(30.0f, VectorUtils.add2Vectors(pMRC,
+				new Vector2(400f, 1f)), CrossRoad.CR_TYPE.Roundabout);
+		Vertex<NavigationObject> vmtcright = g.addVertex(mtcright);
+
+		// peters shit
+
 		CrossRoad mtctop = new CrossRoad(30.0f, VectorUtils.add2Vectors(pMTC,
-				new Vector2(0, 400.0f)), CrossRoad.CR_TYPE.Roundabout);
+				new Vector2(1f, 400.0f)), CrossRoad.CR_TYPE.Roundabout);
 		Vertex<NavigationObject> vmtctop = g.addVertex(mtctop);
 
 		CrossRoad mtcbot = new CrossRoad(30.0f, VectorUtils.add2Vectors(pMTC,
-				new Vector2(0, -550.0f)), CrossRoad.CR_TYPE.Roundabout);
+				new Vector2(1f, -550.0f)), CrossRoad.CR_TYPE.Roundabout);
 		Vertex<NavigationObject> vmtcbot = g.addVertex(mtcbot);
 
+		// Vector2 pMTC = vmtc.getData().getPosition();
+
 		Vector2 v1 = VectorUtils.add2Vectors(pMTC, ver_s_pos);
+		Vector2 v5 = VectorUtils.add2Vectors(pMTC, hor_s_neg);
 		Vector2 v2 = VectorUtils.add2Vectors(mtctop.getPosition(), new Vector2(
 				0, -mtctop.getSize() / 2));
 
 		Vector2 v3 = VectorUtils.add2Vectors(mtcbot.getPosition(), new Vector2(
 				0, mtcbot.getSize() / 2));
+
+		Vector2 v8 = VectorUtils.add2Vectors(mtcleft.getPosition(),
+				new Vector2((mtcleft.getSize() / 2), 0));
+
+		Vector2 v4 = VectorUtils.add2Vectors(pMLC, hor_s_pos);
+
+		Vector2 v6 = VectorUtils.add2Vectors(pBMC, ver_s_pos);
+
+		Vector2 v7 = VectorUtils.add2Vectors(pMRC, hor_s_neg);
+
+		Vector2 v9 = VectorUtils.add2Vectors(mtcbottom.getPosition(),
+				new Vector2(0, (mtcleft.getSize() / 2)));
+		
+		Vector2 v10 = VectorUtils.add2Vectors(mtcright.getPosition(),
+				new Vector2(-(mtcright.getSize() / 2), 0));
+
+		// outer left to middle left
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v4, v8)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vmlc.getData(), (CrossRoad) vmtcleft
+								.getData()), vmlc, vmtcleft, true);
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v8, v4)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vmtcleft.getData(), (CrossRoad) vmlc
+								.getData()), vmtcleft, vmlc, true);
+
+		// outer bottom to middle bottom
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v6, v9)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vbmc.getData(), (CrossRoad) vmtcbottom
+								.getData()), vbmc, vmtcbottom, true);
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v9, v6)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vmtcbottom.getData(), (CrossRoad) vbmc
+								.getData()), vmtcbottom, vbmc, true);
+		
+		// outer right to middle right
+				g.addEdge(
+						new Road(new ParametricCurve(new C_Linear(v7, v10)), 2,
+								TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+								(CrossRoad) vrmc.getData(), (CrossRoad) vmtcright
+										.getData()),vrmc, vmtcright, true);
+				g.addEdge(
+						new Road(new ParametricCurve(new C_Linear(v10, v7)), 2,
+								TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+								(CrossRoad) vmtcright.getData(), (CrossRoad) vrmc
+										.getData()), vmtcright, vrmc, true);
+
+
+		// middle left to middle of map
+		v3 = VectorUtils.add2Vectors(mtcbot.getPosition(),
+				new Vector2(-mtcbot.getSize() / 2, 0));
+
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v4, v3)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vmlc.getData(), (CrossRoad) vmtcbot
+								.getData()), vmlc, vmtcbot, true);
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v3, v4)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vmtcbot.getData(), (CrossRoad) vmlc
+								.getData()), vmtcbot, vmlc, true);
+
+		// middle bottom to middle of map
+		v3 = VectorUtils.add2Vectors(mtcbot.getPosition(), new Vector2(0,
+				-mtcbot.getSize() / 2));
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v6, v3)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vbmc.getData(), (CrossRoad) vmtcbot
+								.getData()), vbmc, vmtcbot, true);
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v3, v6)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vmtcbot.getData(), (CrossRoad) vbmc
+								.getData()), vmtcbot, vbmc, true);
+
+		// middle right to middle of map
+		v3 = VectorUtils.add2Vectors(mtcbot.getPosition(),
+				new Vector2(+mtcbot.getSize() / 2, 0));
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v7, v3)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vrmc.getData(), (CrossRoad) vmtcbot
+								.getData()), vrmc, vmtcbot, true);
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v3, v7)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vmtcbot.getData(), (CrossRoad) vrmc
+								.getData()), vmtcbot, vrmc, true);
+
+		// peters shit
+		v3 = VectorUtils.add2Vectors(mtcbot.getPosition(), new Vector2(0,
+				mtcbot.getSize() / 2));
+
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v1, v2)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vmtc.getData(), (CrossRoad) vmtctop
+								.getData()), vmtc, vmtctop, true);
+		g.addEdge(
+				new Road(new ParametricCurve(new C_Linear(v2, v1)), 2,
+						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
+						(CrossRoad) vmtctop.getData(), (CrossRoad) vmtc
+								.getData()), vmtctop, vmtc, true);
 
 		g.addEdge(
 				new Road(new ParametricCurve(new C_Linear(v1, v2)), 2,

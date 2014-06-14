@@ -3,6 +3,8 @@ package ui.tables;
 import lombok.AllArgsConstructor;
 import trafficsim.components.DataComponent;
 import trafficsim.components.PhysicsBodyComponent;
+import trafficsim.components.PositionComponent;
+import trafficsim.components.RouteComponent;
 import utils.Assets;
 
 import com.artemis.Entity;
@@ -15,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -28,7 +31,7 @@ public class InfoPop {
 	private Label popUp;
 	private SpriteBatch batch;
 	
-	private Drawable glow ;
+	private Drawable glow, destination, start ;
 	private ShapeRenderer shapeRenderer;
 	public InfoPop(SpriteBatch batch)
 	{
@@ -37,6 +40,9 @@ public class InfoPop {
 		popUp = new Label(null, Assets.skin);
 		TextureAtlas atlas = new TextureAtlas("assets/packed-textures/ui-textures.pack");
 		glow = new TextureRegionDrawable( atlas.findRegion("car glow"));
+		start = new TextureRegionDrawable(atlas.findRegion("target"));
+		destination = new TextureRegionDrawable(atlas.findRegion("target"));
+		
 		
 		
 	}
@@ -54,6 +60,12 @@ public class InfoPop {
 			Vector2 speed = entityToRender.getComponent(PhysicsBodyComponent.class).getLinearVelocity();
 			//float acceleration = entityToRender.getComponent(PhysicsBodyComponent.class).getPosition();
 			float timeSpentOnTrafficLights = entityToRender.getComponent(DataComponent.class).getTimeSpentOnTrafficLights();
+			
+			
+			/** distance left*/
+//			float d2t = entityToRender.getComponent(DataComponent.class).
+			
+			entityToRender.getComponent(RouteComponent.class).getTarget().getData().getPointC();
 		
 			Texture texture = new Texture(Gdx.files.internal("assets/m2_0.png"), true); // true enables mipmaps
 			texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear); // linear filtering in nearest mipmap image
@@ -72,7 +84,16 @@ public class InfoPop {
 			popUp.setStyle(style);
 			//batch.getProjectionMatrix().setToOrtho2D(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			batch.begin();
+			
+			drawPath(entityToRender);
 		 
+			destination.draw(batch, entityToRender.getComponent(RouteComponent.class).getTarget().getData().getPointC().x-4,
+									entityToRender.getComponent(RouteComponent.class).getTarget().getData().getPointC().y-7,
+									 8	, 8);
+			
+			destination.draw(batch, entityToRender.getComponent(RouteComponent.class).getSource().getData().getPointC().x-4,
+									entityToRender.getComponent(RouteComponent.class).getSource().getData().getPointC().y-7,
+									8	, 8);
 			glow.draw(batch, position.x-4f, position.y-4f, 8,8);
 			//popUp.setSize(40,40);
 			popUp.setFontScale(0.22f);//
@@ -80,6 +101,31 @@ public class InfoPop {
 			batch.end();
 			
 		}
+	}
+	
+	public void drawPath(Entity entity){
+		
+		RouteComponent entityRoute = entity.getComponent(RouteComponent.class);
+		
+		 ShapeRenderer sr = new ShapeRenderer();
+		 
+		 sr.setProjectionMatrix(batch.getProjectionMatrix());
+
+	        sr.begin(ShapeType.Line);
+	        sr.setColor(Color.RED);
+	        
+	       // System.out.println("waypoint size: " + entityRoute.getWayPoints().size());
+	        
+	        //entityRoute.getPath()entit
+	        
+	        for(int i=0;i<entityRoute.getAllVertices().size()-1;i++){
+	        	
+	        	sr.line(entityRoute.getAllVertices().get(i),entityRoute.getAllVertices().get(i+1));
+	        	
+	        }
+	        		
+	sr.end();	
+		
 	}
 	
 	public void setEntityToRender(Entity clickedEntity)

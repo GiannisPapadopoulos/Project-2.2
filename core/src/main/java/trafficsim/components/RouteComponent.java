@@ -1,8 +1,10 @@
 package trafficsim.components;
 
+import functions.VectorUtils;
 import graph.Edge;
 import graph.Vertex;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Delegate;
@@ -102,6 +104,18 @@ public class RouteComponent
 
 	public boolean isLastEdge() {
 		return edgeIndex >= path.getRoute().size() - 1;
+	}
+	
+	public List<Vector2> getAllVertices() {
+		List<Vector2> remainingVertices = new ArrayList<Vector2>();
+		Vertex<Road> v = currentVertex;
+		for (int i = edgeIndex; i < path.getRoute().size(); i++) {
+			Edge<Road> edge = path.getRoute().get(i).getEdge();
+			remainingVertices.add(VectorUtils.getMidPoint(v.getData()));
+			v = v.getNeighbor(edge);
+		}
+		remainingVertices.add(VectorUtils.getMidPoint(v.getData()));
+		return remainingVertices;
 	}
 
 }

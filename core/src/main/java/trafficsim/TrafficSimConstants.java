@@ -2,6 +2,8 @@ package trafficsim;
 
 import java.util.Random;
 
+import lombok.Setter;
+
 import org.apache.commons.lang3.time.StopWatch;
 
 /** All constants used in the simulation are defined here */
@@ -23,7 +25,7 @@ public final class TrafficSimConstants {
 	public static boolean DEBUG_RENDER = false;
 
 	/** Whether to debug the ui tables */
-	public static boolean DEBUG_TABLES = false;
+	public static boolean DEBUG_TABLES = true;
 
 	/** Constant used by world.step() in box2d. Higher values mean higher accuracy, 8 is standard */
 	public static final int VELOCITY_ITERATIONS = 8;
@@ -48,7 +50,9 @@ public final class TrafficSimConstants {
 	public static final float LANE_WIDTH = 4.5f;
 
 	/** Speed limit for simple (1-lane) roads in meters per second */
-	public static final float CITY_SPEED_LIMIT = 50 / 3.6f;
+	@Setter
+	public static float CITY_SPEED_LIMIT = 2; //50 / 3.6f;
+	
 
 	/** When braking, velocity will become brakingFactor * velocity (but also take into account the scaling factor) */
 	public static final float DEFAULT_BRAKING_FACTOR = 0.98f;

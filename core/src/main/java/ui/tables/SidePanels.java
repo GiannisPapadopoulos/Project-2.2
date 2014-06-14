@@ -2,6 +2,7 @@ package ui.tables;
 
 import lombok.Getter;
 import lombok.Setter;
+import trafficsim.TrafficSimConstants;
 import trafficsim.TrafficSimWorld;
 import trafficsim.systems.MovementSystem;
 import utils.Assets;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -43,7 +45,7 @@ public class SidePanels extends Table {
 				avtimewait;		
 
 	@Getter
-	private TextButton roundabout, standardRoad, intersection;
+	private TextButton roundabout, standardRoad, intersection, showhidetext,simleft, simright;
 	@Getter
 	private Label averageLightTime,carsOnRoadLabel ;
 	
@@ -55,7 +57,7 @@ public class SidePanels extends Table {
 	private BitmapFont black;
 	
 	@Getter
-	private Table worldStatistics,worldVariables,expandCollapse, switchPanel, editorPanel;	
+	private Table worldStatistics,worldVariables,expandCollapse, switchPanel, editorPanel,sidepanel,hide,tabbed1,tabbed2,tabbed3;	
 	
 	public SidePanels() {
 		this.world = new TrafficSimWorld();
@@ -75,6 +77,8 @@ public class SidePanels extends Table {
 		carSpawningRate = new Slider(cspawnmin, cspawnmax, defaultstep, false, Assets.skin);
 		speedLimitSlider = new Slider(slimitmin, slimitmax, defaultstep*10, false, Assets.skin);
 		
+		speedLimitSlider.setValue(TrafficSimConstants.CITY_SPEED_LIMIT);
+		
 		
 		/** Companions (numbers next to sliders) */		
 		cspawncompanion = new Label(Integer.toString((int)carSpawningRate.getValue()), Assets.skin);		
@@ -89,7 +93,12 @@ public class SidePanels extends Table {
 
 			public void changed(ChangeEvent event, Actor actor) {
 				slimitcompanion.setText(Integer.toString((int)speedLimitSlider.getValue()));
+				
+				TrafficSimConstants.setCITY_SPEED_LIMIT(speedLimitSlider.getValue());
+				
 				}});
+		
+	
 		
 		
 		this.setFillParent(true);
@@ -105,7 +114,7 @@ public class SidePanels extends Table {
 		Label worldStatsLabel = new Label("World Statistics",style);
 		
 		worldStatistics = new Table();
-		worldStatistics.add(worldStatsLabel).right();
+		worldStatistics.add(worldStatsLabel);
 		worldStatistics.row();
 		worldStatistics.add(new Label("Cars On Road", Assets.skin)).left(); // cars on road image
 		worldStatistics.add(carsOnRoadLabel); // cars on road number
@@ -142,16 +151,7 @@ public class SidePanels extends Table {
 		    }
 			
 		);
-//		
-//		editMode.addListener(new ClickListener(){
-//			
-//			public void clicked(InputEvent event, float x, float y) {
-//					
-//				switchPanel.clearChildren();
-//				switchPanel.add(editorPanel);
-//				}			
-//		});
-//		
+	
 
 		expandCollapse = new Table();		
 		expandCollapse.add(simTools).size(80); // button with image		
@@ -159,11 +159,19 @@ public class SidePanels extends Table {
 		
 		/** World Variables Table */		
 		worldVariables = new Table();
-		
+	
 		Label worldVariablesLabel = new Label("Simulation Tools",style);
 		
+
+		simleft = new TextButton("<", Assets.skin);
+		simright = new TextButton(">", Assets.skin);
+		Table simt = new Table();
 		
-		worldVariables.add(worldVariablesLabel).right();
+		simt.add(simleft).left();
+		simt.add(worldVariablesLabel).pad(20);
+		simt.add(simright).right();
+		
+		worldVariables.add(simt).fillX();
 		worldVariables.row();
 		worldVariables.add(new Label("Car Spawning Rate", Assets.skin)); // first adjusting tool
 		worldVariables.row();
@@ -178,6 +186,33 @@ public class SidePanels extends Table {
 		worldVariables.row();
 		
 		
+	
+		
+		/** Second Page Sim Panel */
+		
+		
+		TextButton weightedTL = new TextButton("Priority Traffic Lights", Assets.skin);
+		TextButton timedTL = new TextButton("Timed Traffic Lights", Assets.skin);
+		TextButton thirdTL = new TextButton("Third Traffic Lights", Assets.skin);
+		
+		weightedTL.setChecked(true);
+		
+		ButtonGroup traffbg = new ButtonGroup();
+		
+		traffbg.add(weightedTL);
+		traffbg.add(timedTL);
+		traffbg.add(thirdTL);
+		
+		
+		Table secondPage = new Table();
+		
+		
+		secondPage.add(new Label("Traffic Light Systems",style));
+		secondPage.row();
+		secondPage.add(weightedTL);
+		secondPage.row();
+		secondPage.add(timedTL);
+		
 		/** Editor Panel */
 		
 		editorPanel = new Table();
@@ -187,7 +222,7 @@ public class SidePanels extends Table {
 		roundabout = new TextButton("Roundabout", Assets.skin);
 		standardRoad = new TextButton("Standard Road", Assets.skin);
 		
-		//editorPanel.add(carVisibility).size(80);
+		
 		editorPanel.add(deletingTool).size(80);
 		editorPanel.row();
 		editorPanel.add(roundabout);
@@ -195,13 +230,38 @@ public class SidePanels extends Table {
 		editorPanel.add(standardRoad);
 		
 		/** Adding to mainPanel */				
-		Table sidepanel = new Table();
+		sidepanel = new Table();
+		
+		hide = new Table();
+		
+		showhidetext = new TextButton(">", Assets.skin);
+		
+		hide.add(showhidetext);
+		
+		hide.addListener(new ClickListener(){
+			
+			public void clicked(InputEvent event, float x, float y) {
+				
+				sidepanel.setVisible(!sidepanel.isVisible());
+				
+				if(sidepanel.isVisible()){
+					
+					showhidetext.setText(">");
+					
+				}
+				else 
+					showhidetext.setText("<");				
+				}
+		    }
+			
+		);
 		
 		Drawable background = new TextureRegionDrawable(atlas.findRegion("bg"));
 		
 		sidepanel.setBackground(background);
 	
-		sidepanel.add(worldStatistics).width(panelwidth).top(); /// world stats
+		sidepanel.add(worldStatistics).width(panelwidth).top();/// world stats
+		
 		sidepanel.row(); 
 		sidepanel.add(expandCollapse).width(panelwidth); // show hide
 		sidepanel.row();
@@ -212,10 +272,8 @@ public class SidePanels extends Table {
 		//add(new TextButton("x" , Assets.skin)).right().width(20);
 		
 		add(sidepanel).top().right();
-		
-		
-		
-		
+		add(hide).top().right();
+	
 		debug();
 	}
 	
@@ -254,6 +312,8 @@ public class SidePanels extends Table {
 		
 		
 	}
+	
+	
 
 
 

@@ -19,7 +19,8 @@ public class DataComponent
 	
 	float totalDistance;
 	float totalTime;
-
+	float distanceLeft;
+	
 	float timeSpentOnTrafficLights;
 
 	public float getAverageSpeed() {

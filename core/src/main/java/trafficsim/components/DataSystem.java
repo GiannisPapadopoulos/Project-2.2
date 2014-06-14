@@ -40,6 +40,7 @@ public class DataSystem
 				if (dT != 0) {
 					Vector2 previousPosition = dataComp.getLastPosition().cpy();
 					float distance = physComp.getPosition().dst(previousPosition);
+					//dataComp.setDistanceLeft(dataComp.getTotalDistance() + distance);
 					dataComp.setTotalDistance(dataComp.getTotalDistance() + distance);
 					dataComp.setTotalTime(dataComp.getTotalTime() + world.getDelta());
 					if (steeringComp.getState() == State.STOPPED) {

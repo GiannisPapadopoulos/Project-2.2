@@ -39,6 +39,7 @@ import trafficsim.movement.BrakeBehavior;
 import trafficsim.movement.SeekBehavior;
 import trafficsim.movement.WeightedBehavior;
 import trafficsim.roads.CrossRoad;
+import trafficsim.roads.CrossRoad.CR_TYPE;
 import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 import trafficsim.spawning.AbstractSpawnStrategy;
@@ -194,7 +195,7 @@ public class EntityFactory {
 
 		SpriteComponent sprite = new SpriteComponent(name);
 		crossRoad.addComponent(sprite);
-		if (vertex.getID() == 0 || vertex.getID() == vertex.getParent().getVertexCount() - 1) {
+		if (vertex.getID() == 0 ) {
 			crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(2000 * 1000)));
 		}
 		return crossRoad;
@@ -402,7 +403,7 @@ public class EntityFactory {
 			int interval) {
 		// NavigationObject intersection = new Road(vertexA, vertexB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
 		Vertex<NavigationObject> spawn1 = graph.addVertex(new CrossRoad(2 * LANE_WIDTH,
-																		new Vector2(getMidPoint(vertexA, vertexB))));
+																		new Vector2(getMidPoint(vertexA, vertexB)),CrossRoad.CR_TYPE.SpawnPoint));
 		// NavigationObject edge = new Road(edgeA, edgeB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
 
 		Vector2 pointA1 = new Vector2(edgeA.x + LANE_WIDTH, edgeA.y - LANE_WIDTH / 2);

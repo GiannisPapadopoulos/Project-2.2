@@ -49,6 +49,8 @@ public final class TrafficSimConstants {
 
 	/** Speed limit for simple (1-lane) roads in meters per second */
 	public static final float CITY_SPEED_LIMIT = 50 / 3.6f;
+	
+	public static final float HIGHWAY_SPEED_LIMIT = 100 / 3.6f;
 
 	/** When braking, velocity will become brakingFactor * velocity (but also take into account the scaling factor) */
 	public static final float DEFAULT_BRAKING_FACTOR = 0.98f;
@@ -70,5 +72,6 @@ public final class TrafficSimConstants {
 
 	/** Default traffic light orange interval */
 	public static final int TRAFFIC_LIGHT_ORANGE_INTERVAL = 1;
+
 
 }

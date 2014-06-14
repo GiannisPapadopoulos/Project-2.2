@@ -4,6 +4,7 @@ import static trafficsim.TrafficSimConstants.DEGUG_SUBSYSTEMS;
 
 import java.util.ArrayList;
 
+import lombok.val;
 import paramatricCurves.ParametricCurve;
 import paramatricCurves.curveDefs.C_Circular;
 import paramatricCurves.curveDefs.C_Linear;
@@ -62,8 +63,7 @@ public class SubsystemFactory {
 
 	public static SubSystem createCrossRoadSubSystem(Road rIN, Road rOUT,
 			CrossRoad cr) {
-		if (DEGUG_SUBSYSTEMS)
-			System.out.println(" runned");
+
 		int cIN = rIN.getNumLanes();
 		int cOUT = rOUT.getNumLanes();
 
@@ -187,5 +187,63 @@ public class SubsystemFactory {
 
 		}
 		return null;
+	}
+
+	public static SubSystem createRoundAboutSubSystem(Road rIN, Road rOUT,
+			CrossRoad cr) {
+		
+		SubSystem ss = new SubSystem();
+		
+		int cIN = rIN.getNumLanes();
+		int cOUT = rOUT.getNumLanes();
+
+		Vector2 angleIN = null;
+		Vector2 angleOUT = null;
+		
+		ArrayList<Vector2> pIN = new ArrayList<Vector2>();
+		ArrayList<Vector2> pOUT = new ArrayList<Vector2>();
+		
+		for (CrossRoadTransition crt : rIN.getRSubSystems().keySet())
+			if (crt.getDestination() == cr) {
+				for (int i = 0; i < rIN.getRSubSystems().get(crt)
+						.getLanes().size(); i++)
+					pIN.add(rIN
+							.getRSubSystems()
+							.get(crt)
+							.getLanes()
+							.get(i)
+							.get(rIN.getRSubSystems().get(crt).getLanes()
+									.get(i).size() - 1).getEnd());
+				angleIN = rIN
+						.getRSubSystems()
+						.get(crt)
+						.getLanes()
+						.get(0)
+						.get(rIN.getRSubSystems().get(crt).getLanes()
+								.get(0).size() - 1).getTrajectory()
+						.getEndDirection();
+			}
+
+		for (CrossRoadTransition crt : rOUT.getRSubSystems().keySet())
+			if (crt.getOrigin() == cr) {
+				for (int i = 0; i < rOUT.getRSubSystems().get(crt)
+						.getLanes().size(); i++)
+					pOUT.add(rOUT.getRSubSystems().get(crt).getLanes()
+							.get(i).get(0).getStart());
+				angleOUT = rOUT.getRSubSystems().get(crt).getLanes().get(0)
+						.get(0).getTrajectory().getStartDirection();
+			}
+		
+		for(val pin : pIN)
+			for(val pout :pOUT) {
+				ArrayList<Lane> subsys = new ArrayList<Lane>();
+				Lane lane = new Lane(new ParametricCurve(new C_Circular(cr.getPosition(), cr.getSize()/2-TrafficSimConstants.LANE_WIDTH/2, pin, pout, true)));
+				subsys.add(lane);
+				ss.addSubsystem(subsys);			
+			}
+		
+		
+		
+		return ss;
 	}
 }

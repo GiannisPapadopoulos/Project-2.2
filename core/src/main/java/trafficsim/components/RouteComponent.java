@@ -45,6 +45,7 @@ public class RouteComponent
 	/** */
 	private Vertex<NavigationObject> currentVertex;
 	/** */
+	// @Setter(AccessLevel.NONE)
 	private int edgeIndex;
 
 	/** Waypoints along the current edge */

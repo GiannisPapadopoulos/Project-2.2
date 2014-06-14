@@ -1,8 +1,6 @@
 package trafficsim.screens;
 
 import static trafficsim.TrafficSimConstants.*;
-import graph.Graph;
-import graph.GraphFactory;
 
 import java.util.List;
 
@@ -31,6 +29,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
+import editor.WorldRenderer;
+import graph.Graph;
+import graph.GraphFactory;
+
 /**
  * The main screen of the simulation
  * 
@@ -48,6 +50,8 @@ public class SimulationScreen extends SuperScreen {
 	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
 
 	private boolean firstTimeSimulationRun = true;
+
+	private WorldRenderer wr;
 
 	@Getter
 	@Setter
@@ -118,16 +122,18 @@ public class SimulationScreen extends SuperScreen {
 			TIMER.reset();
 		TIMER.start();
 
+		wr = new WorldRenderer(null);
+
 		world.process();
-
-
-
 
 	}
 
 
 	@Override
 	public void render(float delta) {
+		if (isPaused()) {
+			return;
+		}
 		long start;
 		if(DEBUG_FPS)
 			start = TIMER.getTime();
@@ -135,9 +141,12 @@ public class SimulationScreen extends SuperScreen {
 		getCamera().update();
 		world.setDelta(delta);
 
+
 		world.process();
 		if (DEBUG_RENDER)
 			debugRenderer.render(world.getBox2dWorld(), getCamera().combined);
+
+		// wr.renderDEBUG(getCamera(), world.getGraph());
 
 		getWorldLayer().act(delta);
 		getUILayer().act(delta);

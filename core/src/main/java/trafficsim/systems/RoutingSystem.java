@@ -91,13 +91,14 @@ public class RoutingSystem
 							.getData()
 							.requestTransitionPath(currentEdge.getData(), routeComp.getCurrentEdge().getData());
 
-				// assert trans != null;
-				// List<Vector2> waypoints = buildWaypoints(routeComp);
+
+				// System.out.println("vertex " + routeComp.getCurrentVertex());
+				assert trans != null : "e " + routeComp.getEdgeIndex() + " v " + routeComp.getCurrentVertex();
 				List<Vector2> waypoints = buildWaypointsParametric(routeComp);
+				waypoints = buildWaypointsParametric(trans);
 				routeComp.setWayPoints(waypoints);
 				routeComp.setWayPointIndex(0);
 				updateRoadReference(routeComp, carID, false);
-				System.out.println(routeComp.getCurrentVertex());
 			}
 			else {
 				// TODO arrival behavior

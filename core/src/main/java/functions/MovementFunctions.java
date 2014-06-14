@@ -66,12 +66,22 @@ public class MovementFunctions {
 	public static List<Vector2> buildWaypointsParametric(RouteComponent routeComp, int numPoints) {
 		Road road = getRoad(routeComp.getCurrentEdge());
 		SubSystem transitionPath = road.getSubSystem();
+		return buildWaypointsParametric(transitionPath, numPoints);
 
-		Vertex<NavigationObject> v1 = routeComp.getCurrentVertex();
-		Vertex<NavigationObject> v2 = v1.getNeighbor(routeComp.getCurrentEdge());
-		SubSystem transitionPath2 = road.requestTransitionPath(v2.getData(), v1.getData());
-		// System.out.println(transitionPath2 != null);
-		// System.out.println("tp ");
+		// Vertex<NavigationObject> v1 = routeComp.getCurrentVertex();
+		// Vertex<NavigationObject> v2 = v1.getNeighbor(routeComp.getCurrentEdge());
+		// SubSystem transitionPath2 = road.requestTransitionPath(v2.getData(), v1.getData());
+		// // System.out.println(transitionPath2 != null);
+		// // System.out.println("tp ");
+		// List<Vector2> waypoints = transitionPath.getLanes().get(0).get(0).getTrajectory().getSamplePoints(numPoints);
+		// return waypoints;
+	}
+
+	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath) {
+		return buildWaypointsParametric(transitionPath, 10);
+	}
+
+	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath, int numPoints) {
 		List<Vector2> waypoints = transitionPath.getLanes().get(0).get(0).getTrajectory().getSamplePoints(numPoints);
 		return waypoints;
 	}

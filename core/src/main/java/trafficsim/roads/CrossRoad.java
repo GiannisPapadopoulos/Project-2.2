@@ -33,7 +33,8 @@ public class CrossRoad extends NavigationObject {
 		this.crossRoadType = crt;
 	}
 
-	public SubSystem requestTransitionPath(NavigationObject origin, NavigationObject destination) {
+	public SubSystem requestTransitionPath(NavigationObject origin,
+			NavigationObject destination) {
 		for (RoadTransition rt : crSubSystems.keySet()) {
 			if (rt.getOrigin() == origin && rt.getDestination() == destination)
 				return crSubSystems.get(rt);
@@ -51,7 +52,6 @@ public class CrossRoad extends NavigationObject {
 					if (ss != null)
 						crSubSystems.put(new RoadTransition(r, road), ss);
 				}
-				roadsIN.add(r);
 			} else if (!in) {
 				for (Road road : roadsIN) {
 					SubSystem ss = SubsystemFactory.createCrossRoadSubSystem(
@@ -59,7 +59,6 @@ public class CrossRoad extends NavigationObject {
 					if (ss != null)
 						crSubSystems.put(new RoadTransition(road, r), ss);
 				}
-				roadsOUT.add(r);
 			}
 		} else if (crossRoadType == CR_TYPE.Roundabout) {
 			if (in) {
@@ -69,7 +68,6 @@ public class CrossRoad extends NavigationObject {
 					if (ss != null)
 						crSubSystems.put(new RoadTransition(r, road), ss);
 				}
-				roadsIN.add(r);
 			} else if (!in) {
 				for (Road road : roadsIN) {
 					SubSystem ss = SubsystemFactory.createRoundAboutSubSystem(
@@ -77,11 +75,31 @@ public class CrossRoad extends NavigationObject {
 					if (ss != null)
 						crSubSystems.put(new RoadTransition(road, r), ss);
 				}
-				roadsOUT.add(r);
+			}
+		} else if (crossRoadType == CR_TYPE.HighWay_Cross) {
+			if (in) {
+
+				for (Road road : roadsOUT) {
+					SubSystem ss = SubsystemFactory.createHighWayCrossSS_TYPE1(
+							r, road, this);
+					if (ss != null)
+						crSubSystems.put(new RoadTransition(r, road), ss);
+				}
+
+			} else if (!in) {
+				for (Road road : roadsIN) {
+					SubSystem ss = SubsystemFactory.createHighWayCrossSS_TYPE1(
+							road, r, this);
+					if (ss != null)
+						crSubSystems.put(new RoadTransition(road, r), ss);
+				}
 			}
 		}
+		if (in)
+			roadsIN.add(r);
+		else if (!in)
+			roadsOUT.add(r);
 	}
-
 
 	public Vector2 getPosition() {
 		return position.cpy();
@@ -100,6 +118,6 @@ public class CrossRoad extends NavigationObject {
 	}
 
 	public enum CR_TYPE {
-		CrossRoad, Roundabout, SpawnPoint;
+		CrossRoad, Roundabout, SpawnPoint, HighWay_Cross, HighWay_T;
 	}
 }

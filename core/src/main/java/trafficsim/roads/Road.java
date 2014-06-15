@@ -38,22 +38,28 @@ public class Road extends NavigationObject {
 			CrossRoad origin, CrossRoad destination) {
 		ArrayList<ParametricCurve> roadDefAL = new ArrayList<ParametricCurve>();
 		roadDefAL.add(roadDef);
-		create(roadDefAL, numLanes, speedLimit, origin, destination);
-		origin.addConnection(this, false);
-		destination.addConnection(this, true);
 		this.numLanes = numLanes;
+		create(roadDefAL, numLanes, speedLimit, origin, destination);
+		if (origin != null)
+			origin.addConnection(this, false);
+		if (destination != null)
+			destination.addConnection(this, true);
+		
 	}
 
 	// UNUSED
 	public Road(ArrayList<ParametricCurve> roadDef, int numLanes,
 			float speedLimit, CrossRoad origin, CrossRoad destination) {
+		this.numLanes = numLanes;
 		create(roadDef, numLanes, speedLimit, origin, destination);
 		origin.addConnection(this, false);
 		destination.addConnection(this, true);
+		
 	}
 
 	@Override
-	public SubSystem requestTransitionPath(NavigationObject origin, NavigationObject destination) {
+	public SubSystem requestTransitionPath(NavigationObject origin,
+			NavigationObject destination) {
 		assert rSubSystems.keySet().size() > 0;
 		for (CrossRoadTransition rt : rSubSystems.keySet()) {
 			if (rt.getOrigin() == origin && rt.getDestination() == destination)
@@ -80,16 +86,18 @@ public class Road extends NavigationObject {
 
 		subSystem = rSubSystems.get(crt);
 	}
-	
+
 	@Override
 	public Vector2 getPosition() {
 		return VectorUtils.getMidPoint(pointA, pointB).cpy();
 	}
-	/*public Rectangle2D getRectangle(){
-		
-		new Rectangle2D.Float(pointA.x-LANE_WIDTH*Math.cos(getAngle(this)), pointA.y-LANE_WIDTH*Math.sin(getAngle(this)), LANE_WIDTH*numLanes,)
-	}
-	*/
+
+	/*
+	 * public Rectangle2D getRectangle(){
+	 * 
+	 * new Rectangle2D.Float(pointA.x-LANE_WIDTH*Math.cos(getAngle(this)),
+	 * pointA.y-LANE_WIDTH*Math.sin(getAngle(this)), LANE_WIDTH*numLanes,) }
+	 */
 
 	// UNUSED ////////
 	public Vector2 getPointC() {

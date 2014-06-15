@@ -73,6 +73,10 @@ public class VectorUtils {
 	public static double getAbsAngleDifference(Vector2 v1, Vector2 v2) {
 		return Math.abs(v1.angle() - v2.angle());
 	}
+	
+	public static double getAngleDifference(Vector2 v1, Vector2 v2) {
+		return v1.angle() - v2.angle();
+	}
 
 	public static Vector2 multiplyVector(Vector2 v, float a) {
 		v.x *= a;

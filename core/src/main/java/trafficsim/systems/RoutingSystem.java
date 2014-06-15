@@ -45,7 +45,7 @@ public class RoutingSystem
 	private float waypointThreshold = 1.0f;
 
 	/** Threshold for switching to the next parametric curve */
-	private float switchThreshold = 2.0f;
+	private float switchThreshold = 5.0f;
 
 	@SuppressWarnings("unchecked")
 	public RoutingSystem() {
@@ -91,7 +91,8 @@ public class RoutingSystem
 			SubSystem transition = getNextSubsystem(routeComp);
 			Vector2 nextTransitionPoint = getNextTransitionPoint(transition);
 
-			if (physComp.getPosition().dst(nextTransitionPoint) < switchThreshold) {
+			if (physComp.getPosition().dst(nextTransitionPoint) < switchThreshold
+				|| reachedLastWaypoint(routeComp, physComp)) {
 				List<Vector2> waypoints = buildWaypointsParametric(transition);
 				routeComp.setWayPoints(waypoints);
 				routeComp.setWayPointIndex(0);
@@ -112,6 +113,12 @@ public class RoutingSystem
 				updateWayPointIndex(routeComp, physComp);
 			}
 		}
+	}
+
+	private boolean reachedLastWaypoint(RouteComponent routeComp, PhysicsBodyComponent physComp) {
+		Vector2 target = routeComp.getNextWaypoint();
+		float distanceToTarget = target.dst(physComp.getPosition());
+		return distanceToTarget < waypointThreshold && routeComp.isLastWaypoint();
 	}
 
 	private void updateWayPointIndex(RouteComponent routeComp, PhysicsBodyComponent physComp) {

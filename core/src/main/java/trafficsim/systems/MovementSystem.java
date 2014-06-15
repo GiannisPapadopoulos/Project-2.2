@@ -125,9 +125,6 @@ public class MovementSystem
 		// }
 		deltaA = constrainAngle(deltaA);
 
-		// physComp.getBody().setTransform(physComp.getPosition(), physComp.getLinearVelocity().angle() * degRad);
-		// System.out.println(constrainAngle(physComp.getLinearVelocity().angle() * degRad));
-
 		// TODO extract constants, refactor
 		float scalingFactor = 0.5f;
 		float angularThreshold = 2;

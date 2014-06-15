@@ -96,7 +96,7 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 		else {
 			superScreen.getMousePosition().update(camera);
 			Coordinates coords = superScreen.getMousePosition().getAbsolute();
-			System.out.println("x " + coords.getX() + " y " + coords.getY());
+			// System.out.println("x " + coords.getX() + " y " + coords.getY());
 		}
 		return true;
 	}
@@ -105,7 +105,7 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		Vector3 vec = new Vector3(screenX, screenY, 0);
 		camera.unproject(vec, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-		//System.out.println(screenX + " " + screenY + " v " + vec);
+		// System.out.println(screenX + " " + screenY + " v " + vec);
 		return false;
 	}
 

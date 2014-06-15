@@ -56,8 +56,11 @@ public class RouteComponent
 	/** If false, path will be recomputed */
 	private boolean set;
 
-	// /** */
-	// private boolean first = true;
+	/**
+	 * If the car is currently following an edge (will search crossroad transition out) or a crossroad (will search edge
+	 * transition)
+	 */
+	private boolean followingEdge;
 
 	public RouteComponent(Vertex<NavigationObject> source,
 			Vertex<NavigationObject> target) {
@@ -68,6 +71,11 @@ public class RouteComponent
 
 	public Edge<NavigationObject> getCurrentEdge() {
 		return path.getRoute().get(edgeIndex).getEdge();
+	}
+
+	public Edge<NavigationObject> getNextEdge() {
+		assert !isLastEdge() : "No more edges";
+		return path.getRoute().get(edgeIndex + 1).getEdge();
 	}
 
 	public Vertex<NavigationObject> getNextVertex() {
@@ -84,6 +92,7 @@ public class RouteComponent
 	}
 
 	public void incrementWaypointIndex() {
+		assert !isLastWaypoint();
 		wayPointIndex++;
 	}
 
@@ -102,20 +111,12 @@ public class RouteComponent
 		return remainingVertices;
 	}
 
-	// public void update() {
-	// assert !isLastEdge();
-	// // if (first) {
-	// // first = false;
-	// // }
-	// // else {
-	// setCurrentVertex(getNextVertex());
-	// setEdgeIndex(getEdgeIndex() + 1);
-	// // first = true;
-	// // }
-	// }
-
 	public boolean isLastEdge() {
 		return edgeIndex >= path.getRoute().size() - 1;
+	}
+
+	public boolean isLastWaypoint() {
+		return wayPointIndex >= wayPoints.size() - 1;
 	}
 
 }

@@ -1,11 +1,9 @@
 package trafficsim.systems;
 
 import static functions.MovementFunctions.buildWaypointsParametric;
-import graph.Edge;
 
 import java.util.List;
 
-import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
@@ -13,7 +11,8 @@ import trafficsim.components.RouteComponent;
 import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.VehiclesOnRoadComponent;
-import trafficsim.roads.NavigationObject;
+import trafficsim.roads.Road;
+import trafficsim.roads.SubSystem;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -42,13 +41,11 @@ public class RoutingSystem
 	@Mapper
 	private ComponentMapper<VehiclesOnRoadComponent> vehiclesOnRoadComponentMapper;
 
-	// Start turning left
-	private float leftTurnThreshold = 0.2f;
-	private float rightTurnThreshold = 2.2f;
-	// Arrived at destination
-	private float arrivalThreshold = 2.5f;
+	/** Threshold for changing to the next waypoint */
+	private float waypointThreshold = 1.0f;
 
-	private float threshold = 1.0f;
+	/** Threshold for switching to the next parametric curve */
+	private float switchThreshold = 2.0f;
 
 	@SuppressWarnings("unchecked")
 	public RoutingSystem() {
@@ -58,17 +55,17 @@ public class RoutingSystem
 
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
+
 		for (int i = 0; i < entities.size(); i++) {
 			Entity car = entities.get(i);
 			RouteComponent routeComp = routeComponentMapper.get(car);
 			SteeringComponent steeringComp = steeringComponentMapper.get(car);
 			PhysicsBodyComponent physComp = physicsBodyMapper.get(car);
-			MovementComponent movementComp = movementComponentMapper.get(car);
 			if (routeComp.isSet()) {
 				Vector2 target = routeComp.getNextWaypoint();
 				float distanceToTarget = target.dst(physComp.getPosition());
-				if (distanceToTarget < threshold) {
-					updatePath(routeComp, steeringComp, car.getId());
+				if (distanceToTarget < waypointThreshold) {
+					updatePath(routeComp, steeringComp, physComp, car.getId());
 					// System.out.println(routeComp.getEdgeIndex() + " w " + routeComp.getWayPointIndex() + " "
 					// + routeComp.getNextWaypoint());
 				}
@@ -80,38 +77,68 @@ public class RoutingSystem
 	 * Updates the path, by setting the next waypoint or building new waypoints if necessary
 	 * The assumption is that the path is always vertex, edge, vertex etc
 	 */
-	private void updatePath(RouteComponent routeComp, SteeringComponent steeringComp, int carID) {
-		if (routeComp.getWayPointIndex() < routeComp.getWayPoints().size() - 1) {
-			routeComp.incrementWaypointIndex();
-			System.out.println(carID + " " + routeComp.getEdgeIndex() + " " + routeComp.getCurrentEdge() + " w "
-								+ routeComp.getWayPoints());
-		}
-		else {
-			updateRoadReference(routeComp, carID, true);
-			if (!routeComp.isLastEdge()) {
-				NavigationObject nextEdge;
-				Edge<NavigationObject> currentEdge = routeComp.getCurrentEdge();
-				routeComp.setCurrentVertex(routeComp.getNextVertex());
-				routeComp.incrementEdgeIndex();
-				val trans = routeComp.getCurrentVertex()
-							.getData()
-							.requestTransitionPath(currentEdge.getData(), routeComp.getCurrentEdge().getData());
-
-
-				// System.out.println("vertex " + routeComp.getCurrentVertex());
-				assert trans != null : "e " + routeComp.getEdgeIndex() + " v " + routeComp.getCurrentVertex();
-				List<Vector2> waypoints = buildWaypointsParametric(routeComp);
-				// waypoints = buildWaypointsParametric(trans);
-
-				routeComp.setWayPoints(waypoints);
-				routeComp.setWayPointIndex(0);
-				updateRoadReference(routeComp, carID, false);
-			}
-			else {
+	private void updatePath(RouteComponent routeComp, SteeringComponent steeringComp, PhysicsBodyComponent physComp, int carID) {
+		if (routeComp.isLastEdge()) {
+			if (routeComp.isLastWaypoint()) {
 				// TODO arrival behavior
 				steeringComp.setState(State.ARRIVED);
 			}
+			else {
+				updateWayPointIndex(routeComp, physComp);
+			}
 		}
+		else {
+			SubSystem transition = getNextSubsystem(routeComp);
+			Vector2 nextTransitionPoint = getNextTransitionPoint(transition);
+
+			if (physComp.getPosition().dst(nextTransitionPoint) < switchThreshold) {
+				List<Vector2> waypoints = buildWaypointsParametric(transition);
+				routeComp.setWayPoints(waypoints);
+				routeComp.setWayPointIndex(0);
+				if (routeComp.isFollowingEdge()) {
+					// If we are leaving an edge, remove the car from the list
+					updateRoadReference(routeComp, carID, true);
+
+				}
+				else {
+					// If we are entering an edge, add the car to the list
+					routeComp.setCurrentVertex(routeComp.getNextVertex());
+					routeComp.incrementEdgeIndex();
+					updateRoadReference(routeComp, carID, false);
+				}
+				routeComp.setFollowingEdge(!routeComp.isFollowingEdge());
+			}
+			else {
+				updateWayPointIndex(routeComp, physComp);
+			}
+		}
+	}
+
+	private void updateWayPointIndex(RouteComponent routeComp, PhysicsBodyComponent physComp) {
+		Vector2 target = routeComp.getNextWaypoint();
+		float distanceToTarget = target.dst(physComp.getPosition());
+		if (distanceToTarget < waypointThreshold && !routeComp.isLastWaypoint()) {
+			routeComp.incrementWaypointIndex();
+		}
+	}
+
+	private Vector2 getNextTransitionPoint(SubSystem transition) {
+		return transition.getLanes().get(0).get(0).getStart();
+	}
+
+	/** Returns the next edge or crossroad subsystem */
+	private SubSystem getNextSubsystem(RouteComponent routeComp) {
+		SubSystem transition;
+		if (routeComp.isFollowingEdge()) {
+			transition = routeComp.getNextVertex()
+											.getData()
+											.requestTransitionPath(routeComp.getCurrentEdge().getData(),
+																	routeComp.getNextEdge().getData());
+		}
+		else {
+			transition = ((Road) routeComp.getNextEdge().getData()).getSubSystem();
+		}
+		return transition;
 	}
 
 	private void updateRoadReference(RouteComponent routeComp, int carID, boolean remove) {

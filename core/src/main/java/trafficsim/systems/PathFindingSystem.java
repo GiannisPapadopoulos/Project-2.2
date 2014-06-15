@@ -56,6 +56,7 @@ public class PathFindingSystem
 					routeComp.setEdgeIndex(0);
 					// TODO not tested
 					List<Vector2> waypoints = buildWaypointsParametric(routeComp);
+					routeComp.setFollowingEdge(true);
 					routeComp.setWayPoints(waypoints);
 					updateRoadReference(routeComp, car.getId());
 				}

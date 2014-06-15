@@ -11,6 +11,7 @@ import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.NavigationObject;
 import trafficsim.systems.AbstractToggleStrategy;
+import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.GroupedTrafficLightSystem;
@@ -87,7 +88,7 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new ManageMovementBehaviorsSystem());
 
 		// Temporary hack
-		// world.setSystem(new CollisionDisablingSystem());
+		world.setSystem(new CollisionDisablingSystem());
 
 		InputSystem inputSystem = new InputSystem(this);
 		initMultiplexer();
@@ -125,7 +126,7 @@ public class SimulationScreen extends SuperScreen {
 		wr = new WorldRenderer(null);
 
 		world.process();
-		getCamera().translate(900, 900);
+		// getCamera().translate(900, 900);
 	}
 
 

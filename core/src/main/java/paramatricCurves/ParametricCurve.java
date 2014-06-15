@@ -99,6 +99,8 @@ public class ParametricCurve {
 		return samplePoints;
 	}
 
+	
+	// Vector directing out of pc  <-- |----------|
 	public Vector2 getStartDirection() {
 		if (startDir == null) {
 			ArrayList<Float> precise = r_t.getDiscreteCover(1000);
@@ -115,6 +117,7 @@ public class ParametricCurve {
 		return result;
 	}
 
+	// Vector directing out of pc  |----------| -->
 	public Vector2 getEndDirection() {
 		if (endDir == null) {
 			ArrayList<Float> precise = r_t.getDiscreteCover(1000);

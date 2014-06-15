@@ -21,6 +21,11 @@ public class Vertex<E> extends Element<E> {
 	public EdgeIterator<E> getIncomingEdgeIterator() {
 		return new EdgeIterator<E>(parent, incomingEdges);
 	}
+	
+	//TEST ONLY
+	public Vertex() {
+		super(null,0,null);
+	}
 
 	/**
 	 * Returns the other vertex of the given edge or null if this vertex is not

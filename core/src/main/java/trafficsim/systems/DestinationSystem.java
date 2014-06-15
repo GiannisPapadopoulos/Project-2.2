@@ -9,7 +9,7 @@ import java.util.List;
 import lombok.Getter;
 import trafficsim.components.RouteComponent;
 import trafficsim.components.SpawnComponent;
-import trafficsim.roads.Road;
+import trafficsim.roads.NavigationObject;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -47,9 +47,10 @@ public class DestinationSystem
 			RouteComponent routeComp = routeComponentMapper.get(entity);
 			if (routeComp.getTarget() == null) {
 				assert routeComp.getSource() != null;
-				Graph<Road> graph = routeComp.getSource().getParent();
+				Graph<NavigationObject> graph = routeComp.getSource().getParent();
 				if (spawnPoints.size() <= 1) {
-					int randIndex = RANDOM.nextInt(graph.getVertexCount() - 1);
+					int randIndex = RANDOM.nextInt(graph.getVertexCount() - 5);
+
 					// Make sure source != target
 					if (randIndex >= routeComp.getSource().getID()) {
 						randIndex++;
@@ -57,6 +58,8 @@ public class DestinationSystem
 					routeComp.setTarget(graph.getVertex(randIndex));
 				}
 				else {
+
+					System.out.println("yes");
 					int randIndex = RANDOM.nextInt(spawnPoints.size() - 1);
 					if (spawnComponentMapper.get(spawnPoints.get(randIndex)).getVertex() == routeComp.getSource()) {
 						randIndex++;

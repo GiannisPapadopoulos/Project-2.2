@@ -16,7 +16,7 @@ import lombok.ToString;
 import pathfinding.GraphAction;
 import pathfinding.GraphState;
 import search.Path;
-import trafficsim.roads.Road;
+import trafficsim.roads.NavigationObject;
 
 import com.artemis.Component;
 import com.badlogic.gdx.math.Vector2;
@@ -31,22 +31,22 @@ import com.badlogic.gdx.math.Vector2;
 @RequiredArgsConstructor
 @ToString
 public class RouteComponent
-		extends Component {
+ extends Component {
 
 
 	@NonNull
-	/** The start of the route */
-	private Vertex<Road> source;
+	private Vertex<NavigationObject> source;
 
-	/** The last vertex of the route */
-	private Vertex<Road> target;
+	// @NonNull
+	private Vertex<NavigationObject> target;
 
 	@Delegate
 	private Path<GraphState, GraphAction> path;
 
-	/** The current vertex along the path */
-	private Vertex<Road> currentVertex;
-	/** Index of the current edge in the route */
+	/** */
+	private Vertex<NavigationObject> currentVertex;
+	/** */
+	// @Setter(AccessLevel.NONE)
 	private int edgeIndex;
 
 	/** Waypoints along the current edge */
@@ -57,21 +57,31 @@ public class RouteComponent
 	/** If false, path will be recomputed */
 	private boolean set;
 
-	// /** */
-	// private boolean first = true;
+	/**
+	 * If the car is currently following an edge (will search crossroad transition out) or a crossroad (will search edge
+	 * transition)
+	 */
+	private boolean followingEdge;
 
-	public RouteComponent(Vertex<Road> source, Vertex<Road> target) {
+	public RouteComponent(Vertex<NavigationObject> source,
+			Vertex<NavigationObject> target) {
 		super();
 		this.source = source;
 		this.target = target;
 	}
 
-	public Edge<Road> getCurrentEdge() {
+	public Edge<NavigationObject> getCurrentEdge() {
 		return path.getRoute().get(edgeIndex).getEdge();
 	}
 
-	public Vertex<Road> getNextVertex() {
-		return currentVertex == target ? currentVertex : currentVertex.getNeighbor(getCurrentEdge());
+	public Edge<NavigationObject> getNextEdge() {
+		assert !isLastEdge() : "No more edges";
+		return path.getRoute().get(edgeIndex + 1).getEdge();
+	}
+
+	public Vertex<NavigationObject> getNextVertex() {
+		return currentVertex == target ? currentVertex : currentVertex
+				.getNeighbor(getCurrentEdge());
 	}
 
 	public Vector2 getNextWaypoint() {
@@ -83,6 +93,7 @@ public class RouteComponent
 	}
 
 	public void incrementWaypointIndex() {
+		assert !isLastWaypoint();
 		wayPointIndex++;
 	}
 
@@ -90,17 +101,16 @@ public class RouteComponent
 		edgeIndex++;
 	}
 
-	// public void update() {
-	// assert !isLastEdge();
-	// // if (first) {
-	// // first = false;
-	// // }
-	// // else {
-	// setCurrentVertex(getNextVertex());
-	// setEdgeIndex(getEdgeIndex() + 1);
-	// // first = true;
-	// // }
-	// }
+	public List<Vector2> getAllVertices() {
+		List<Vector2> remainingVertices = new ArrayList<Vector2>();
+		Vertex<NavigationObject> v = currentVertex;
+		for (int i = edgeIndex; i < path.getRoute().size(); i++) {
+			Edge<NavigationObject> edge = path.getRoute().get(i).getEdge();
+			remainingVertices.add(v.getData().getPosition());
+			v = v.getNeighbor(edge);
+		}
+		return remainingVertices;
+	}
 
 	public boolean isLastEdge() {
 		return edgeIndex >= path.getRoute().size() - 1;
@@ -116,6 +126,10 @@ public class RouteComponent
 		}
 		remainingVertices.add(VectorUtils.getMidPoint(v.getData()));
 		return remainingVertices;
+	}
+
+	public boolean isLastWaypoint() {
+		return wayPointIndex >= wayPoints.size() - 1;
 	}
 
 }

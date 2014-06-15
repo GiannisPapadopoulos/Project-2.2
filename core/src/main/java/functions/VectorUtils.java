@@ -1,6 +1,7 @@
 package functions;
 
 import graph.Element;
+import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -16,8 +17,8 @@ public class VectorUtils {
 		return pointA.dst(pointB);
 	}
 
-	public static float calculateExpectedTime(Road road) {
-		return getLength(road) / road.getSpeedLimit();
+	public static float calculateExpectedTime(NavigationObject road) {
+		return road.getLength() / road.getSpeedLimit();
 	}
 
 	public static Vector2 getVector(Road road) {
@@ -48,8 +49,9 @@ public class VectorUtils {
 		return getAngle(getMidPoint(roadA), getMidPoint(roadB));
 	}
 
-	public static Vector2 getMidPoint(Road road) {
-		return getMidPoint(road.getPointA(), road.getPointB());
+	public static Vector2 getMidPoint(NavigationObject navObj) {
+		
+		return new Vector2(navObj.getPosition().x,navObj.getPosition().y);
 	}
 
 	public static Vector2 getMidPoint(Vector2 pointA, Vector2 pointB) {
@@ -58,9 +60,35 @@ public class VectorUtils {
 		return new Vector2(xm, ym);
 	}
 
-	public static Vector2 getUnitVector(float angle) {
-		return new Vector2(MathUtils.cos(angle * MathUtils.degreesToRadians),
-				MathUtils.sin(angle * MathUtils.degreesToRadians));
+	public static Vector2 getUnitVectorDegrees(float angleInDegrees) {
+		return new Vector2(MathUtils.cos(angleInDegrees * MathUtils.degreesToRadians),
+							MathUtils.sin(angleInDegrees * MathUtils.degreesToRadians));
+	}
+
+	public static Vector2 getUnitVectorRads(float angleInRads) {
+		return new Vector2(MathUtils.cos(angleInRads * MathUtils.degreesToRadians),
+							MathUtils.sin(angleInRads * MathUtils.degreesToRadians));
+	}
+
+	public static double getAbsAngleDifference(Vector2 v1, Vector2 v2) {
+		return Math.abs(v1.angle() - v2.angle());
+	}
+	
+	public static double getAngleDifference(Vector2 v1, Vector2 v2) {
+		return v1.angle() - v2.angle();
+	}
+
+	public static Vector2 multiplyVector(Vector2 v, float a) {
+		v.x *= a;
+		v.y *= a;
+		return v;
+	}
+
+	public static Vector2 add2Vectors(Vector2 v1, Vector2 v2) {
+		Vector2 result = new Vector2();
+		result.x = v1.x + v2.x;
+		result.y = v1.y + v2.y;
+		return result;
 	}
 
 	// public static Vector2 getUnitPerpendicularVector(Vector2 vector) {

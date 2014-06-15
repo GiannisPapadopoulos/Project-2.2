@@ -9,7 +9,7 @@ import lombok.Getter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.factories.EntityFactory;
-import trafficsim.roads.Road;
+import trafficsim.roads.NavigationObject;
 import trafficsim.systems.InputEditorSystem;
 import trafficsim.systems.RenderSystem;
 
@@ -53,16 +53,17 @@ public class EditorScreen extends SuperScreen {
 		world.initialize();
 		EntityFactory.populateWorld(world, getScreens().getSimulationScreen()
 				.getWorld().getGraph());
+		updatePOI(world.getGraph());
 		ed = new EditorData(1000, 1000, -100, -100);
 		wr = new WorldRenderer(ed);
-		updatePOI(world.getGraph());
+		
 	}
 	
 	protected void initMultiplexer() {
 		this.multiplexer = new InputMultiplexer(UILayer, worldLayer);
 	}
 
-	private void updatePOI(Graph<Road> graph) {
+	private void updatePOI(Graph<NavigationObject> graph) {
 		POI = new PointsOfInterest(graph);
 	}
 
@@ -83,7 +84,9 @@ public class EditorScreen extends SuperScreen {
 		wr.renderGridUnderMouse(getCamera(), mousePosition.getGrid().getX(),
 				mousePosition.getGrid().getY());
 
-		wr.renderPOI(getCamera(), POI, getMousePosition().updateClosestPOI(POI));
+		//wr.renderPOI(getCamera(), POI, getMousePosition().updateClosestPOI(POI));
+		
+		wr.renderDEBUG(getCamera(),world.getGraph());
 
 		
 		
@@ -111,7 +114,7 @@ public class EditorScreen extends SuperScreen {
 			world.getBox2dWorld().destroyBody(body);
 			e.deleteFromWorld();
 		}
-		world.setGraph(new Graph<Road>());
+		world.setGraph(new Graph<NavigationObject>());
 		updatePOI(world.getGraph());
 	}
 

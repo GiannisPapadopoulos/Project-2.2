@@ -222,7 +222,7 @@ public class GraphFactory {
 
 	public static Graph<NavigationObject> addHighway(Graph<NavigationObject> g,
 			int width, int height, float distance, float startX, float startY) {
-		
+
 		float crossSize = 100.0f;
 
 		// bottom left crossroad
@@ -275,10 +275,10 @@ public class GraphFactory {
 
 		float halfW = TrafficSimConstants.LANE_WIDTH * 5;
 
-		Vector2 ver_s_pos = new Vector2(0, rmc.getSize()/2);
-		Vector2 ver_s_neg = new Vector2(0, -rmc.getSize()/2);
-		Vector2 hor_s_pos = new Vector2(rmc.getSize()/2, 0);
-		Vector2 hor_s_neg = new Vector2(-rmc.getSize()/2, 0);
+		Vector2 ver_s_pos = new Vector2(0, rmc.getSize() / 2);
+		Vector2 ver_s_neg = new Vector2(0, -rmc.getSize() / 2);
+		Vector2 hor_s_pos = new Vector2(rmc.getSize() / 2, 0);
+		Vector2 hor_s_neg = new Vector2(-rmc.getSize() / 2, 0);
 
 		Vector2 pBLC = vblc.getData().getPosition();
 		Vector2 pMLC = vmlc.getData().getPosition();
@@ -420,18 +420,20 @@ public class GraphFactory {
 
 		// CROSS_DEBUG
 
-		CrossRoad mtctop = new CrossRoad(30.0f, VectorUtils.add2Vectors(pMTC, new Vector2(0,400.0f)),
-				CrossRoad.CR_TYPE.Roundabout);
+		CrossRoad mtctop = new CrossRoad(30.0f, VectorUtils.add2Vectors(pMTC,
+				new Vector2(0, 400.0f)), CrossRoad.CR_TYPE.Roundabout);
 		Vertex<NavigationObject> vmtctop = g.addVertex(mtctop);
-		
-		CrossRoad mtcbot = new CrossRoad(30.0f, VectorUtils.add2Vectors(pMTC, new Vector2(0,-550.0f)),
-				CrossRoad.CR_TYPE.Roundabout);
+
+		CrossRoad mtcbot = new CrossRoad(30.0f, VectorUtils.add2Vectors(pMTC,
+				new Vector2(0, -550.0f)), CrossRoad.CR_TYPE.Roundabout);
 		Vertex<NavigationObject> vmtcbot = g.addVertex(mtcbot);
 
 		Vector2 v1 = VectorUtils.add2Vectors(pMTC, ver_s_pos);
-		Vector2 v2 = VectorUtils.add2Vectors(mtctop.getPosition(), new Vector2(0,-mtctop.getSize()/2));
-		
-		Vector2 v3 = VectorUtils.add2Vectors(mtcbot.getPosition(), new Vector2(0,mtcbot.getSize()/2));
+		Vector2 v2 = VectorUtils.add2Vectors(mtctop.getPosition(), new Vector2(
+				0, -mtctop.getSize() / 2));
+
+		Vector2 v3 = VectorUtils.add2Vectors(mtcbot.getPosition(), new Vector2(
+				0, mtcbot.getSize() / 2));
 
 		g.addEdge(
 				new Road(new ParametricCurve(new C_Linear(v1, v2)), 2,
@@ -443,10 +445,9 @@ public class GraphFactory {
 						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
 						(CrossRoad) vmtctop.getData(), (CrossRoad) vmtc
 								.getData()), vmtctop, vmtc, true);
-		
-		v1 = VectorUtils.add2Vectors(pMTC, new Vector2(0,-ver_s_pos.y));
-	
-		
+
+		v1 = VectorUtils.add2Vectors(pMTC, new Vector2(0, -ver_s_pos.y));
+
 		g.addEdge(
 				new Road(new ParametricCurve(new C_Linear(v1, v3)), 2,
 						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
@@ -457,8 +458,6 @@ public class GraphFactory {
 						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
 						(CrossRoad) vmtcbot.getData(), (CrossRoad) vmtc
 								.getData()), vmtcbot, vmtc, true);
-								
-	
 
 		return g;
 	}

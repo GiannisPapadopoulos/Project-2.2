@@ -2,6 +2,8 @@ package trafficsim.systems;
 
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.AttachedLightsComponent;
@@ -47,6 +49,8 @@ public class GroupedTrafficLightSystem
 	@Mapper
 	private ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
 
+	@Getter
+	@Setter
 	private AbstractToggleStrategy toggleStrategy;
 
 	@SuppressWarnings("unchecked")

@@ -91,6 +91,7 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 				PhysicsBodyComponent physComp = car.getComponent(PhysicsBodyComponent.class);
 				System.out.println("Found something " + car + " id " + callBack.getClosestId() + " "
 									+ physComp.getPosition() + "\n");
+				superScreen.getScreens().getSimulationScreen().getPop().setEntityToRender(car);
 			}
 		}
 		else {

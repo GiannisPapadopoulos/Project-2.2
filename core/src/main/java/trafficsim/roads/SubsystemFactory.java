@@ -304,13 +304,15 @@ public class SubsystemFactory {
 			subsys.add(lane);
 			ss.addSubsystem(subsys);
 
-			System.out.println(pIN.size() + " " + pOUT.size());
+			if (DEGUG_SUBSYSTEMS)
+				System.out.println(pIN.size() + " " + pOUT.size());
 			EditorData.debugPoints.add(pIN.get(pIN.size() - 1));
 			EditorData.debugPoints2.add(pOUT.get(pOUT.size() - 1));
 		} else if (Math
 				.abs((VectorUtils.getAngleDifference(angleIN, angleOUT) + 270.0f)) < SAME_DIR_LIMIT
 				|| Math.abs((VectorUtils.getAngleDifference(angleIN, angleOUT) - 90.0f)) < SAME_DIR_LIMIT) {
-			System.out.println("other");
+			if (DEGUG_SUBSYSTEMS)
+				System.out.println("other");
 			ArrayList<Lane> subsys = new ArrayList<Lane>();
 
 			// //

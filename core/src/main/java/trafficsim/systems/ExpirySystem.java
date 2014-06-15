@@ -48,9 +48,10 @@ public class ExpirySystem
 					((TrafficSimWorld) world).getDataGatherer().add(dataComp);
 					// System.out.println(dataComp.getTotalDistance() + " " + dataComp.getAverageSpeed() + " pct "
 					// + dataComp.getPercentageStopped());
+					world.getSystem(MovementSystem.class).carRemoved();
 				}
 				entity.deleteFromWorld();
-				world.getSystem(MovementSystem.class).carRemoved();
+
 			}
 		}
 	}

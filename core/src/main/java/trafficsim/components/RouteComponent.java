@@ -1,5 +1,6 @@
 package trafficsim.components;
 
+import functions.VectorUtils;
 import graph.Edge;
 import graph.Vertex;
 
@@ -108,13 +109,14 @@ public class RouteComponent
 			remainingVertices.add(v.getData().getPosition());
 			v = v.getNeighbor(edge);
 		}
+		remainingVertices.add(VectorUtils.getMidPoint(v.getData()));
 		return remainingVertices;
 	}
 
 	public boolean isLastEdge() {
 		return edgeIndex >= path.getRoute().size() - 1;
 	}
-
+	
 	public boolean isLastWaypoint() {
 		return wayPointIndex >= wayPoints.size() - 1;
 	}

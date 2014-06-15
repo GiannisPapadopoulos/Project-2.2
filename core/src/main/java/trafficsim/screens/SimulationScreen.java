@@ -20,15 +20,17 @@ import trafficsim.systems.ManageMovementBehaviorsSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
-import trafficsim.systems.PriorityToggleStrategy;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
+import ui.tables.InfoPop;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import editor.WorldRenderer;
 import graph.Graph;
@@ -51,6 +53,8 @@ public class SimulationScreen extends SuperScreen {
 	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
 
 	private boolean firstTimeSimulationRun = true;
+	@Getter
+	private InfoPop pop;
 
 	private WorldRenderer wr;
 
@@ -72,14 +76,15 @@ public class SimulationScreen extends SuperScreen {
 
 		// Add systems
 		world.setSystem(new DataSystem());
-		world.setSystem(new RenderSystem(getCamera()));
-
+		RenderSystem renderSystem = new RenderSystem(getCamera());
+		world.setSystem(renderSystem);
+		// world.setSystem(new MovementSystem());
 		world.setSystem(new PhysicsSystem());
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
-		// AbstractToggleStrategy toggleStrategy = new BasicToggleStrategy();
-		AbstractToggleStrategy toggleStrategy = new PriorityToggleStrategy();
+		// AbstractToggleStrategy toggleStrategy = AbstractToggleStrategy.basicToggleStrategy;
+		AbstractToggleStrategy toggleStrategy = AbstractToggleStrategy.priorityToggleStrategy;
 		world.setSystem(new GroupedTrafficLightSystem(toggleStrategy));
 		world.setSystem(new ExpirySystem());
 
@@ -118,15 +123,24 @@ public class SimulationScreen extends SuperScreen {
 
 		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 
+		/** Set the world reference */
+		getSidePanels().setWorld(world);
+
 
 		if (TIMER.isStarted())
 			TIMER.reset();
 		TIMER.start();
-
-		wr = new WorldRenderer(null);
-
+		pop = new InfoPop(renderSystem.getBatch());
 		world.process();
-		// getCamera().translate(900, 900);
+
+		
+		
+		
+
+
+	}
+	protected void initMultiplexer() {
+		this.multiplexer = new InputMultiplexer(UILayer, worldLayer);
 	}
 
 
@@ -153,10 +167,19 @@ public class SimulationScreen extends SuperScreen {
 		getUILayer().act(delta);
 		getWorldLayer().draw();
 		getUILayer().draw();
+		
+		if (DEBUG_TABLES)
+			Table.drawDebug(getUILayer());
 
 		if (DEBUG_FPS)
 			System.out.println(TIMER.getTime() - start + " milliseconds ");
+		pop.render();
+		super.setWaitTimeUI(world);
+		super.setCarsUI(world);
+		
+		
 	}
+	
 
 	@Override
 	public void populateUILayer() {

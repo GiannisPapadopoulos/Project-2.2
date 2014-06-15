@@ -1,24 +1,25 @@
 package trafficsim.screens;
 
 import static trafficsim.TrafficSimConstants.*;
-
-import java.util.ArrayList;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
-import utils.Assets;
+import trafficsim.TrafficSimWorld;
+import trafficsim.systems.InputEditorSystem;
+import trafficsim.systems.InputSystem;
+import trafficsim.systems.MovementSystem;
+import ui.tables.SidePanels;
+import utils.Stats;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import editor.MousePosition;
 
@@ -30,34 +31,49 @@ public abstract class SuperScreen implements Screen {
 
 	private OrthographicCamera camera;
 
-	private Stage UILayer;
+	@Getter
+	protected Stage UILayer;
 
-	private Stage worldLayer;
+	@Getter
+	protected Stage worldLayer;
 
-	private InputMultiplexer multiplexer;
+	InputMultiplexer multiplexer;
 
 	protected MousePosition mousePosition;
 
+	@Getter
+	private SidePanels sidePanels;
+
 	public SuperScreen(Screens screens) {
 		this.screens = screens;
-		this.UILayer = new Stage();
+
 		this.worldLayer = new Stage();
+
+		this.UILayer = new Stage(Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight(), false, worldLayer.getSpriteBatch());
 		setCamera(new OrthographicCamera(WINDOW_WIDTH * WORLD_TO_BOX,
 				WINDOW_HEIGHT * WORLD_TO_BOX));
-		
+
 		initMultiplexer();
-		
-		// if (this instanceof EditorScreen)
-		// this.multiplexer.addProcessor(new InputEditorSystem(getCamera(), (EditorScreen) this));
-		// else
-		// this.multiplexer.addProcessor(new InputSystem(this));
-		
-		populateCommonLayers();
+
+		if (this instanceof EditorScreen)
+			this.multiplexer.addProcessor(new InputEditorSystem(getCamera(),
+					(EditorScreen) this));
+
+		else
+			this.multiplexer.addProcessor(new InputSystem(this));
+
 		this.mousePosition = new MousePosition(100, 100);
+		populateCommonLayers();
 	}
 
 	protected void initMultiplexer() {
 		this.multiplexer = new InputMultiplexer(UILayer, worldLayer);
+	}
+
+	@Override
+	public void render(float delta) {
+
 	}
 
 	@Override
@@ -68,6 +84,7 @@ public abstract class SuperScreen implements Screen {
 
 	@Override
 	public void show() {
+		System.out.println("called");
 		// System.out.println(multiplexer.getProcessors());
 	}
 
@@ -100,44 +117,67 @@ public abstract class SuperScreen implements Screen {
 
 	public abstract void populateWorldLayer();
 
+	public void passWorld(TrafficSimWorld world) {
+		sidePanels.passWorld(world);
+	}
+
+	public void setCarsUI(TrafficSimWorld world) {
+
+		sidePanels.getCarsOnRoadLabel().setText(
+				Integer.toString(world.getSystem(MovementSystem.class)
+						.getTotalCars()));
+
+	}
+
+	public void setWaitTimeUI(TrafficSimWorld world) {
+
+		int timewaited = (int) (Stats.mean(world.getDataGatherer().getAveragePercentageStopped())*100);
+	
+		sidePanels.getAverageLightTime().setText(
+				Integer.toString(timewaited) + "%");
+	}
+
 	private void populateCommonLayers() {
-		Table t = new Table();
-		ArrayList<TextButton> buttons = new ArrayList<TextButton>();
 
-		TextButton simButton = new TextButton("Simulation", Assets.skin);
-		buttons.add(simButton);
-		simButton.setName("Simulation");
-		TextButton ediButton = new TextButton("Editor", Assets.skin);
-		buttons.add(ediButton);
+		sidePanels = new SidePanels();
 
-		ediButton.setVisible(true);
-		ediButton.setName("Editor");
-		TextButton staButton = new TextButton("Statistics", Assets.skin);
-		buttons.add(staButton);
-		staButton.setName("Statistics");
+		getUILayer().addActor(sidePanels);
 
-		t.add(simButton).top().left();
-		t.add(ediButton).top().left();
-		t.add(staButton).top().left();
-
-		t.align(Align.top);
-
-		t.setFillParent(true);
-
-		getUILayer().addActor(t);
-
-		for (val button : buttons)
+		for (val button : sidePanels.getTransitionButtons().getButtons())
 			button.addListener(new ChangeListener() {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
 					if (actor.getName() == "Simulation")
 						switchToScreen(screens.getSimulationScreen());
-					else if (actor.getName() == "Editor")
-						switchToScreen(screens.getEditorScreen());
 					else if (actor.getName() == "Statistics")
 						switchToScreen(screens.getStatisticsScreen());
 				}
 			});
+
+		sidePanels.getEditMode().addListener(new ClickListener() {
+
+			public void clicked(InputEvent event, float x, float y) {
+
+				sidePanels.getSwitchPanel().clearChildren();
+				sidePanels.getSwitchPanel().add(sidePanels.getEditorPanel());
+				switchToScreen(screens.getEditorScreen());
+				// sidePanels.
+
+			}
+		});
+
+//		sidePanels.getSimTools().addListener(new ClickListener() {
+//
+//			public void clicked(InputEvent event, float x, float y) {
+//
+//				// if(screens.){
+//				switchToScreen(screens.getSimulationScreen());
+//				// }
+//				sidePanels.getSwitchPanel().clearChildren();
+//				sidePanels.getSwitchPanel().add(sidePanels.getWorldVariables());
+//
+//			}
+//		});
 
 		populateUILayer();
 		populateWorldLayer();

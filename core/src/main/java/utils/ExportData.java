@@ -46,6 +46,7 @@ public class ExportData {
 			List<Float> averageTimeTravelled = new ArrayList<Float>();
 			List<Float> averageVelocities = new ArrayList<Float>();
 			List<Float> averagePercentageStopped = new ArrayList<Float>();
+			List<Float> averageTimeWaited = new ArrayList<Float>();
 			for (int i = 0; i < dataPoints; i++) {
 				averageDistanceTravelled.add(scanner.nextFloat());
 			}
@@ -60,7 +61,7 @@ public class ExportData {
 			}
 			scanner.close();
 			return new DataGatherer(averageDistanceTravelled, averageTimeTravelled, averageVelocities,
-									averagePercentageStopped);
+									averagePercentageStopped, averageTimeWaited);
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();

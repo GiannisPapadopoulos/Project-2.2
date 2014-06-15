@@ -2,6 +2,7 @@ package trafficsim.systems;
 
 import java.util.HashMap;
 
+import lombok.Getter;
 import trafficsim.components.DimensionComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.PositionComponent;
@@ -37,6 +38,7 @@ public class RenderSystem
 
 	private HashMap<String, AtlasRegion> regions;
 	private TextureAtlas textureAtlas;
+	@Getter
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 
@@ -44,6 +46,11 @@ public class RenderSystem
 	public RenderSystem(OrthographicCamera camera) {
 		super(Aspect.getAspectForAll(SpriteComponent.class).one(PhysicsBodyComponent.class, PositionComponent.class));
 		this.camera = camera;
+		
+		OrthographicCamera guicam = new OrthographicCamera();
+		float ratew = guicam.viewportWidth/camera.viewportWidth;  //<--- you should calculate these 2 only once.
+		float rateh = guicam.viewportHeight/camera.viewportHeight;
+	
 	}
 
 	@Override

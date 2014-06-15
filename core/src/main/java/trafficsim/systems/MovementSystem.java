@@ -34,9 +34,6 @@ import com.badlogic.gdx.math.Vector2;
 public class MovementSystem
 		extends EntitySystem {
 
-	@Getter
-	private int totalCars = 0;
-
 	@Mapper
 	ComponentMapper<PhysicsBodyComponent> physicsBodyMapper;
 	@Mapper
@@ -51,6 +48,9 @@ public class MovementSystem
 	ComponentMapper<MovementComponent> movementComponentMapper;
 	@Mapper
 	ComponentMapper<ExpiryComponent> expiryMapper;
+	
+	@Getter 
+	private int totalCars;
 
 	@SuppressWarnings("unchecked")
 	public MovementSystem() {
@@ -60,7 +60,10 @@ public class MovementSystem
 
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
+		
+		totalCars = entities.size();
 		for (int i = 0; i < entities.size(); i++) {
+			
 			Entity car = entities.get(i);
 			RouteComponent routeComp = routeComponentMapper.get(car);
 			SteeringComponent steeringComp = steeringComponentMapper.get(car);

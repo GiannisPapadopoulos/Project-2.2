@@ -2,10 +2,13 @@ package ui.tables;
 
 import java.util.ArrayList;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimConstants;
 import trafficsim.TrafficSimWorld;
+import trafficsim.systems.AbstractToggleStrategy;
+import trafficsim.systems.GroupedTrafficLightSystem;
 import utils.Assets;
 
 import com.badlogic.gdx.Gdx;
@@ -50,6 +53,7 @@ public class SidePanels extends Table {
 	@Getter
 	private Label averageLightTime,carsOnRoadLabel ;
 	
+	@Setter
 	private TrafficSimWorld world;
 	
 	private Slider carSpawningRate,speedLimitSlider;
@@ -61,6 +65,10 @@ public class SidePanels extends Table {
 	private Table worldStatistics,worldVariables,expandCollapse, switchPanel, editorPanel,sidepanel,hide,tabbed1,tabbed2,tabbed3;	
 	
 	private ArrayList<Table> simPageList;
+	private TextButton weightedTL;
+	private TextButton timedTL;
+	private TextButton thirdTL;
+	private ButtonGroup traffbg;
 	
 	public SidePanels() {
 		currentSimPageIndex=0;
@@ -223,19 +231,21 @@ public class SidePanels extends Table {
 		/** Second Page Sim Panel */
 		
 		
-		TextButton weightedTL = new TextButton("Priority Traffic Lights", Assets.skin);
-		TextButton timedTL = new TextButton("Timed Traffic Lights", Assets.skin);
-		TextButton thirdTL = new TextButton("Third Traffic Lights", Assets.skin);
+		weightedTL = new TextButton("Priority Traffic Lights", Assets.skin);
+		timedTL = new TextButton("Timed Traffic Lights", Assets.skin);
+		thirdTL = new TextButton("Third Traffic Lights", Assets.skin);
 		
 		weightedTL.setChecked(true);
 		
-		ButtonGroup traffbg = new ButtonGroup();
+		traffbg = new ButtonGroup();
 		
 		traffbg.add(weightedTL);
 		traffbg.add(timedTL);
 		traffbg.add(thirdTL);
 		
-		
+		weightedTL.addListener(new TrafficButtonListener(AbstractToggleStrategy.priorityToggleStrategy));
+		timedTL.addListener(new TrafficButtonListener(AbstractToggleStrategy.basicToggleStrategy));
+
 		Table secondPage = new Table();
 		
 		
@@ -373,7 +383,25 @@ private void prevSimPage(){
 		}
 	}
 	
-	
+	@AllArgsConstructor
+	private class TrafficButtonListener
+			extends ClickListener {
+		
+		private AbstractToggleStrategy toggleStrategy;
+
+		@Override
+		public void clicked(InputEvent event, float x, float y) {
+			if (world != null) {
+				GroupedTrafficLightSystem trafficSystem = world.getSystem(GroupedTrafficLightSystem.class);
+				if (trafficSystem != null) {
+					trafficSystem.setToggleStrategy(toggleStrategy);
+				}
+			}
+			else {
+				System.out.println("World is not set");
+			}
+	    }
+	}
 
 
 

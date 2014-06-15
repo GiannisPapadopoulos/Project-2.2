@@ -20,7 +20,6 @@ import trafficsim.systems.ManageMovementBehaviorsSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
-import trafficsim.systems.PriorityToggleStrategy;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
@@ -84,8 +83,8 @@ public class SimulationScreen extends SuperScreen {
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
 		world.setSystem(new SpawnSystem());
-		// AbstractToggleStrategy toggleStrategy = new BasicToggleStrategy();
-		AbstractToggleStrategy toggleStrategy = new PriorityToggleStrategy();
+		// AbstractToggleStrategy toggleStrategy = AbstractToggleStrategy.basicToggleStrategy;
+		AbstractToggleStrategy toggleStrategy = AbstractToggleStrategy.priorityToggleStrategy;
 		world.setSystem(new GroupedTrafficLightSystem(toggleStrategy));
 		world.setSystem(new ExpirySystem());
 
@@ -123,6 +122,9 @@ public class SimulationScreen extends SuperScreen {
 
 
 		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
+
+		/** Set the world reference */
+		getSidePanels().setWorld(world);
 
 
 		if (TIMER.isStarted())

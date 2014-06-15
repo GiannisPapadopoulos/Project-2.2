@@ -64,7 +64,7 @@ public class InfoPop {
 			/** distance left*/
 //			float d2t = entityToRender.getComponent(DataComponent.class).
 			
-			entityToRender.getComponent(RouteComponent.class).getTarget().getData().getPointC();
+			// entityToRender.getComponent(RouteComponent.class).getTarget().getData().getPointC();
 		
 			Texture texture = new Texture(Gdx.files.internal("assets/m2_0.png"), true); // true enables mipmaps
 			texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear); // linear filtering in nearest mipmap image
@@ -86,12 +86,14 @@ public class InfoPop {
 			
 			drawPath(entityToRender);
 		 
-			destination.draw(batch, entityToRender.getComponent(RouteComponent.class).getTarget().getData().getPointC().x-4,
-									entityToRender.getComponent(RouteComponent.class).getTarget().getData().getPointC().y-7,
+			destination.draw(	batch,
+								entityToRender.getComponent(RouteComponent.class).getTarget().getData().getPosition().x - 4,
+								entityToRender.getComponent(RouteComponent.class).getTarget().getData().getPosition().y - 7,
 									 8	, 8);
 			
-			destination.draw(batch, entityToRender.getComponent(RouteComponent.class).getSource().getData().getPointC().x-4,
-									entityToRender.getComponent(RouteComponent.class).getSource().getData().getPointC().y-7,
+			destination.draw(	batch,
+								entityToRender.getComponent(RouteComponent.class).getSource().getData().getPosition().x - 4,
+								entityToRender.getComponent(RouteComponent.class).getSource().getData().getPosition().y - 7,
 									8	, 8);
 			glow.draw(batch, position.x-4f, position.y-4f, 8,8);
 			//popUp.setSize(40,40);

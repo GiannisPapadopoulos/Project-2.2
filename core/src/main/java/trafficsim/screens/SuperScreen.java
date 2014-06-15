@@ -3,6 +3,7 @@ package trafficsim.screens;
 import static trafficsim.TrafficSimConstants.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.systems.InputEditorSystem;
 import trafficsim.systems.InputSystem;
@@ -14,8 +15,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import editor.MousePosition;
@@ -140,16 +143,16 @@ public abstract class SuperScreen implements Screen {
 
 		getUILayer().addActor(sidePanels);
 
-		// for (val button : sidePanels.getTransitionButtons().getButtons())
-		// button.addListener(new ChangeListener() {
-		// @Override
-		// public void changed(ChangeEvent event, Actor actor) {
-		// if (actor.getName() == "Simulation")
-		// switchToScreen(screens.getSimulationScreen());
-		// else if (actor.getName() == "Statistics")
-		// switchToScreen(screens.getStatisticsScreen());
-		// }
-		// });
+		for (val button : sidePanels.getTransitionButtons().getButtons())
+			button.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					if (actor.getName() == "Simulation")
+						switchToScreen(screens.getSimulationScreen());
+					else if (actor.getName() == "Statistics")
+						switchToScreen(screens.getStatisticsScreen());
+				}
+			});
 
 		sidePanels.getEditMode().addListener(new ClickListener() {
 

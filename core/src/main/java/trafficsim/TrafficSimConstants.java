@@ -57,7 +57,7 @@ public final class TrafficSimConstants {
 
 	/** Speed limit for simple (1-lane) roads in meters per second */
 	@Setter
-	public static float CITY_SPEED_LIMIT = 2 * DEFAULT_CITY_SPEED_LIMIT;
+	public static float CITY_SPEED_LIMIT = DEFAULT_CITY_SPEED_LIMIT;
 	
 	public static float HIGHWAY_SPEED_LIMIT = 2 * CITY_SPEED_LIMIT;
 

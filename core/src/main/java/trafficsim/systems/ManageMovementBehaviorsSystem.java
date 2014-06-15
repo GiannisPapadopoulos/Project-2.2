@@ -2,8 +2,6 @@ package trafficsim.systems;
 
 import static com.badlogic.gdx.math.MathUtils.cos;
 import static com.badlogic.gdx.math.MathUtils.sin;
-import static functions.MovementFunctions.fromAtoB;
-import static functions.MovementFunctions.isLeftTurn;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.DEFAULT_BRAKING_FACTOR;
 import gnu.trove.list.TIntList;
@@ -156,8 +154,10 @@ public class ManageMovementBehaviorsSystem
 		}
 		int roadId = ((TrafficSimWorld) world).getEdgeToEntityMap().get(routeComp.getCurrentEdge().getID());
 		Entity road = world.getEntity(roadId);
-		boolean fromAtoB = fromAtoB(routeComp);
-		boolean leftTurn = isLeftTurn(routeComp);
+		// TODO This needs to change
+		boolean fromAtoB = true;
+		boolean leftTurn = false;
+		// boolean leftTurn = isLeftTurn(routeComp);
 
 		if (attachedLightsMapper.has(road)) {// && !routeComp.isLast()) {
 			TIntList trafficLights = attachedLightsMapper.get(road).getTrafficLightIDs();

@@ -20,7 +20,7 @@ public final class TrafficSimConstants {
 	public static final boolean DEBUG_FPS = false;
 
 	/** Whether to do box2d debug rendering */
-	public static boolean DEBUG_RENDER = false;
+	public static boolean DEBUG_RENDER = true;
 
 	/** Constant used by world.step() in box2d. Higher values mean higher accuracy, 8 is standard */
 	public static final int VELOCITY_ITERATIONS = 8;
@@ -30,6 +30,9 @@ public final class TrafficSimConstants {
 	/** Size of the main window */
 	public static final int WINDOW_WIDTH = 1366;
 	public static final int WINDOW_HEIGHT = 768;
+	
+	
+	public static final int SAMPLING_DENSITY = 100;
 
 	/**
 	 * Box2D Constants, used to convert between the 2 coordinate systems
@@ -46,6 +49,8 @@ public final class TrafficSimConstants {
 
 	/** Speed limit for simple (1-lane) roads in meters per second */
 	public static final float CITY_SPEED_LIMIT = 50 / 3.6f;
+	
+	public static final float HIGHWAY_SPEED_LIMIT = 100 / 3.6f;
 
 	/** When braking, velocity will become brakingFactor * velocity (but also take into account the scaling factor) */
 	public static final float DEFAULT_BRAKING_FACTOR = 0.98f;
@@ -60,10 +65,13 @@ public final class TrafficSimConstants {
 	
 	public static final boolean DEBUG_PRINT_LEVEL_0 = false;
 
+	public static final boolean DEGUG_SUBSYSTEMS = false;
+
 	/** Default traffic light green interval */
 	public static final int TRAFFIC_LIGHT_GREEN_INTERVAL = 5;
 
 	/** Default traffic light orange interval */
 	public static final int TRAFFIC_LIGHT_ORANGE_INTERVAL = 1;
+
 
 }

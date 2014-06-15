@@ -1,8 +1,6 @@
 package trafficsim.screens;
 
 import static trafficsim.TrafficSimConstants.*;
-import graph.Graph;
-import graph.GraphFactory;
 
 import java.util.List;
 
@@ -11,7 +9,7 @@ import lombok.Setter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
-import trafficsim.roads.Road;
+import trafficsim.roads.NavigationObject;
 import trafficsim.systems.AbstractToggleStrategy;
 import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
@@ -32,6 +30,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
+import editor.WorldRenderer;
+import graph.Graph;
+import graph.GraphFactory;
+
 /**
  * The main screen of the simulation
  * 
@@ -50,6 +52,8 @@ public class SimulationScreen extends SuperScreen {
 
 	private boolean firstTimeSimulationRun = true;
 
+	private WorldRenderer wr;
+
 	@Getter
 	@Setter
 	// TODO it's not perfectly functional
@@ -57,7 +61,6 @@ public class SimulationScreen extends SuperScreen {
 
 	public SimulationScreen(Screens screens) {
 		super(screens);
-
 	}
 
 	@Override
@@ -70,7 +73,7 @@ public class SimulationScreen extends SuperScreen {
 		// Add systems
 		world.setSystem(new DataSystem());
 		world.setSystem(new RenderSystem(getCamera()));
-		// world.setSystem(new OldMovementSystem());
+
 		world.setSystem(new PhysicsSystem());
 		world.setSystem(new PathFindingSystem());
 		world.setSystem(new DestinationSystem());
@@ -96,34 +99,40 @@ public class SimulationScreen extends SuperScreen {
 
 		EntityFactory.createBackground(world, "background").addToWorld();
 
-		Graph<Road> graph;
-		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null)
-			graph = GraphFactory.createManhattanGraph(6, 6, 60, 0, 0);
+		Graph<NavigationObject> graph;
+		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null) {
+			graph = GraphFactory.createManhattanGraph(10, 10, 100.0f, 0, 0);
+			graph = GraphFactory.addHighway(graph, 10, 10, 100.0f, 0, 0);
+			//graph = GraphFactory.createNewSystem();
+		}
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();
 		world.setGraph(graph);
+		// EntityFactory.addSpawnPointsTest(world, world.getGraph());
+		// EntityFactory.addSpawnPoints(world, graph);
+		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
 		
-
 		firstTimeSimulationRun = false;
 
 
-		GraphFactory.addSpawnPointsTest(world, world.getGraph());
-		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
-		EntityFactory.addSpawnPoints(world, graph, vertexEntities);
-		
+
 		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
+
 
 		if (TIMER.isStarted())
 			TIMER.reset();
 		TIMER.start();
-		world.process();
 
+		wr = new WorldRenderer(null);
+
+		world.process();
+		// getCamera().translate(900, 900);
 	}
 
 
 	@Override
 	public void render(float delta) {
-		if (paused) {
+		if (isPaused()) {
 			return;
 		}
 		long start;
@@ -133,9 +142,12 @@ public class SimulationScreen extends SuperScreen {
 		getCamera().update();
 		world.setDelta(delta);
 
+
 		world.process();
 		if (DEBUG_RENDER)
 			debugRenderer.render(world.getBox2dWorld(), getCamera().combined);
+
+		// wr.renderDEBUG(getCamera(), world.getGraph());
 
 		getWorldLayer().act(delta);
 		getUILayer().act(delta);
@@ -144,17 +156,7 @@ public class SimulationScreen extends SuperScreen {
 
 		if (DEBUG_FPS)
 			System.out.println(TIMER.getTime() - start + " milliseconds ");
-
-		// if (TIMER.getTime() > 1000 * 600 && !exported) {
-		// String file = GraphFactory.poisson ? "data/poisson" : "data/uniform";
-		// ExportData.writeToFile(world.getDataGatherer(), file);
-		// System.out.println("exporting");
-		// exported = true;
-		// System.out.println(world.getDataGatherer());
-		// }
 	}
-
-	boolean exported = false;
 
 	@Override
 	public void populateUILayer() {

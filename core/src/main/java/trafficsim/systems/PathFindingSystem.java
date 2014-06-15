@@ -1,6 +1,9 @@
 package trafficsim.systems;
 
-import static functions.MovementFunctions.buildWaypoints;
+import static functions.MovementFunctions.buildWaypointsParametric;
+
+import java.util.List;
+
 import pathfinding.GraphAction;
 import pathfinding.GraphBasedAstar;
 import pathfinding.GraphState;
@@ -15,6 +18,7 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Mapper;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * System responsible for computing(by calling A*) a path between the assigned source and target vertices
@@ -51,7 +55,9 @@ public class PathFindingSystem
 					routeComp.setCurrentVertex(routeComp.getSource());
 					routeComp.setEdgeIndex(0);
 					// TODO not tested
-					routeComp.setWayPoints(buildWaypoints(routeComp));
+					List<Vector2> waypoints = buildWaypointsParametric(routeComp);
+					routeComp.setFollowingEdge(true);
+					routeComp.setWayPoints(waypoints);
 					updateRoadReference(routeComp, car.getId());
 				}
 			}

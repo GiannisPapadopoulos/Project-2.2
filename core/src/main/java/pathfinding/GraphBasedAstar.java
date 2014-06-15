@@ -4,7 +4,7 @@ import graph.Vertex;
 import lombok.NoArgsConstructor;
 import search.AstarSearch;
 import search.Path;
-import trafficsim.roads.Road;
+import trafficsim.roads.NavigationObject;
 
 @NoArgsConstructor
 public class GraphBasedAstar {
@@ -16,7 +16,7 @@ public class GraphBasedAstar {
 											new GraphGoalTest(targetState));
 	}
 
-	public Path<GraphState, GraphAction> findRoute(Vertex<Road> source, Vertex<Road> target) {
+	public Path<GraphState, GraphAction> findRoute(Vertex<NavigationObject> source, Vertex<NavigationObject> target) {
 		init(new GraphState(target));
 		return aStarInstance.findPath(new GraphState(source));
 	}

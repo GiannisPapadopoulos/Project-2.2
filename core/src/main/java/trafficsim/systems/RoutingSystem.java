@@ -1,7 +1,8 @@
 package trafficsim.systems;
 
 import static functions.MovementFunctions.buildWaypointsParametric;
-import static trafficsim.TrafficSimConstants.*;
+import static trafficsim.TrafficSimConstants.CAR_LENGTH;
+import static trafficsim.TrafficSimConstants.SPEED_RATIO;
 
 import java.util.List;
 
@@ -43,10 +44,10 @@ public class RoutingSystem
 	private ComponentMapper<VehiclesOnRoadComponent> vehiclesOnRoadComponentMapper;
 
 	/** Threshold for changing to the next waypoint */
-	private float waypointThreshold = 1.5f * (CITY_SPEED_LIMIT / DEFAULT_CITY_SPEED_LIMIT);
+	private float waypointThreshold = 1.5f * SPEED_RATIO;
 
 	/** Threshold for switching to the next parametric curve */
-	private float switchThreshold = CAR_LENGTH * (CITY_SPEED_LIMIT / DEFAULT_CITY_SPEED_LIMIT);
+	private float switchThreshold = CAR_LENGTH * SPEED_RATIO;
 
 	@SuppressWarnings("unchecked")
 	public RoutingSystem() {

@@ -61,6 +61,9 @@ public final class TrafficSimConstants {
 	
 	public static float HIGHWAY_SPEED_LIMIT = 2 * CITY_SPEED_LIMIT;
 
+	/** Ratio of maximum allowed speed to original speed limit, used for braking etc */
+	public static final float SPEED_RATIO = CITY_SPEED_LIMIT / DEFAULT_CITY_SPEED_LIMIT;
+
 	/** When braking, velocity will become brakingFactor * velocity (but also take into account the scaling factor) */
 	public static final float DEFAULT_BRAKING_FACTOR = 0.98f;
 

@@ -1,9 +1,7 @@
 package trafficsim.systems;
 
 
-import static com.badlogic.gdx.math.MathUtils.PI;
 import static com.badlogic.gdx.math.MathUtils.degRad;
-import static functions.MovementFunctions.constrainAngle;
 import static trafficsim.TrafficSimConstants.SPEED_SCALING_FACTOR;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -107,23 +105,26 @@ public class MovementSystem
 
 	private void steer(PhysicsBodyComponent physComp, RouteComponent routeComp, SteeringComponent steeringComp,
 			Vector2 newVel) {
-//		float deltaA = getAngleOfCurrentEdgeInRads(routeComp) - physComp.getAngle();
-		float deltaA = constrainAngle(physComp.getLinearVelocity().angle() * degRad)
-						- constrainAngle(physComp.getAngle());
-		deltaA = constrainAngle(deltaA);
 
-		// TODO extract constants, refactor
-		float scalingFactor = 0.5f;
-		// maximum turning speed
-		float angularThreshold = 1.5f * PI;
-		if (Math.abs(deltaA) > 0.05) {
-			if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
-				physComp.applyTorque(steeringComp.getMaxTorque() * deltaA * scalingFactor, true);
-			}
-		}
-		else {
-			physComp.setAngularVelocity(0);
-		}
+		// THEY WON"T STEER OTHERWISE!!!
+		physComp.setTransform(physComp.getPosition(), physComp.getLinearVelocity().angle() * degRad);
+
+		// float deltaA = constrainAngle(physComp.getLinearVelocity().angle() * degRad)
+		// - constrainAngle(physComp.getAngle());
+		// deltaA = constrainAngle(deltaA);
+		//
+		// // TODO extract constants, refactor
+		// float scalingFactor = 0.5f;
+		// // maximum turning speed
+		// float angularThreshold = 1.5f * PI;
+		// if (Math.abs(deltaA) > 0.05) {
+		// if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
+		// physComp.applyTorque(steeringComp.getMaxTorque() * deltaA * scalingFactor, true);
+		// }
+		// }
+		// else {
+		// physComp.setAngularVelocity(0);
+		// }
 	}
 
 	@Override

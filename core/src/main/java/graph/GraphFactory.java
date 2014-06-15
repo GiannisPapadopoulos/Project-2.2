@@ -110,14 +110,14 @@ public class GraphFactory {
 		graph.addVertex(cr4);
 		graph.addVertex(cr5);
 
-		graph.addEdge(r1, graph.getVertex(2), graph.getVertex(0), false);
-		graph.addEdge(r2, graph.getVertex(0), graph.getVertex(2), false);
-		graph.addEdge(r3, graph.getVertex(4), graph.getVertex(0), false);
-		graph.addEdge(r4, graph.getVertex(0), graph.getVertex(4), false);
-		graph.addEdge(r5, graph.getVertex(0), graph.getVertex(1), false);
-		graph.addEdge(r6, graph.getVertex(1), graph.getVertex(0), false);
-		graph.addEdge(r7, graph.getVertex(0), graph.getVertex(3), false);
-		graph.addEdge(r8, graph.getVertex(3), graph.getVertex(0), false);
+		graph.addEdge(r1, graph.getVertex(2), graph.getVertex(0), true);
+		graph.addEdge(r2, graph.getVertex(0), graph.getVertex(2), true);
+		graph.addEdge(r3, graph.getVertex(4), graph.getVertex(0), true);
+		graph.addEdge(r4, graph.getVertex(0), graph.getVertex(4), true);
+		graph.addEdge(r5, graph.getVertex(0), graph.getVertex(1), true);
+		graph.addEdge(r6, graph.getVertex(1), graph.getVertex(0), true);
+		graph.addEdge(r7, graph.getVertex(0), graph.getVertex(3), true);
+		graph.addEdge(r8, graph.getVertex(3), graph.getVertex(0), true);
 
 		cr1.addConnection(r1, true);
 		cr1.addConnection(r3, true);

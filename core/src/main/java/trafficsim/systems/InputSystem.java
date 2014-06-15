@@ -32,6 +32,8 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 	protected float previousDragX;
 	protected float previousDragY;
 
+	private boolean printCoordinates = false;
+
 	public InputSystem(SuperScreen superScreen) {
 		this.superScreen = superScreen;
 		this.camera = superScreen.getCamera();
@@ -56,6 +58,9 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 				// Toggle paused
 				screen.setPaused(!screen.isPaused());
 			}
+		}
+		else if (keycode == Keys.R) {
+			printCoordinates = !printCoordinates;
 		}
 		return false;
 	}
@@ -97,7 +102,8 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 		else {
 			superScreen.getMousePosition().update(camera);
 			Coordinates coords = superScreen.getMousePosition().getAbsolute();
-			// System.out.println("x " + coords.getX() + " y " + coords.getY());
+			if (printCoordinates)
+				System.out.println("x " + coords.getX() + " y " + coords.getY());
 		}
 		return true;
 	}

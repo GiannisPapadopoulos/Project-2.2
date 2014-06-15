@@ -49,7 +49,8 @@ public class DestinationSystem
 				assert routeComp.getSource() != null;
 				Graph<NavigationObject> graph = routeComp.getSource().getParent();
 				if (spawnPoints.size() <= 1) {
-					int randIndex = RANDOM.nextInt(graph.getVertexCount() - 5);
+					int randIndex = RANDOM.nextInt(graph.getVertexCount() - 11);
+					// int randIndex = RANDOM.nextInt(graph.getVertexCount() - 1);
 
 					// Make sure source != target
 					if (randIndex >= routeComp.getSource().getID()) {
@@ -58,8 +59,6 @@ public class DestinationSystem
 					routeComp.setTarget(graph.getVertex(randIndex));
 				}
 				else {
-
-					System.out.println("yes");
 					int randIndex = RANDOM.nextInt(spawnPoints.size() - 1);
 					if (spawnComponentMapper.get(spawnPoints.get(randIndex)).getVertex() == routeComp.getSource()) {
 						randIndex++;

@@ -2,8 +2,7 @@ package trafficsim.systems;
 
 import static com.badlogic.gdx.math.MathUtils.cos;
 import static com.badlogic.gdx.math.MathUtils.sin;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.DEFAULT_BRAKING_FACTOR;
+import static trafficsim.TrafficSimConstants.*;
 import gnu.trove.list.TIntList;
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.TrafficRayCastCallBack;
@@ -44,9 +43,9 @@ public class ManageMovementBehaviorsSystem
 	@Mapper
 	private ComponentMapper<TrafficLightComponent> trafficLightsMapper;
 
-	private float brakingThreshold = 3f;
-	private float carInFrontThreshold = CAR_LENGTH + brakingThreshold + 1f;
-	private float emergencyThreshold = CAR_LENGTH + 2f;
+	private float brakingThreshold = 3f * SPEED_RATIO;
+	private float carInFrontThreshold = (CAR_LENGTH + brakingThreshold + 1f) * SPEED_RATIO;
+	private float emergencyThreshold = (CAR_LENGTH + 2f) * SPEED_RATIO;
 
 	@SuppressWarnings("unchecked")
 	public ManageMovementBehaviorsSystem() {

@@ -108,7 +108,7 @@ public class SimulationScreen extends SuperScreen {
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null) {
 			graph = GraphFactory.createManhattanGraph(10, 10, 100.0f, 0, 0);
 			graph = GraphFactory.addHighway(graph, 10, 10, 100.0f, 0, 0);
-			//graph = GraphFactory.createNewSystem();
+			// graph = GraphFactory.createNewSystem();
 		}
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();

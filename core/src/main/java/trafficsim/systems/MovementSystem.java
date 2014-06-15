@@ -1,6 +1,7 @@
 package trafficsim.systems;
 
 
+import static com.badlogic.gdx.math.MathUtils.PI;
 import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.MovementFunctions.constrainAngle;
 import static trafficsim.TrafficSimConstants.SPEED_SCALING_FACTOR;
@@ -106,37 +107,15 @@ public class MovementSystem
 //		float deltaA = getAngleOfCurrentEdgeInRads(routeComp) - physComp.getAngle();
 		float deltaA = constrainAngle(physComp.getLinearVelocity().angle() * degRad)
 						- constrainAngle(physComp.getAngle());
-		// float deltaA =
-		// physComp.getLinearVelocity().cpy().sub(getUnitVectorRads(physComp.getBody().getAngle())).angle();
-		// float deltaA =
-		// getUnitVectorRads(physComp.getBody().getAngle()).cpy().sub(physComp.getLinearVelocity()).angle();
-		// float deltaA = getDeltaAngle(routeComp) - physComp.getAngle();
-		// float deltaA = physComp.getAngle();
-		// if (routeComp.getWayPointIndex() < routeComp.getWayPoints().size() - 1) {
-		// Vector2 v1 = routeComp.getWayPoints().get(routeComp.getWayPointIndex() + 1);
-		// Vector2 v2 = routeComp.getWayPoints().get(routeComp.getWayPointIndex());
-		// Vector2 vector = routeComp.getWayPoints()
-		// .get(routeComp.getWayPointIndex() + 1)
-		// .cpy()
-		// .sub(routeComp.getNextWaypoint().cpy());
-		// deltaA = vector.angle() * degRad - physComp.getAngle();
-		// // System.out.println("da" + deltaA + "constr " + constrainAngle(deltaA) + "vecA " + vector.angle() * degRad
-		// // + " v1 " + v1 + " v2 " + v2 + " vector " + vector);
-		// }
 		deltaA = constrainAngle(deltaA);
 
 		// TODO extract constants, refactor
 		float scalingFactor = 0.5f;
-		float angularThreshold = 2;
+		// maximum turning speed
+		float angularThreshold = 1.5f * PI;
 		if (Math.abs(deltaA) > 0.05) {
 			if (Math.abs(physComp.getAngularVelocity()) < angularThreshold) {
-				// deltaA < 0 &&
-				float turningSpeed = 8;
-				if (newVel.len() > turningSpeed) {
-					newVel.scl(0.9f);
-				}
 				physComp.applyTorque(steeringComp.getMaxTorque() * deltaA * scalingFactor, true);
-
 			}
 		}
 		else {

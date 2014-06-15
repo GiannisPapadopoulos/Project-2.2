@@ -1,6 +1,7 @@
 package trafficsim.systems;
 
 import static functions.MovementFunctions.buildWaypointsParametric;
+import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class RoutingSystem
 	private float waypointThreshold = 1.0f;
 
 	/** Threshold for switching to the next parametric curve */
-	private float switchThreshold = 5.0f;
+	private float switchThreshold = CAR_LENGTH;
 
 	@SuppressWarnings("unchecked")
 	public RoutingSystem() {

@@ -29,6 +29,7 @@ import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
+import ui.tables.CurrentFocus;
 import ui.tables.InfoPop;
 
 import com.artemis.Entity;
@@ -96,6 +97,8 @@ public class InitializeWorld {
 			TIMER.reset();
 		TIMER.start();
 		screen.setPop(new InfoPop(renderSystem.getBatch()));
+		screen.setFocus(new CurrentFocus(screen.getSidePanels()));
+		System.out.println(screen.getFocus());
 		world.process();
 	}
 }

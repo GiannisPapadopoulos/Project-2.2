@@ -5,25 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.data.DataGatherer;
-import trafficsim.factories.EntityFactory;
-import trafficsim.roads.NavigationObject;
-import trafficsim.systems.AbstractToggleStrategy;
-import trafficsim.systems.DestinationSystem;
-import trafficsim.systems.ExpirySystem;
-import trafficsim.systems.GroupedTrafficLightSystem;
-import trafficsim.systems.InputSystem;
-import trafficsim.systems.ManageMovementBehaviorsSystem;
-import trafficsim.systems.ManageSpawnRateChangeSystem;
-import trafficsim.systems.ManageSpeedLimitChangeSystem;
-import trafficsim.systems.MovementSystem;
-import trafficsim.systems.PathFindingSystem;
-import trafficsim.systems.PhysicsSystem;
-import trafficsim.systems.RenderSystem;
-import trafficsim.systems.RoutingSystem;
-import trafficsim.systems.SpawnSystem;
-import ui.tables.CurrentFocus;
 import trafficsim.experiments.InitializeWorld;
 import trafficsim.experiments.PredefinedParameters;
+import ui.tables.CurrentFocus;
 import ui.tables.InfoPop;
 import utils.ExportData;
 
@@ -56,6 +40,7 @@ public class SimulationScreen extends SuperScreen {
 	@Setter
 	private InfoPop pop;
 	@Getter
+	@Setter
 	private CurrentFocus focus;
 
 	private WorldRenderer wr;
@@ -123,7 +108,11 @@ public class SimulationScreen extends SuperScreen {
 				System.out.println(frameTime + " milliseconds ");
 		}
 		pop.render();
-		focus.render();
+		if (focus != null)
+			focus.render();
+		else {
+			// System.out.println("focus is null");
+		}
 		super.setWaitTimeUI(world);
 		super.setCarsUI(world);
 		super.setAverageSpeed(world);

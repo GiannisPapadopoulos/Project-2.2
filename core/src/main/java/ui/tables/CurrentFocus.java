@@ -44,6 +44,10 @@ public class CurrentFocus extends Table {
 	
 	public void render(){
 		
+		if (entityToRender == null || !entityToRender.isActive()) {
+			return;
+		}
+
 		if(car){
 			
 			
@@ -67,19 +71,21 @@ public class CurrentFocus extends Table {
 	}
 	
 	private boolean isCar(Entity entity) {
-		
-		if(entity!=null){
-		
-		if (entity.getComponent(MaxSpeedComponent.class)!=null){	
-			
-			return true;
+
+		if (entity != null) {
+
+			if (entity.getComponent(MaxSpeedComponent.class) != null) {
+				// /System.out.println("car");
+				return true;
+			}
 		}
+
+		else {
+
 		}
-		
-		else
-	
-		System.out.println("not car");
-	
+
+		// System.out.println("not car");
+
 		return false;
 	}
 
@@ -92,22 +98,21 @@ public class CurrentFocus extends Table {
 			entityToRender = clickedEntity;
 			car = isCar(entityToRender); 
 			if(car){
-				Table table = new Table();
-				System.out.println("clearing children");
+				// Table table = new Table();
 				clearChildren();
-				table.add(new Label("Current Velocity: ", Assets.skin));
-				table.add(currentSpeed);
-				table.row();
-				table.add(new Label("Distance Traveled: ", Assets.skin));
-				table.add(distanceTravelled);
-				table.row();
-				table.add(new Label("Average Speed: ", Assets.skin));
-				table.add(averageSpeed);
-				table.row();
-				table.add(new Label("Distance Remaining: ", Assets.skin));
-				table.add(distanceRemaining);
+				add(new Label("Current Velocity: ", Assets.skin));
+				add(currentSpeed);
+				row();
+				add(new Label("Distance Traveled: ", Assets.skin));
+				add(distanceTravelled);
+				row();
+				add(new Label("Average Speed: ", Assets.skin));
+				add(averageSpeed);
+				row();
+				add(new Label("Distance Remaining: ", Assets.skin));
+				add(distanceRemaining);
 				
-				sidepanels.setCurrentFocus(table);
+				sidepanels.setCurrentFocus(this);
 				
 			}
 			else

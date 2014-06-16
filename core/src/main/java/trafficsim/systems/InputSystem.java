@@ -112,12 +112,15 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 					EntityIdentificationData graphData = (EntityIdentificationData) physComp.getUserData();
 					if (graphData.getType() == ElementType.EDGE) {
 						Edge<NavigationObject> edge = ((TrafficSimWorld) world).getGraph().getEdge(graphData.getID());
-						System.out.println(getRoad(edge).getDirection());
+						if (DEBUG_CLICKS)
+							System.out.println(getRoad(edge).getDirection());
 					}
 				}
-				System.out.println("Found something " + entity + " id " + callBack.getIdData().getID() + " "
-									+ physComp.getPosition() + "\n");
+				if (DEBUG_CLICKS)
+					System.out.println("Found something " + entity + " id " + callBack.getIdData().getID() + " "
+										+ physComp.getPosition() + "\n");
 				superScreen.getScreens().getSimulationScreen().getPop().setEntityToRender(entity);
+				superScreen.getScreens().getSimulationScreen().getFocus().setEntityToRender(entity);
 			}
 		}
 		else {

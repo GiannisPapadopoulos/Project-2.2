@@ -103,7 +103,7 @@ public class ManageMovementBehaviorsSystem
 				System.out.println("Could not retrieve entity with ID " + rayCallBack.getClosestId() + " loc "
 									+ position);
 			}
-			else {
+			else if (otherCar != null && isOnSameEdge(routeComp, otherCar)) {
 				float distance = physicsBodyMapper.get(otherCar).getPosition().dst(position);
 				// steeringComponentMapper.get(otherCar).getState() != State.DEFAULT &&
 				// && routeComponentMapper.get(otherCar).getCurrentEdge() == routeComp.getCurrentEdge()
@@ -137,6 +137,15 @@ public class ManageMovementBehaviorsSystem
 		steeringComp.setState(State.DEFAULT);
 		setSeekBehavior(movementComp, routeComp);
 
+	}
+
+	private boolean isOnSameEdge(RouteComponent routeComp, Entity otherCar) {
+		assert otherCar != null && routeComp != null;
+		RouteComponent otherRouteComponent = routeComponentMapper.get(otherCar);
+		if (!otherRouteComponent.isSet() || !routeComp.isSet()) {
+			return false;
+		}
+		return otherRouteComponent.getCurrentEdge().getID() == routeComp.getCurrentEdge().getID();
 	}
 
 	private void setBrakeBehavior(MovementComponent movementComp, float factor) {

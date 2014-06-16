@@ -20,7 +20,7 @@ public class GraphFactory {
 	public static final boolean useManhattanGraph = false;
 
 	/** */
-	public static final boolean makeRoundabout = false;
+	public static final boolean makeRoundabout = true;
 
 	public static Graph<NavigationObject> createGraph() {
 		if (useManhattanGraph) {

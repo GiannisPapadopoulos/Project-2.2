@@ -11,10 +11,15 @@ import java.util.List;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.DataSystem;
 import trafficsim.components.PhysicsBodyComponent;
+import trafficsim.components.SpawnComponent;
 import trafficsim.experiments.SimulationParameters.ManhattanGraphInfo;
+import trafficsim.experiments.SimulationParameters.SpawnInfo;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.NavigationObject;
 import trafficsim.screens.SimulationScreen;
+import trafficsim.spawning.AbstractSpawnStrategy.SpawnStrategyType;
+import trafficsim.spawning.FixedIntervalSpawningStrategy;
+import trafficsim.spawning.PoissonSpawnStrategy;
 import trafficsim.systems.AbstractToggleStrategy;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
@@ -74,7 +79,9 @@ public class InitializeWorld {
 		Graph<NavigationObject> graph;
 		if (parameters.isManhattanGraph()) {
 			ManhattanGraphInfo graphInfo = parameters.getGraphInfo();
-			graph = GraphFactory.createManhattanGraph(graphInfo.getWidth(), graphInfo.getHeight(), 100f, 0, 0);
+			graph = GraphFactory.createManhattanGraph(	graphInfo.getWidth(), graphInfo.getHeight(),
+														graphInfo.getLaneLength(), 0, 0);
+			GraphFactory.addHighway(graph, graphInfo.getWidth(), graphInfo.getHeight(), graphInfo.getLaneLength(), 0, 0);
 		}
 		else {
 			graph = GraphFactory.createTestOneGraph(parameters.isRoundabout());
@@ -86,6 +93,21 @@ public class InitializeWorld {
 		for (Entity vertexEntity : vertexEntities) {
 			int vertexID = ((EntityIdentificationData) vertexEntity.getComponent(PhysicsBodyComponent.class)
 																	.getUserData()).getID();
+			for (SpawnInfo spawnInfo : parameters.getSpawnpoints()) {
+				if (spawnInfo.getVertexID() == vertexID) {
+					if (spawnInfo.getStrategy() == SpawnStrategyType.POISSON) {
+						vertexEntity.addComponent(new SpawnComponent(
+																		graph.getVertex(vertexID),
+																		new PoissonSpawnStrategy(spawnInfo.getSpawnInterval())));
+					}
+					else {
+
+						vertexEntity.addComponent(new SpawnComponent(
+																		graph.getVertex(vertexID),
+																		new FixedIntervalSpawningStrategy(spawnInfo.getSpawnInterval())));
+					}
+				}
+			}
 		}
 
 		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
@@ -98,7 +120,6 @@ public class InitializeWorld {
 		TIMER.start();
 		screen.setPop(new InfoPop(renderSystem.getBatch()));
 		screen.setFocus(new CurrentFocus(screen.getSidePanels()));
-		System.out.println(screen.getFocus());
 		world.process();
 	}
 }

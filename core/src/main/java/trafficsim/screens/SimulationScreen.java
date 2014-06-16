@@ -7,6 +7,7 @@ import trafficsim.TrafficSimWorld;
 import trafficsim.data.DataGatherer;
 import trafficsim.experiments.InitializeWorld;
 import trafficsim.experiments.PredefinedParameters;
+import trafficsim.experiments.SimulationParameters;
 import ui.tables.CurrentFocus;
 import ui.tables.InfoPop;
 import utils.ExportData;
@@ -66,7 +67,8 @@ public class SimulationScreen extends SuperScreen {
 		if (world != null)
 			world.dispose();
 		world = new TrafficSimWorld();
-		InitializeWorld.init(world, PredefinedParameters.roundaboutSimpleGraph, this);
+		SimulationParameters parameters = PredefinedParameters.priorityLightsmanhattanGraph;
+		InitializeWorld.init(world, parameters, this);
 	}
 
 

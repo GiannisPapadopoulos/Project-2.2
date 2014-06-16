@@ -11,7 +11,6 @@ import graph.Edge;
 import graph.EntityIdentificationData;
 import graph.EntityIdentificationData.ElementType;
 import graph.Graph;
-import graph.GraphFactory;
 import graph.Vertex;
 
 import java.util.ArrayList;
@@ -216,17 +215,17 @@ public class EntityFactory {
 		SpriteComponent sprite = new SpriteComponent(name);
 		crossRoad.addComponent(sprite);
 		// || vertex.getID() == vertex.getParent().getVertexCount() - 1
-		double spawnInterval = spawnRate;
-		if (GraphFactory.useManhattanGraph) {
-			if (indices.contains(vertex.getID())) {
-				crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(spawnInterval)));
-			}
-		}
-		else {
-			if (vertex.getID() != 0) {
-				crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(spawnInterval)));
-			}
-		}
+		// double spawnInterval = spawnRate;
+		// if (GraphFactory.useManhattanGraph) {
+		// if (indices.contains(vertex.getID())) {
+		// crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(spawnInterval)));
+		// }
+		// }
+		// else {
+		// if (vertex.getID() != 0) {
+		// crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(spawnInterval)));
+		// }
+		// }
 		return crossRoad;
 	}
 

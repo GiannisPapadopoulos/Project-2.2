@@ -47,15 +47,15 @@ public class Road extends NavigationObject {
 		
 	}
 
-	// UNUSED
-	public Road(ArrayList<ParametricCurve> roadDef, int numLanes,
-			float speedLimit, CrossRoad origin, CrossRoad destination) {
-		this.numLanes = numLanes;
-		create(roadDef, numLanes, speedLimit, origin, destination);
-		origin.addConnection(this, false);
-		destination.addConnection(this, true);
-		
-	}
+	// // UNUSED
+	// public Road(ArrayList<ParametricCurve> roadDef, int numLanes,
+	// float speedLimit, CrossRoad origin, CrossRoad destination) {
+	// this.numLanes = numLanes;
+	// create(roadDef, numLanes, speedLimit, origin, destination);
+	// origin.addConnection(this, false);
+	// destination.addConnection(this, true);
+	//
+	// }
 
 	@Override
 	public SubSystem requestTransitionPath(NavigationObject origin,

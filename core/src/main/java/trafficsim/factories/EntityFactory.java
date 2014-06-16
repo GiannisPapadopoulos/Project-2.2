@@ -12,6 +12,7 @@ import graph.Graph;
 import graph.Vertex;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import paramatricCurves.ParametricCurve;
@@ -116,6 +117,7 @@ public class EntityFactory {
 	 */
 	public static Entity createRoad(TrafficSimWorld world,
 			Edge<NavigationObject> edge) {
+
 		Road roadData = (Road) edge.getData();
 		String name;
 		Entity road = world.createEntity();
@@ -159,6 +161,10 @@ public class EntityFactory {
 
 	private static Entity createCrossRoad(TrafficSimWorld world,
 			Vertex<NavigationObject> vertex) {
+		Graph<NavigationObject> graph = vertex.getParent();
+		List<Integer> indices = Arrays.asList(	0, graph.getVertexCount() - 1,
+												(int) Math.sqrt(graph.getVertexCount() - 1),
+												graph.getVertexCount() - (int) Math.sqrt(graph.getVertexCount()));
 		CrossRoad crossRoadData = (CrossRoad) vertex.getData();
 		String name;
 		Entity crossRoad = world.createEntity();
@@ -202,7 +208,7 @@ public class EntityFactory {
 		SpriteComponent sprite = new SpriteComponent(name);
 		crossRoad.addComponent(sprite);
 		// || vertex.getID() == vertex.getParent().getVertexCount() - 1
-		if (vertex.getID() == 0) {
+		if (indices.contains(vertex.getID())) {
 			crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(1000)));
 		}
 		return crossRoad;
@@ -405,8 +411,9 @@ public class EntityFactory {
 			boolean AtoB,
 			int interval) {
 		// NavigationObject intersection = new Road(vertexA, vertexB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
-		Vertex<NavigationObject> spawn1 = graph.addVertex(new CrossRoad(2 * LANE_WIDTH,
-																		new Vector2(getMidPoint(vertexA, vertexB)),CrossRoad.CR_TYPE.SpawnPoint));
+		Vertex<NavigationObject> spawn1 = graph.addVertex(new CrossRoad(4 * LANE_WIDTH,
+																		new Vector2(getMidPoint(vertexA, vertexB)),
+																		CrossRoad.CR_TYPE.CrossRoad));
 		// NavigationObject edge = new Road(edgeA, edgeB, 1, Direction.BOTH, CITY_SPEED_LIMIT);
 
 		Vector2 pointA1 = new Vector2(edgeA.x + LANE_WIDTH, edgeA.y - LANE_WIDTH / 2);
@@ -415,27 +422,36 @@ public class EntityFactory {
 		Vector2 pointA2 = new Vector2(edgeA.x + LANE_WIDTH, edgeA.y + LANE_WIDTH / 2);
 		Vector2 pointB2 = new Vector2(edgeB.x - LANE_WIDTH, edgeB.y + LANE_WIDTH / 2);
 
-		Edge<NavigationObject> roadEdge1 = graph.addEdge(	new Road(
-																		new ParametricCurve(new C_Linear(pointA1,
-																											pointB1)),
-																		1, TrafficSimConstants.CITY_SPEED_LIMIT,
-																		(CrossRoad) spawn1.getData(),
-																		(CrossRoad) connection.getData()), spawn1,
-															connection, true);
-		Edge<NavigationObject> roadEdge2 = graph.addEdge(	new Road(
-																		new ParametricCurve(new C_Linear(pointB2,
-																											pointA2)),
-																		1, TrafficSimConstants.CITY_SPEED_LIMIT,
-																		(CrossRoad) connection.getData(),
-																		(CrossRoad) spawn1.getData()), connection,
-															spawn1,
-															true);
+		Edge<NavigationObject> roadEdge1, roadEdge2;
+
+
 		// System.out.println(VectorUtils.getAngle(intersection) + " " + VectorUtils.getAngle(edge));
 		// Edge<NavigationObject> roadEdge;
-		// if (AtoB)
-		// roadEdge = graph.addEdge(edge, spawn1, connection, false);
-		// else
-		// roadEdge = graph.addEdge(edge, connection, spawn1, false);
+		if (AtoB) {
+			// roadEdge = graph.addEdge(edge, spawn1, connection, false);
+			roadEdge1 = graph.addEdge(new Road(new ParametricCurve(new C_Linear(edgeA, edgeB)), 1,
+												TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) spawn1.getData(),
+												(CrossRoad) connection.getData()), spawn1, connection, true);
+			roadEdge2 = graph.addEdge(new Road(new ParametricCurve(new C_Linear(edgeB, edgeA)), 1,
+												TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) connection.getData(),
+												(CrossRoad) spawn1.getData()), connection, spawn1, true);
+		}
+		else {
+			// roadEdge = graph.addEdge(edge, connection, spawn1, false);
+			roadEdge1 = graph.addEdge(new Road(new ParametricCurve(new C_Linear(edgeA, edgeB)), 1,
+												TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) spawn1.getData(),
+												(CrossRoad) connection.getData()), connection, spawn1, true);
+			roadEdge2 = graph.addEdge(new Road(new ParametricCurve(new C_Linear(edgeB, edgeA)), 1,
+												TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) connection.getData(),
+												(CrossRoad) spawn1.getData()), spawn1, connection, true);
+			// roadEdge1 = graph.addEdge(new Road(new ParametricCurve(new C_Linear(edgeB, edgeA)), 1,
+			// TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) connection.getData(),
+			// (CrossRoad) spawn1.getData()), spawn1, connection, true);
+			// roadEdge2 = graph.addEdge(new Road(new ParametricCurve(new C_Linear(edgeA, edgeB)), 1,
+			// TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) spawn1.getData(),
+			// (CrossRoad) connection.getData()), connection, spawn1, true);
+		}
+
 		EntityFactory.createCrossRoad(world, spawn1).addToWorld();
 		EntityFactory.createRoad(world, roadEdge1).addToWorld();
 		EntityFactory.createRoad(world, roadEdge2).addToWorld();

@@ -14,7 +14,6 @@ import trafficsim.components.DataSystem;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.NavigationObject;
 import trafficsim.systems.AbstractToggleStrategy;
-import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.GroupedTrafficLightSystem;
@@ -89,14 +88,16 @@ public class SimulationScreen extends SuperScreen {
 		// AbstractToggleStrategy toggleStrategy = AbstractToggleStrategy.basicToggleStrategy;
 		AbstractToggleStrategy toggleStrategy = AbstractToggleStrategy.priorityToggleStrategy;
 		world.setSystem(new GroupedTrafficLightSystem(toggleStrategy));
-		world.setSystem(new ExpirySystem());
+
 
 		world.setSystem(new RoutingSystem());
 		world.setSystem(new MovementSystem());
 		world.setSystem(new ManageMovementBehaviorsSystem());
 
 		// Temporary hack
-		world.setSystem(new CollisionDisablingSystem());
+		// world.setSystem(new CollisionDisablingSystem());
+
+		world.setSystem(new ExpirySystem());
 
 		InputSystem inputSystem = new InputSystem(this);
 		initMultiplexer();
@@ -109,8 +110,8 @@ public class SimulationScreen extends SuperScreen {
 
 		Graph<NavigationObject> graph;
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null) {
-			//graph = GraphFactory.createManhattanGraph(10, 10, 100.0f, 0, 0);
-			//graph = GraphFactory.addHighway(graph, 10, 10, 100.0f, 0, 0);
+			graph = GraphFactory.createManhattanGraph(10, 10, 100.0f, 0, 0);
+			// graph = GraphFactory.addHighway(graph, 10, 10, 100.0f, 0, 0);
 			// graph = GraphFactory.createNewSystem();
 			graph = GraphFactory.createTestOneGraph(false);
 		}
@@ -138,9 +139,7 @@ public class SimulationScreen extends SuperScreen {
 		world.process();
 
 		
-		
-		
-
+		getCamera().translate(900, 900);
 
 	}
 	protected void initMultiplexer() {

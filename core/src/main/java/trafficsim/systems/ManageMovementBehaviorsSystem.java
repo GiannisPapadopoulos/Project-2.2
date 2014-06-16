@@ -79,8 +79,9 @@ public class ManageMovementBehaviorsSystem
 		TrafficRayCastCallBack rayCallBack = new TrafficRayCastCallBack();
 		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
 
-		if (rayCallBack.foundSomething()) {
+		if (rayCallBack.foundSomething() && world.getEntity(rayCallBack.getClosestId()) != null) {
 			Entity otherCar = world.getEntity(rayCallBack.getClosestId());
+			// System.out.println(otherCar + " " + rayCallBack.getClosestId());
 			float distance = physicsBodyMapper.get(otherCar).getPosition().dst(position);
 			// steeringComponentMapper.get(otherCar).getState() != State.DEFAULT &&
 			// && routeComponentMapper.get(otherCar).getCurrentEdge() == routeComp.getCurrentEdge()

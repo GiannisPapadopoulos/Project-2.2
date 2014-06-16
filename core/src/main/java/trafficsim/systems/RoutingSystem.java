@@ -91,6 +91,9 @@ public class RoutingSystem
 		}
 		else {
 			SubSystem transition = getNextSubsystem(routeComp);
+			if (transition == null) {
+				System.out.println(routeComp.getCurrentVertex() + " " + routeComp.getCurrentEdge());
+			}
 			Vector2 nextTransitionPoint = getNextTransitionPoint(transition);
 
 			if (physComp.getPosition().dst(nextTransitionPoint) < switchThreshold

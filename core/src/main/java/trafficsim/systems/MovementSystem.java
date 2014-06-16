@@ -5,6 +5,7 @@ import static com.badlogic.gdx.math.MathUtils.degRad;
 import static trafficsim.TrafficSimConstants.SPEED_SCALING_FACTOR;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import trafficsim.components.AccelerationComponent;
 import trafficsim.components.ExpiryComponent;
@@ -49,6 +50,11 @@ public class MovementSystem
 	
 	@Getter 
 	private int totalCars;
+
+	/** If set to true, all car speed limits will be changed */
+	@Getter
+	@Setter
+	private boolean speedLimitModified;
 
 	@SuppressWarnings("unchecked")
 	public MovementSystem() {

@@ -4,6 +4,7 @@ import static trafficsim.TrafficSimConstants.*;
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.FindBodyQueryCallback;
 import trafficsim.components.PhysicsBodyComponent;
+import trafficsim.data.DataGatherer;
 import trafficsim.screens.SimulationScreen;
 import trafficsim.screens.SuperScreen;
 import utils.ExportData;
@@ -47,10 +48,11 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
+		DataGatherer dataGatherer = ((TrafficSimWorld) world).getDataGatherer();
 		if (keycode == Keys.C) {
 			System.out.println("Total time running " + TIMER.getTime() / 1000.0 + " cars spawned "
 								+ world.getSystem(MovementSystem.class).getTotalCars());
-			System.out.println(((TrafficSimWorld) world).getDataGatherer());
+			System.out.println(dataGatherer);
 			return true;
 		}
 		else if (keycode == Keys.P) {
@@ -61,7 +63,8 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 			}
 		}
 		else if (keycode == Keys.E) {
-			ExportData.writeToFile(((TrafficSimWorld) world).getDataGatherer(), "data/simulationData");
+			ExportData.writeToFile(dataGatherer, "data/simulationData");
+			System.out.println(dataGatherer.getAverageDistanceTravelled().size() + " cars have reached destination");
 		}
 		else if (keycode == Keys.R) {
 			printCoordinates = !printCoordinates;

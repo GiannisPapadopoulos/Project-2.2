@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.DataSystem;
+import trafficsim.data.DataGatherer;
 import trafficsim.factories.EntityFactory;
 import trafficsim.roads.NavigationObject;
 import trafficsim.systems.AbstractToggleStrategy;
@@ -23,6 +24,7 @@ import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
 import ui.tables.InfoPop;
+import utils.ExportData;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
@@ -56,6 +58,12 @@ public class SimulationScreen extends SuperScreen {
 	private InfoPop pop;
 
 	private WorldRenderer wr;
+
+	// If data have been exported
+	private boolean exported = false;
+
+	// Export data after this many seconds
+	private int secsToSave = 300;
 
 	@Getter
 	@Setter
@@ -180,7 +188,13 @@ public class SimulationScreen extends SuperScreen {
 		super.setWaitTimeUI(world);
 		super.setCarsUI(world);
 		
-		
+		if (!exported && TIMER.getTime() > 1.0 * secsToSave * 1000) {
+			DataGatherer dataGatherer = world.getDataGatherer();
+			ExportData.writeToFile(dataGatherer, "data/simulationData");
+			exported = true;
+
+			System.out.println(dataGatherer.getAverageDistanceTravelled().size() + " cars have reached destination");
+		}
 	}
 	
 

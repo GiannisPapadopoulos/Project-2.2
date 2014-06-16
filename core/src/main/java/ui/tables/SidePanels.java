@@ -9,6 +9,7 @@ import trafficsim.TrafficSimConstants;
 import trafficsim.TrafficSimWorld;
 import trafficsim.systems.AbstractToggleStrategy;
 import trafficsim.systems.GroupedTrafficLightSystem;
+import trafficsim.systems.MovementSystem;
 import utils.Assets;
 
 import com.badlogic.gdx.Gdx;
@@ -106,11 +107,12 @@ public class SidePanels extends Table {
 		speedLimitSlider.addListener(new ChangeListener(){
 
 			public void changed(ChangeEvent event, Actor actor) {
-				slimitcompanion.setText(Integer.toString((int)speedLimitSlider.getValue()));
-				
-				TrafficSimConstants.setCITY_SPEED_LIMIT(speedLimitSlider.getValue());
-				
-				}});
+				slimitcompanion.setText(Integer.toString((int) speedLimitSlider.getValue()));
+
+				TrafficSimConstants.setCITY_SPEED_LIMIT(speedLimitSlider.getValue() / 3.6f);
+				world.getSystem(MovementSystem.class).setSpeedLimitModified(true);
+			}
+		});
 		
 	
 		

@@ -8,6 +8,8 @@ import functions.VectorUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import graph.Edge;
+import graph.EntityIdentificationData;
+import graph.EntityIdentificationData.ElementType;
 import graph.Graph;
 import graph.GraphFactory;
 import graph.Vertex;
@@ -43,6 +45,7 @@ import trafficsim.movement.WeightedBehavior;
 import trafficsim.roads.CrossRoad;
 import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
+import trafficsim.roads.Road.Direction;
 import trafficsim.spawning.AbstractSpawnStrategy;
 import trafficsim.spawning.FixedIntervalSpawningStrategy;
 import trafficsim.spawning.PoissonSpawnStrategy;
@@ -82,7 +85,7 @@ public class EntityFactory {
 				.restitution(0.2f).friction(0f);
 		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
 				.type(BodyType.DynamicBody).position(position)
-				.angle(angleInRads).userData(car.getId()).build();
+				.angle(angleInRads).userData(new EntityIdentificationData(ElementType.CAR, car.getId())).build();
 		/** @formatter:on */
 		car.addComponent(new PhysicsBodyComponent(body));
 
@@ -135,11 +138,11 @@ public class EntityFactory {
 		// boxShape takes the half width/height as input
 		// TODO Check number of lanes here
 		float length = VectorUtils.getLength(roadData);
-		road.addComponent(new DimensionComponent(length, 2 * LANE_WIDTH * roadData.getNumLanes()));
+		road.addComponent(new DimensionComponent(length, LANE_WIDTH * roadData.getNumLanes()));
 		angle *= MathUtils.degRad;
 
 
-		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, LANE_WIDTH * 2 / 2)
+		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, LANE_WIDTH / 2)
 																.density(1.0f)
 																.restitution(1.0f)
 																.friction(0f)
@@ -149,6 +152,8 @@ public class EntityFactory {
 															.type(BodyType.StaticBody)
 															.position(position)
 															.angle(angle)
+															.userData(	new EntityIdentificationData(ElementType.EDGE,
+																									edge.getID()))
 															.build();
 		road.addComponent(new PhysicsBodyComponent(body));
 		// road.addComponent(new PositionComponent(position));
@@ -202,6 +207,8 @@ public class EntityFactory {
 															.type(BodyType.StaticBody)
 															.position(position)
 															.angle(angle)
+															.userData(	new EntityIdentificationData(ElementType.VERTEX,
+																									vertex.getID()))
 															.build();
 		crossRoad.addComponent(new PhysicsBodyComponent(body));
 		// road.addComponent(new PositionComponent(position));
@@ -438,21 +445,28 @@ public class EntityFactory {
 		// Edge<NavigationObject> roadEdge;
 		if (AtoB) {
 			// roadEdge = graph.addEdge(edge, spawn1, connection, false);
-			roadEdge1 = graph.addEdge(new Road(new ParametricCurve(new C_Linear(edgeA, edgeB)), 1,
-												TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) spawn1.getData(),
-												(CrossRoad) connection.getData()), spawn1, connection, true);
-			roadEdge2 = graph.addEdge(new Road(new ParametricCurve(new C_Linear(edgeB, edgeA)), 1,
-												TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) connection.getData(),
-												(CrossRoad) spawn1.getData()), connection, spawn1, true);
+			roadEdge1 = graph.addEdge(	new Road(new ParametricCurve(new C_Linear(edgeA, edgeB)), 1,
+													TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) spawn1.getData(),
+													(CrossRoad) connection.getData(), Direction.DOWNSTREAM), spawn1,
+										connection, true);
+			roadEdge2 = graph.addEdge(	new Road(new ParametricCurve(new C_Linear(edgeB, edgeA)), 1,
+													TrafficSimConstants.CITY_SPEED_LIMIT,
+													(CrossRoad) connection.getData(), (CrossRoad) spawn1.getData(),
+													Direction.UPSTREAM), connection, spawn1,
+										true);
 		}
 		else {
 			// roadEdge = graph.addEdge(edge, connection, spawn1, false);
-			roadEdge1 = graph.addEdge(new Road(new ParametricCurve(new C_Linear(edgeA, edgeB)), 1,
-												TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) spawn1.getData(),
-												(CrossRoad) connection.getData()), connection, spawn1, true);
-			roadEdge2 = graph.addEdge(new Road(new ParametricCurve(new C_Linear(edgeB, edgeA)), 1,
-												TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) connection.getData(),
-												(CrossRoad) spawn1.getData()), spawn1, connection, true);
+			roadEdge1 = graph.addEdge(	new Road(new ParametricCurve(new C_Linear(edgeA, edgeB)), 1,
+													TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) spawn1.getData(),
+													(CrossRoad) connection.getData(), Direction.DOWNSTREAM),
+										connection,
+										spawn1, true);
+			roadEdge2 = graph.addEdge(	new Road(new ParametricCurve(new C_Linear(edgeB, edgeA)), 1,
+													TrafficSimConstants.CITY_SPEED_LIMIT,
+													(CrossRoad) connection.getData(), (CrossRoad) spawn1.getData(),
+													Direction.UPSTREAM), spawn1, connection,
+										true);
 			// roadEdge1 = graph.addEdge(new Road(new ParametricCurve(new C_Linear(edgeB, edgeA)), 1,
 			// TrafficSimConstants.CITY_SPEED_LIMIT, (CrossRoad) connection.getData(),
 			// (CrossRoad) spawn1.getData()), spawn1, connection, true);

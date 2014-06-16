@@ -1,5 +1,7 @@
 package trafficsim.callbacks;
 
+import graph.EntityIdentificationData;
+import graph.EntityIdentificationData.ElementType;
 import lombok.Getter;
 
 import com.badlogic.gdx.math.Vector2;
@@ -15,12 +17,14 @@ public class TrafficRayCastCallBack
 	@Override
 	public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
 		Object userData = fixture.getBody().getUserData();
-		if (userData != null && userData.getClass() == Integer.class) {
-			closestId = (Integer) userData;
-			return fraction;
+		if (userData != null && userData.getClass() == EntityIdentificationData.class) {
+			EntityIdentificationData idData = (EntityIdentificationData) userData;
+			if (idData.getType() == ElementType.CAR) {
+				closestId = idData.getID();
+				return fraction;
+			}
 		}
-		else
-			return -1;
+		return -1;
 	}
 
 	public boolean foundSomething() {

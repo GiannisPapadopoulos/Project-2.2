@@ -53,7 +53,7 @@ public class SimulationScreen extends SuperScreen {
 	// So it's mutable by EditorScreen
 	private TrafficSimWorld world;
 
-	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
+	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, false, true, false, true, true);
 
 	private boolean firstTimeSimulationRun = true;
 	@Getter

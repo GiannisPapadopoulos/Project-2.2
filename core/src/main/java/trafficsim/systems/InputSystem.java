@@ -1,10 +1,13 @@
 package trafficsim.systems;
 
+import static functions.MovementFunctions.getRoad;
 import static trafficsim.TrafficSimConstants.*;
+import static utils.EntityRetrievalUtils.getEntity;
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.FindBodyQueryCallback;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.data.DataGatherer;
+import trafficsim.roads.NavigationObject;
 import trafficsim.screens.SimulationScreen;
 import trafficsim.screens.SuperScreen;
 import utils.ExportData;
@@ -20,6 +23,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 
 import editor.MousePosition.Coordinates;
+import graph.Edge;
+import graph.EntityIdentificationData;
+import graph.EntityIdentificationData.ElementType;
 
 /** System to control the camera and other input commands we might define */
 public class InputSystem extends VoidEntitySystem implements InputProcessor {
@@ -99,11 +105,19 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 									coords.getX() + boxSize,
 									coords.getY() + boxSize);
 			if (callBack.foundSomething()) {
-				Entity car = world.getEntity(callBack.getClosestId());
-				PhysicsBodyComponent physComp = car.getComponent(PhysicsBodyComponent.class);
-				System.out.println("Found something " + car + " id " + callBack.getClosestId() + " "
+				// int entityID = callBack.getClosestId();
+				Entity entity = getEntity(world, callBack.getIdData());
+				PhysicsBodyComponent physComp = entity.getComponent(PhysicsBodyComponent.class);
+				if (physComp != null && physComp.getUserData().getClass() == EntityIdentificationData.class) {
+					EntityIdentificationData graphData = (EntityIdentificationData) physComp.getUserData();
+					if (graphData.getType() == ElementType.EDGE) {
+						Edge<NavigationObject> edge = ((TrafficSimWorld) world).getGraph().getEdge(graphData.getID());
+						System.out.println(getRoad(edge).getDirection());
+					}
+				}
+				System.out.println("Found something " + entity + " id " + callBack.getIdData().getID() + " "
 									+ physComp.getPosition() + "\n");
-				superScreen.getScreens().getSimulationScreen().getPop().setEntityToRender(car);
+				superScreen.getScreens().getSimulationScreen().getPop().setEntityToRender(entity);
 			}
 		}
 		else {

@@ -2,6 +2,7 @@ package trafficsim.systems;
 
 import static com.badlogic.gdx.math.MathUtils.cos;
 import static com.badlogic.gdx.math.MathUtils.sin;
+import static functions.MovementFunctions.getRoad;
 import static trafficsim.TrafficSimConstants.*;
 import graph.Vertex;
 
@@ -145,7 +146,8 @@ public class ManageMovementBehaviorsSystem
 		if (!otherRouteComponent.isSet() || !routeComp.isSet()) {
 			return false;
 		}
-		return otherRouteComponent.getCurrentEdge().getID() == routeComp.getCurrentEdge().getID();
+		return getRoad(otherRouteComponent.getCurrentEdge()).getDirection() == getRoad(routeComp.getCurrentEdge()).getDirection();
+		// return otherRouteComponent.getCurrentEdge().getID() == routeComp.getCurrentEdge().getID();
 	}
 
 	private void setBrakeBehavior(MovementComponent movementComp, float factor) {

@@ -92,7 +92,7 @@ public class MovementSystem
 				newVel.clamp(0, maxSpeed);
 				physComp.setLinearVelocity(newVel);
 
-				correctionVectors(routeComp, physComp);
+				// correctionVectors(routeComp, physComp);
 			}
 		}
 		

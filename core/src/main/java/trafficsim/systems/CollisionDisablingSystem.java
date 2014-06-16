@@ -2,6 +2,8 @@ package trafficsim.systems;
 
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.TIMER;
+import static utils.EntityRetrievalUtils.getEntity;
+import graph.EntityIdentificationData;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.ExpiryComponent;
 import trafficsim.components.PhysicsBodyComponent;
@@ -64,9 +66,8 @@ public class CollisionDisablingSystem
 		}
 
 		private void removeFromWorld(Object userData1) {
-			if (userData1 != null && userData1.getClass() == Integer.class) {
-				int id = (Integer) userData1;
-				Entity car = world.getEntity(id);
+			if (userData1 != null && userData1.getClass() == EntityIdentificationData.class) {
+				Entity car = getEntity(world, (EntityIdentificationData) userData1);
 				expiryMapper.get(car).setExpired(true);
 			}
 		}
@@ -87,7 +88,7 @@ public class CollisionDisablingSystem
 				if (physBody1.getPosition().dst(physBody2.getPosition()) < CAR_LENGTH / 2) {
 					removeFromWorld(physBody1.getUserData());
 				}
-				removeFromWorld(physBody1.getUserData());
+				// removeFromWorld(physBody1.getUserData());
 				contact.setEnabled(false);
 				if (!firstHit) {
 					System.out.println("first hit " + TIMER.getTime() / 1000.0 + " pos "

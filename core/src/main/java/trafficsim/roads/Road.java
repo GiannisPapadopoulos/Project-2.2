@@ -1,5 +1,8 @@
 package trafficsim.roads;
 
+import static functions.VectorUtils.getVector;
+import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,11 +36,18 @@ public class Road extends NavigationObject {
 	/** Number of lanes on this road */
 	private int numLanes;
 
+	private Direction direction;
+
 	@Setter
 	private float speedLimit;
 
-	public Road(ParametricCurve roadDef, int numLanes, float speedLimit,
-			CrossRoad origin, CrossRoad destination) {
+	public enum Direction {
+		UPSTREAM,
+		DOWNSTREAM;
+	}
+
+	public Road(ParametricCurve roadDef, int numLanes, float speedLimit, CrossRoad origin, CrossRoad destination,
+				Direction direction) {
 		ArrayList<ParametricCurve> roadDefAL = new ArrayList<ParametricCurve>();
 		roadDefAL.add(roadDef);
 		this.numLanes = numLanes;
@@ -46,6 +56,7 @@ public class Road extends NavigationObject {
 			origin.addConnection(this, false);
 		if (destination != null)
 			destination.addConnection(this, true);
+		this.direction = direction;
 		
 	}
 
@@ -76,6 +87,9 @@ public class Road extends NavigationObject {
 		this.pointA = roadDef.get(0).getPoint(roadDef.get(0).getR_t().getLow());
 		this.pointB = roadDef.get(roadDef.size() - 1).getPoint(
 				roadDef.get(roadDef.size() - 1).getR_t().getHigh());
+		Vector2 unitPerpendicularVector = getVector(pointA, pointB).cpy().rotate(-90).nor();
+		pointA.add(unitPerpendicularVector.cpy().scl(LANE_WIDTH * numLanes / 2));
+		pointB.add(unitPerpendicularVector.cpy().scl(LANE_WIDTH * numLanes / 2));
 		this.speedLimit = speedLimit;
 
 		CrossRoadTransition crt = new CrossRoadTransition(origin, destination);

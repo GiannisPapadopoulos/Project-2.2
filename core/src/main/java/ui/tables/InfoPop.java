@@ -2,6 +2,7 @@ package ui.tables;
 
 import lombok.AllArgsConstructor;
 import trafficsim.components.DataComponent;
+import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
 import utils.Assets;
@@ -49,7 +50,7 @@ public class InfoPop {
 	public void render()
 	{
 		
-		if (entityToRender != null && entityToRender.isActive())
+		if (entityToRender != null && entityToRender.isActive() && isCar(entityToRender))
 		{
 			
 			// Draw entity info
@@ -104,6 +105,10 @@ public class InfoPop {
 		}
 	}
 	
+	private boolean isCar(Entity entityToRender) {
+		return entityToRender.getComponent(MaxSpeedComponent.class) != null;
+	}
+
 	public void drawPath(Entity entity){
 		
 		RouteComponent entityRoute = entity.getComponent(RouteComponent.class);

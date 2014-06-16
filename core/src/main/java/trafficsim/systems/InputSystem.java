@@ -6,6 +6,7 @@ import trafficsim.callbacks.FindBodyQueryCallback;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.screens.SimulationScreen;
 import trafficsim.screens.SuperScreen;
+import utils.ExportData;
 
 import com.artemis.Entity;
 import com.artemis.systems.VoidEntitySystem;
@@ -58,6 +59,9 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 				// Toggle paused
 				screen.setPaused(!screen.isPaused());
 			}
+		}
+		else if (keycode == Keys.E) {
+			ExportData.writeToFile(((TrafficSimWorld) world).getDataGatherer(), "data/simulationData");
 		}
 		else if (keycode == Keys.R) {
 			printCoordinates = !printCoordinates;

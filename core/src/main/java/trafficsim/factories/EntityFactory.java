@@ -122,7 +122,7 @@ public class EntityFactory {
 
 		world.getEdgeToEntityMap().put(edge.getID(), road.getId());
 		road.addComponent(new AttachedLightsComponent());
-		name = "road1x1";
+		name = "2edge";
 
 		Vector2 position = new Vector2(
 				(roadData.getPointB().x + roadData.getPointA().x) / 2,
@@ -165,7 +165,14 @@ public class EntityFactory {
 
 		world.getVertexToEntityMap().put(vertex.getID(), crossRoad.getId());
 		crossRoad.addComponent(new AttachedLightsComponent());
-		name = "road1x1";
+		
+		boolean isRoundAbout = ((CrossRoad) vertex.getData()).getCrossRoadType() == CrossRoad.CR_TYPE.Roundabout;
+		
+		if (isRoundAbout){
+			name = "roundabout";
+		}
+		else
+		name = "intersection";
 
 		Vector2 position = crossRoadData.getPosition();
 		float angle = 0.0f;

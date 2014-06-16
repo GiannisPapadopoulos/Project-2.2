@@ -17,6 +17,21 @@ import functions.VectorUtils;
 
 public class GraphFactory {
 
+	public static final boolean useManhattanGraph = false;;
+
+	/** */
+	public static final boolean makeRoundabout = true;
+
+	public static Graph<NavigationObject> createGraph() {
+		if (useManhattanGraph) {
+			// TODO add highway here
+			return createManhattanGraph(10, 10, 100.0f, 0, 0);
+		}
+		else {
+			return createTestOneGraph(makeRoundabout);
+		}
+	}
+
 	public static Graph<NavigationObject> createNewSystem() {
 		Graph<NavigationObject> graph = new Graph<NavigationObject>();
 

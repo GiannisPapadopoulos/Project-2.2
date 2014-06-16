@@ -172,6 +172,9 @@ public class ManageMovementBehaviorsSystem
 		Vertex<NavigationObject> nextIntersection = routeComp.getNextVertex();
 		int vertexEntityID = getWorld().getVertexToEntityMap().get(nextIntersection.getID());
 		Entity vertexEntity = world.getEntity(vertexEntityID);
+		if (!groupedTrafficLightsMapper.has(vertexEntity)) {
+			return null;
+		}
 		GroupedTrafficLightComponent lightComp = groupedTrafficLightsMapper.get(vertexEntity);
 		List<GroupedTrafficLightData> tfLightList = lightComp.getLightsOnEdge(routeComp.getCurrentEdge().getID());
 		if (tfLightList == null) {

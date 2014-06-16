@@ -10,5 +10,7 @@ public abstract class NavigationObject {
 
 	public abstract float getSpeedLimit();
 
+	public abstract void setSpeedLimit(float speedLimit);
+
 	public abstract SubSystem requestTransitionPath(NavigationObject origin, NavigationObject destination);
 }

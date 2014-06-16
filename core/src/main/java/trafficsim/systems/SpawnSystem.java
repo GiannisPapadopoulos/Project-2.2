@@ -59,8 +59,8 @@ public class SpawnSystem
 				Vector2 castPostion = position.cpy().sub(connectionVector.cpy().nor().scl(CAR_LENGTH));
 				if (canSpawn(spawnComp, castPostion, angle)) {
 					int randInt = RANDOM.nextInt(7) + 1;
-					Entity car = EntityFactory.createCar((TrafficSimWorld) world, position, 1f, 40, angle, "car"
-																											+ randInt);
+					Entity car = EntityFactory.createCar(	(TrafficSimWorld) world, position, 1f, MAX_SPEED, angle,
+															"car" + randInt);
 					car.addComponent(new RouteComponent(spawnComp.getVertex()));
 					car.addToWorld();
 					spawnComp.spawned(TIMER.getTime());

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import paramatricCurves.ParametricCurve;
 
@@ -32,6 +33,7 @@ public class Road extends NavigationObject {
 	/** Number of lanes on this road */
 	private int numLanes;
 
+	@Setter
 	private float speedLimit;
 
 	public Road(ParametricCurve roadDef, int numLanes, float speedLimit,

@@ -109,7 +109,8 @@ public class SidePanels extends Table {
 			public void changed(ChangeEvent event, Actor actor) {
 				slimitcompanion.setText(Integer.toString((int) speedLimitSlider.getValue()));
 
-				TrafficSimConstants.setCITY_SPEED_LIMIT(speedLimitSlider.getValue() / 3.6f);
+				float newSpeedLimit = speedLimitSlider.getValue() / 3.6f;
+				TrafficSimConstants.setCITY_SPEED_LIMIT(newSpeedLimit);
 				world.getSystem(MovementSystem.class).setSpeedLimitModified(true);
 			}
 		});

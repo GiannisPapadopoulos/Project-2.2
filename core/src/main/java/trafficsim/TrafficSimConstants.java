@@ -52,8 +52,12 @@ public final class TrafficSimConstants {
 	/** The width of a single lane, one way */
 	public static final float LANE_WIDTH = 4.5f;
 
+	/** Maximum car speed */
+	public static final float MAX_SPEED = 250 / 3.6f;
+
 	/** Speed limit for simple (1-lane) roads in meters per second */
 	public static final float DEFAULT_CITY_SPEED_LIMIT = 50 / 3.6f;
+
 
 	/** Speed limit for simple (1-lane) roads in meters per second */
 	@Setter

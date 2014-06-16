@@ -3,7 +3,6 @@ package trafficsim.roads;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import paramatricCurves.curveDefs.C_Circular;
 import lombok.Getter;
 
 import com.badlogic.gdx.math.Vector2;
@@ -115,6 +114,10 @@ public class CrossRoad extends NavigationObject {
 	public float getSpeedLimit() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void setSpeedLimit(float speedLimit) {
 	}
 
 	public enum CR_TYPE {

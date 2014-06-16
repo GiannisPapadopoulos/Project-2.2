@@ -209,7 +209,7 @@ public class EntityFactory {
 		SpriteComponent sprite = new SpriteComponent(name);
 		crossRoad.addComponent(sprite);
 		// || vertex.getID() == vertex.getParent().getVertexCount() - 1
-		int spawnInterval = 2000;
+		double spawnInterval = spawnRate;
 		if (GraphFactory.useManhattanGraph) {
 			if (indices.contains(vertex.getID())) {
 				crossRoad.addComponent(new SpawnComponent(vertex, new FixedIntervalSpawningStrategy(spawnInterval)));

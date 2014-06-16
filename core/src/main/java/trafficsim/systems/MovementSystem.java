@@ -2,14 +2,10 @@ package trafficsim.systems;
 
 
 import static com.badlogic.gdx.math.MathUtils.degRad;
-import static trafficsim.TrafficSimConstants.CITY_SPEED_LIMIT;
 import static trafficsim.TrafficSimConstants.SPEED_SCALING_FACTOR;
-import graph.Edge;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import trafficsim.TrafficSimWorld;
 import trafficsim.components.AccelerationComponent;
 import trafficsim.components.ExpiryComponent;
 import trafficsim.components.MaxSpeedComponent;
@@ -18,7 +14,6 @@ import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
 import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
-import trafficsim.roads.NavigationObject;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -55,10 +50,6 @@ public class MovementSystem
 	@Getter 
 	private int totalCars;
 
-	/** If set to true, all car speed limits will be changed */
-	@Getter
-	@Setter
-	private boolean speedLimitModified;
 
 	@SuppressWarnings("unchecked")
 	public MovementSystem() {
@@ -68,11 +59,6 @@ public class MovementSystem
 
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
-		if (speedLimitModified) {
-			setRoadSpeedLimits();
-			speedLimitModified = false;
-		}
-		
 		totalCars = entities.size();
 		for (int i = 0; i < entities.size(); i++) {
 			
@@ -163,12 +149,6 @@ public class MovementSystem
 	public void carRemoved() {
 		totalCars--;
 		assert totalCars >= 0;
-	}
-
-	private void setRoadSpeedLimits() {
-		for (Edge<NavigationObject> edge : ((TrafficSimWorld) world).getGraph().getEdgeIterator()) {
-			edge.getData().setSpeedLimit(CITY_SPEED_LIMIT);
-		}
 	}
 
 	// UNUSED

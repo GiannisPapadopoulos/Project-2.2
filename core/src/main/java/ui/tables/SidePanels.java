@@ -9,7 +9,8 @@ import trafficsim.TrafficSimConstants;
 import trafficsim.TrafficSimWorld;
 import trafficsim.systems.AbstractToggleStrategy;
 import trafficsim.systems.GroupedTrafficLightSystem;
-import trafficsim.systems.MovementSystem;
+import trafficsim.systems.ManageSpawnRateChangeSystem;
+import trafficsim.systems.ManageSpeedLimitChangeSystem;
 import utils.Assets;
 
 import com.badlogic.gdx.Gdx;
@@ -82,8 +83,9 @@ public class SidePanels extends Table {
 		LabelStyle style = new LabelStyle();
 		style.font = black;
 		defaultstep = 1;
-		cspawnmin = 0;
-		cspawnmax = 100;	
+		cspawnmin = 1;
+		cspawnmax = 20;
+
 		slimitmin =	10;
 		slimitmax = 120;	
 		
@@ -95,15 +97,18 @@ public class SidePanels extends Table {
 		speedLimitSlider.setValue(TrafficSimConstants.CITY_SPEED_LIMIT);
 		
 		
-		/** Companions (numbers next to sliders) */		
-		cspawncompanion = new Label(Integer.toString((int)carSpawningRate.getValue()), Assets.skin);		
-		carSpawningRate.addListener(new ChangeListener(){
-			
+		/** Companions (numbers next to sliders) */
+		cspawncompanion = new Label(Integer.toString((int) carSpawningRate.getValue()), Assets.skin);
+		carSpawningRate.addListener(new ChangeListener() {
+
 			public void changed(ChangeEvent event, Actor actor) {
-				cspawncompanion.setText(Integer.toString((int)carSpawningRate.getValue()));
-				}});
-		
-		slimitcompanion = new Label(Integer.toString((int)speedLimitSlider.getValue()), Assets.skin);		
+				cspawncompanion.setText(Integer.toString((int) carSpawningRate.getValue()));
+				TrafficSimConstants.spawnRate = carSpawningRate.getValue() * 1000;
+				world.getSystem(ManageSpawnRateChangeSystem.class).setSpawnRateModified(true);
+			}
+		});
+
+		slimitcompanion = new Label(Integer.toString((int) speedLimitSlider.getValue()), Assets.skin);
 		speedLimitSlider.addListener(new ChangeListener(){
 
 			public void changed(ChangeEvent event, Actor actor) {
@@ -111,7 +116,8 @@ public class SidePanels extends Table {
 
 				float newSpeedLimit = speedLimitSlider.getValue() / 3.6f;
 				TrafficSimConstants.setCITY_SPEED_LIMIT(newSpeedLimit);
-				world.getSystem(MovementSystem.class).setSpeedLimitModified(true);
+				ManageSpeedLimitChangeSystem system = world.getSystem(ManageSpeedLimitChangeSystem.class);
+				system.setSpeedLimitModified(true);
 			}
 		});
 		

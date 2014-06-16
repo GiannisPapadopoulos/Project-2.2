@@ -7,13 +7,13 @@ import lombok.Setter;
 public class FixedIntervalSpawningStrategy
 		extends AbstractSpawnStrategy {
 
-	private float interval;
+	// private float interval;
 
 	@Setter
 	private float lastSpawnTime;
 
-	public FixedIntervalSpawningStrategy(float interval) {
-		this.interval = interval;
+	public FixedIntervalSpawningStrategy(double interval) {
+		super(interval);
 	}
 
 	@Override

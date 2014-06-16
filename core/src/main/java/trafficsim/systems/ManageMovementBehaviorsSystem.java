@@ -60,6 +60,12 @@ public class ManageMovementBehaviorsSystem
 		super(Aspect.getAspectForAll(RouteComponent.class, PhysicsBodyComponent.class, MovementComponent.class));
 	}
 
+	public void setConstants() {
+		brakingThreshold = 3f * SPEED_RATIO;
+		carInFrontThreshold = (CAR_LENGTH + brakingThreshold + 1f) * SPEED_RATIO;
+		emergencyThreshold = (CAR_LENGTH + 2f) * SPEED_RATIO;
+	}
+
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
 		for (int i = 0; i < entities.size(); i++) {

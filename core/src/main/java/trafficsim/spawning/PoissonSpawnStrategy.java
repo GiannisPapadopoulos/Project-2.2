@@ -12,8 +12,9 @@ public class PoissonSpawnStrategy
 	private ExponentialDistribution expDistr;
 	double nextSpawnTime;
 
-	public PoissonSpawnStrategy(double lambda) {
-		expDistr = new ExponentialDistributionImpl(lambda);
+	public PoissonSpawnStrategy(double mean) {
+		super(mean);
+		expDistr = new ExponentialDistributionImpl(mean);
 	}
 
 	@Override

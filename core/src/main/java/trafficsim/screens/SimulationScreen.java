@@ -17,6 +17,8 @@ import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.GroupedTrafficLightSystem;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.ManageMovementBehaviorsSystem;
+import trafficsim.systems.ManageSpawnRateChangeSystem;
+import trafficsim.systems.ManageSpeedLimitChangeSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
@@ -103,6 +105,8 @@ public class SimulationScreen extends SuperScreen {
 		// world.setSystem(new CollisionDisablingSystem());
 
 		world.setSystem(new ExpirySystem());
+		world.setSystem(new ManageSpawnRateChangeSystem());
+		world.setSystem(new ManageSpeedLimitChangeSystem());
 
 		InputSystem inputSystem = new InputSystem(this);
 		initMultiplexer();

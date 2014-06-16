@@ -143,6 +143,123 @@ public class GraphFactory {
 		return graph;
 	}
 
+	public static Graph<NavigationObject> createTestOneGraph() {
+		Graph<NavigationObject> graph = new Graph<NavigationObject>();
+
+		float halfW = TrafficSimConstants.LANE_WIDTH * 2;
+		float crossroadSize = 4 * LANE_WIDTH;
+		float roadLength = 100;
+		
+		
+
+		// center point
+		CrossRoad cCross = new CrossRoad(crossroadSize*2, new Vector2(0, 0),
+				CrossRoad.CR_TYPE.Roundabout);
+		Vertex<NavigationObject> vCCross = graph.addVertex(cCross);
+
+		// left point
+		CrossRoad lCross = new CrossRoad(crossroadSize, new Vector2(
+				-roadLength, 0), CrossRoad.CR_TYPE.CrossRoad);
+		Vertex<NavigationObject> vLCross = graph.addVertex(lCross);
+
+		// right point
+		CrossRoad rCross = new CrossRoad(crossroadSize, new Vector2(roadLength,
+				0), CrossRoad.CR_TYPE.CrossRoad);
+		Vertex<NavigationObject> vRCross = graph.addVertex(rCross);
+
+		// bottom point
+		CrossRoad bCross = new CrossRoad(crossroadSize, new Vector2(0,
+				-roadLength), CrossRoad.CR_TYPE.CrossRoad);
+		Vertex<NavigationObject> vBCross = graph.addVertex(bCross);
+
+		// top point
+		CrossRoad tCross = new CrossRoad(crossroadSize, new Vector2(0,
+				roadLength), CrossRoad.CR_TYPE.CrossRoad);
+		Vertex<NavigationObject> vTCross = graph.addVertex(tCross);
+		
+		Vector2 ver_s_pos_m = new Vector2(0, cCross.getSize() / 2);
+		Vector2 ver_s_neg_m = new Vector2(0, -cCross.getSize() / 2);
+		Vector2 hor_s_pos_m = new Vector2(cCross.getSize() / 2, 0);
+		Vector2 hor_s_neg_m = new Vector2(-cCross.getSize() / 2, 0);
+
+		Vector2 ver_s_pos = new Vector2(0, lCross.getSize() / 2);
+		Vector2 ver_s_neg = new Vector2(0, -lCross.getSize() / 2);
+		Vector2 hor_s_pos = new Vector2(lCross.getSize() / 2, 0);
+		Vector2 hor_s_neg = new Vector2(-lCross.getSize() / 2, 0);
+
+		Vector2 pcC = vCCross.getData().getPosition();
+		Vector2 plC = vLCross.getData().getPosition();
+		Vector2 prC = vRCross.getData().getPosition();
+		Vector2 pbC = vBCross.getData().getPosition();
+		Vector2 ptC = vTCross.getData().getPosition();
+
+		// left to center and back
+		graph.addEdge(
+				new Road(new ParametricCurve(new C_Linear(VectorUtils
+						.add2Vectors(pcC, hor_s_neg_m), VectorUtils.add2Vectors(
+						plC, hor_s_pos))), 1,
+						TrafficSimConstants.DEFAULT_CITY_SPEED_LIMIT,
+						(CrossRoad) vCCross.getData(), (CrossRoad) vLCross
+								.getData()), vCCross, vLCross, true);
+		graph.addEdge(
+				new Road(new ParametricCurve(new C_Linear(VectorUtils
+						.add2Vectors(plC, hor_s_pos), VectorUtils.add2Vectors(
+						pcC, hor_s_neg_m))), 1,
+						TrafficSimConstants.DEFAULT_CITY_SPEED_LIMIT,
+						(CrossRoad) vLCross.getData(), (CrossRoad) vCCross
+								.getData()), vLCross, vCCross, true);
+
+		// right to center and back
+		graph.addEdge(
+				new Road(new ParametricCurve(new C_Linear(VectorUtils
+						.add2Vectors(pcC, hor_s_pos_m), VectorUtils.add2Vectors(
+						prC, hor_s_neg))), 1,
+						TrafficSimConstants.DEFAULT_CITY_SPEED_LIMIT,
+						(CrossRoad) vCCross.getData(), (CrossRoad) vRCross
+								.getData()), vCCross, vRCross, true);
+		graph.addEdge(
+				new Road(new ParametricCurve(new C_Linear(VectorUtils
+						.add2Vectors(prC, hor_s_neg), VectorUtils.add2Vectors(
+						pcC, hor_s_pos_m))), 1,
+						TrafficSimConstants.DEFAULT_CITY_SPEED_LIMIT,
+						(CrossRoad) vRCross.getData(), (CrossRoad) vCCross
+								.getData()), vRCross, vCCross, true);
+
+		// top to center and back
+		graph.addEdge(
+				new Road(new ParametricCurve(new C_Linear(VectorUtils
+						.add2Vectors(pcC, ver_s_pos_m), VectorUtils.add2Vectors(
+						ptC, ver_s_neg))), 1,
+						TrafficSimConstants.DEFAULT_CITY_SPEED_LIMIT,
+						(CrossRoad) vCCross.getData(), (CrossRoad) vTCross
+								.getData()), vCCross, vTCross, true);
+		graph.addEdge(
+				new Road(new ParametricCurve(new C_Linear(VectorUtils
+						.add2Vectors(ptC, ver_s_neg), VectorUtils.add2Vectors(
+						pcC, ver_s_pos_m))), 1,
+						TrafficSimConstants.DEFAULT_CITY_SPEED_LIMIT,
+						(CrossRoad) vTCross.getData(), (CrossRoad) vCCross
+								.getData()), vTCross, vCCross, true);
+
+		// bottom to center and back
+		graph.addEdge(
+				new Road(new ParametricCurve(new C_Linear(VectorUtils
+						.add2Vectors(pcC, ver_s_neg_m), VectorUtils.add2Vectors(
+						pbC, ver_s_pos))), 1,
+						TrafficSimConstants.DEFAULT_CITY_SPEED_LIMIT,
+						(CrossRoad) vCCross.getData(), (CrossRoad) vBCross
+								.getData()), vCCross, vBCross, true);
+		graph.addEdge(
+				new Road(new ParametricCurve(new C_Linear(VectorUtils
+						.add2Vectors(pbC, ver_s_pos), VectorUtils.add2Vectors(
+						pcC, ver_s_neg_m))), 1,
+						TrafficSimConstants.DEFAULT_CITY_SPEED_LIMIT,
+						(CrossRoad) vBCross.getData(), (CrossRoad) vCCross
+								.getData()), vBCross, vCCross, true);
+
+		return graph;
+	}
+
 	public static Graph<NavigationObject> createManhattanGraph(int width,
 			int height, float distance, float startX, float startY) {
 		Graph<NavigationObject> graph = new Graph<NavigationObject>();

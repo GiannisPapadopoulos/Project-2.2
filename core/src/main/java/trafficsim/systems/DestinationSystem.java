@@ -49,8 +49,8 @@ public class DestinationSystem
 				assert routeComp.getSource() != null;
 				Graph<NavigationObject> graph = routeComp.getSource().getParent();
 				if (spawnPoints.size() <= 1) {
-					int randIndex = RANDOM.nextInt(graph.getVertexCount() - 11);
-					// int randIndex = RANDOM.nextInt(graph.getVertexCount() - 1);
+					//int randIndex = RANDOM.nextInt(graph.getVertexCount() - 11);
+					 int randIndex = RANDOM.nextInt(graph.getVertexCount() - 1);
 
 					// Make sure source != target
 					if (randIndex >= routeComp.getSource().getID()) {

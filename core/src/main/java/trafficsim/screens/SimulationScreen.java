@@ -1,6 +1,9 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.*;
+import static trafficsim.TrafficSimConstants.DEBUG_FPS;
+import static trafficsim.TrafficSimConstants.DEBUG_RENDER;
+import static trafficsim.TrafficSimConstants.DEBUG_TABLES;
+import static trafficsim.TrafficSimConstants.TIMER;
 
 import java.util.List;
 
@@ -106,9 +109,10 @@ public class SimulationScreen extends SuperScreen {
 
 		Graph<NavigationObject> graph;
 		if (firstTimeSimulationRun ||  getScreens().getEditorScreen().getWorld()==null) {
-			graph = GraphFactory.createManhattanGraph(10, 10, 100.0f, 0, 0);
-			graph = GraphFactory.addHighway(graph, 10, 10, 100.0f, 0, 0);
+			//graph = GraphFactory.createManhattanGraph(10, 10, 100.0f, 0, 0);
+			//graph = GraphFactory.addHighway(graph, 10, 10, 100.0f, 0, 0);
 			// graph = GraphFactory.createNewSystem();
+			graph = GraphFactory.createTestOneGraph();
 		}
 		else
 			graph = getScreens().getEditorScreen().getWorld().getGraph();

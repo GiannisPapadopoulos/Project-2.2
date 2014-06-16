@@ -1,5 +1,8 @@
 package utils;
 
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -8,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import trafficsim.components.DataComponent;
 import trafficsim.data.DataGatherer;
 
 public class ExportData {
@@ -47,6 +51,7 @@ public class ExportData {
 			List<Float> averageVelocities = new ArrayList<Float>();
 			List<Float> averagePercentageStopped = new ArrayList<Float>();
 			List<Float> averageTimeWaited = new ArrayList<Float>();
+			TIntObjectMap<DataComponent> notYetAdded = new TIntObjectHashMap<DataComponent>();
 			for (int i = 0; i < dataPoints; i++) {
 				averageDistanceTravelled.add(scanner.nextFloat());
 			}
@@ -61,7 +66,7 @@ public class ExportData {
 			}
 			scanner.close();
 			return new DataGatherer(averageDistanceTravelled, averageTimeTravelled, averageVelocities,
-									averagePercentageStopped, averageTimeWaited);
+									averagePercentageStopped, averageTimeWaited, notYetAdded);
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();

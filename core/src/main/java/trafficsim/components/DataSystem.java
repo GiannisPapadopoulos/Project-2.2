@@ -1,5 +1,6 @@
 package trafficsim.components;
 
+import trafficsim.TrafficSimWorld;
 import trafficsim.components.SteeringComponent.State;
 
 import com.artemis.Aspect;
@@ -25,6 +26,12 @@ public class DataSystem
 	@SuppressWarnings("unchecked")
 	public DataSystem() {
 		super(Aspect.getAspectForAll(DataComponent.class));
+	}
+
+	@Override
+	protected void inserted(Entity entity) {
+		DataComponent dataComp = dataComponentMapper.get(entity);
+		((TrafficSimWorld) world).getDataGatherer().insert(entity.getId(), dataComp);
 	}
 
 	@Override

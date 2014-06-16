@@ -106,8 +106,12 @@ public class MovementSystem
 	private void steer(PhysicsBodyComponent physComp, RouteComponent routeComp, SteeringComponent steeringComp,
 			Vector2 newVel) {
 
+		float zeroVelocity = 0.3f;
 		// THEY WON"T STEER OTHERWISE!!!
-		physComp.setTransform(physComp.getPosition(), physComp.getLinearVelocity().angle() * degRad);
+		if (physComp.getLinearVelocity().len() > zeroVelocity) {
+			float velocityAngle = physComp.getLinearVelocity().angle();
+			physComp.setTransform(physComp.getPosition(), velocityAngle * degRad);
+		}
 
 		// float deltaA = constrainAngle(physComp.getLinearVelocity().angle() * degRad)
 		// - constrainAngle(physComp.getAngle());

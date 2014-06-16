@@ -1,6 +1,9 @@
 package trafficsim.screens;
 
 import static trafficsim.TrafficSimConstants.*;
+
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
@@ -131,7 +134,8 @@ public abstract class SuperScreen implements Screen {
 
 	public void setWaitTimeUI(TrafficSimWorld world) {
 
-		int timewaited = (int) (Stats.mean(world.getDataGatherer().getAveragePercentageStopped())*100);
+		List<Float> averagePercentageStopped = world.getDataGatherer().getCurrentAveragePercentageStopped();
+		int timewaited = (int) (Stats.mean(averagePercentageStopped)*100);
 	
 		sidePanels.getAverageLightTime().setText(
 				Integer.toString(timewaited) + "%");

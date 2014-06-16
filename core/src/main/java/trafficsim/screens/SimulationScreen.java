@@ -138,10 +138,10 @@ public class SimulationScreen extends SuperScreen {
 		pop = new InfoPop(renderSystem.getBatch());
 		world.process();
 
-		
-		getCamera().translate(900, 900);
+		getCamera().translate(900, 0);
 
 	}
+
 	protected void initMultiplexer() {
 		this.multiplexer = new InputMultiplexer(UILayer, worldLayer);
 	}
@@ -174,8 +174,11 @@ public class SimulationScreen extends SuperScreen {
 		if (DEBUG_TABLES)
 			Table.drawDebug(getUILayer());
 
-		if (DEBUG_FPS)
-			System.out.println(TIMER.getTime() - start + " milliseconds ");
+		if (DEBUG_FPS) {
+			long frameTime = TIMER.getTime() - start;
+			if (frameTime > 1.1 * DELTA_TIME * 1000)
+				System.out.println(frameTime + " milliseconds ");
+		}
 		pop.render();
 		super.setWaitTimeUI(world);
 		super.setCarsUI(world);

@@ -3,10 +3,15 @@ package trafficsim.systems;
 import static com.badlogic.gdx.math.MathUtils.cos;
 import static com.badlogic.gdx.math.MathUtils.sin;
 import static trafficsim.TrafficSimConstants.*;
-import gnu.trove.list.TIntList;
+import graph.Vertex;
+
+import java.util.List;
+
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.TrafficRayCastCallBack;
 import trafficsim.components.AttachedLightsComponent;
+import trafficsim.components.GroupedTrafficLightComponent;
+import trafficsim.components.GroupedTrafficLightComponent.GroupedTrafficLightData;
 import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
@@ -17,6 +22,7 @@ import trafficsim.components.TrafficLightComponent.Status;
 import trafficsim.movement.Behavior;
 import trafficsim.movement.BrakeBehavior;
 import trafficsim.movement.SeekBehavior;
+import trafficsim.roads.NavigationObject;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -42,6 +48,8 @@ public class ManageMovementBehaviorsSystem
 	private ComponentMapper<AttachedLightsComponent> attachedLightsMapper;
 	@Mapper
 	private ComponentMapper<TrafficLightComponent> trafficLightsMapper;
+	@Mapper
+	private ComponentMapper<GroupedTrafficLightComponent> groupedTrafficLightsMapper;
 
 	private float brakingThreshold = 3f * SPEED_RATIO;
 	private float carInFrontThreshold = (CAR_LENGTH + brakingThreshold + 1f) * SPEED_RATIO;
@@ -70,6 +78,10 @@ public class ManageMovementBehaviorsSystem
 		return true;
 	}
 
+	public TrafficSimWorld getWorld() {
+		return (TrafficSimWorld) world;
+	}
+
 	private void updateBehaviors(MovementComponent movementComp, RouteComponent routeComp,
 			PhysicsBodyComponent physComp, SteeringComponent steeringComp) {
 		World box2dWorld = ((TrafficSimWorld) world).getBox2dWorld();
@@ -79,22 +91,27 @@ public class ManageMovementBehaviorsSystem
 		TrafficRayCastCallBack rayCallBack = new TrafficRayCastCallBack();
 		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
 
-		if (rayCallBack.foundSomething() && world.getEntity(rayCallBack.getClosestId()) != null) {
+		if (rayCallBack.foundSomething()) {
 			Entity otherCar = world.getEntity(rayCallBack.getClosestId());
-			// System.out.println(otherCar + " " + rayCallBack.getClosestId());
-			float distance = physicsBodyMapper.get(otherCar).getPosition().dst(position);
-			// steeringComponentMapper.get(otherCar).getState() != State.DEFAULT &&
-			// && routeComponentMapper.get(otherCar).getCurrentEdge() == routeComp.getCurrentEdge()
-			if (distance < emergencyThreshold) {
-				setBrakeBehavior(movementComp, 0.1f);
-				physComp.setLinearVelocity(new Vector2(0, 0));
-				steeringComp.setState(State.STOPPED);
-				return;
+			if (otherCar == null) {
+				System.out.println("Could not retrieve entity with ID " + rayCallBack.getClosestId() + " loc "
+									+ position);
 			}
-			else if (distance < carInFrontThreshold) {
-				setBrakeBehavior(movementComp, DEFAULT_BRAKING_FACTOR);
-				steeringComp.setState(State.STOPPED);
-				return;
+			else {
+				float distance = physicsBodyMapper.get(otherCar).getPosition().dst(position);
+				// steeringComponentMapper.get(otherCar).getState() != State.DEFAULT &&
+				// && routeComponentMapper.get(otherCar).getCurrentEdge() == routeComp.getCurrentEdge()
+				if (distance < emergencyThreshold) {
+					setBrakeBehavior(movementComp, 0.1f);
+					physComp.setLinearVelocity(new Vector2(0, 0));
+					steeringComp.setState(State.STOPPED);
+					return;
+				}
+				else if (distance < carInFrontThreshold) {
+					setBrakeBehavior(movementComp, DEFAULT_BRAKING_FACTOR);
+					steeringComp.setState(State.STOPPED);
+					return;
+				}
 			}
 		}
 		Entity trafficLight = getRelevantLight(routeComp);
@@ -147,29 +164,51 @@ public class ManageMovementBehaviorsSystem
 		return carBackPosition.dst(lightPosition) < CAR_LENGTH;
 	}
 
-	// TODO this is not robust
 	private Entity getRelevantLight(RouteComponent routeComp) {
-		if (!routeComp.isSet()) {
+		if (!routeComp.isFollowingEdge()) {
+			// Don't stop for traffic lights when on the crossroad
 			return null;
 		}
-		int roadId = ((TrafficSimWorld) world).getEdgeToEntityMap().get(routeComp.getCurrentEdge().getID());
-		Entity road = world.getEntity(roadId);
-		// TODO This needs to change
-		boolean fromAtoB = true;
-		boolean leftTurn = false;
-		// boolean leftTurn = isLeftTurn(routeComp);
-
-		if (attachedLightsMapper.has(road)) {// && !routeComp.isLast()) {
-			TIntList trafficLights = attachedLightsMapper.get(road).getTrafficLightIDs();
-			for (int i = 0; i < trafficLights.size(); i++) {
-				Entity light = world.getEntity(trafficLights.get(i));
-				TrafficLightComponent lightComp = trafficLightsMapper.get(light);
-				if (fromAtoB != lightComp.isOnPointA() && lightComp.isLeft() == leftTurn) {
-					return light;
-				}
-			}
+		Vertex<NavigationObject> nextIntersection = routeComp.getNextVertex();
+		int vertexEntityID = getWorld().getVertexToEntityMap().get(nextIntersection.getID());
+		Entity vertexEntity = world.getEntity(vertexEntityID);
+		GroupedTrafficLightComponent lightComp = groupedTrafficLightsMapper.get(vertexEntity);
+		List<GroupedTrafficLightData> tfLightList = lightComp.getLightsOnEdge(routeComp.getCurrentEdge().getID());
+		if (tfLightList == null) {
+			System.out.println(lightComp);
+		}
+		else {
+			int lightID = tfLightList.get(0).getID();
+			Entity trafficLight = getWorld().getEntity(lightID);
+			assert trafficLight != null;
+			return trafficLight;
 		}
 		return null;
 	}
+
+	// // TODO this is not robust
+	// private Entity getRelevantLight(RouteComponent routeComp) {
+	// if (!routeComp.isSet()) {
+	// return null;
+	// }
+	// int roadId = ((TrafficSimWorld) world).getEdgeToEntityMap().get(routeComp.getCurrentEdge().getID());
+	// Entity road = world.getEntity(roadId);
+	// // TODO This needs to change
+	// boolean fromAtoB = true;
+	// boolean leftTurn = false;
+	// // boolean leftTurn = isLeftTurn(routeComp);
+	//
+	// if (attachedLightsMapper.has(road)) {// && !routeComp.isLast()) {
+	// TIntList trafficLights = attachedLightsMapper.get(road).getTrafficLightIDs();
+	// for (int i = 0; i < trafficLights.size(); i++) {
+	// Entity light = world.getEntity(trafficLights.get(i));
+	// TrafficLightComponent lightComp = trafficLightsMapper.get(light);
+	// if (fromAtoB != lightComp.isOnPointA() && lightComp.isLeft() == leftTurn) {
+	// return light;
+	// }
+	// }
+	// }
+	// return null;
+	// }
 
 }

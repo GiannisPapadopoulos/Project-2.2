@@ -69,6 +69,16 @@ public class GroupedTrafficLightComponent
 		return redTimer;
 	}
 
+	/** Returns the traffic lights on the given edge */
+	public List<GroupedTrafficLightData> getLightsOnEdge(int edgeID) {
+		for (List<GroupedTrafficLightData> tfLightList : groupedLightsData) {
+			if (tfLightList.get(0).getEdgeID() == edgeID) {
+				return tfLightList;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Information for a specific traffic light
 	 */

@@ -22,7 +22,7 @@ public final class TrafficSimConstants {
 	public static final boolean DEBUG_FPS = false;
 
 	/** Whether to do box2d debug rendering */
-	public static boolean DEBUG_RENDER = true;
+	public static boolean DEBUG_RENDER = false;
 
 	/** Whether to debug the ui tables */
 	public static boolean DEBUG_TABLES = false;

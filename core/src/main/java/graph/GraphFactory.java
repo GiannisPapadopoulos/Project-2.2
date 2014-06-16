@@ -471,6 +471,7 @@ public class GraphFactory {
 				new Vector2(-(mtcright.getSize() / 2), 0));
 
 		// outer left to middle left
+		v4 = VectorUtils.add2Vectors(pMLC, hor_s_neg);
 		g.addEdge(
 				new Road(new ParametricCurve(new C_Linear(v4, v8)), 2,
 						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
@@ -481,8 +482,12 @@ public class GraphFactory {
 						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
 						(CrossRoad) vmtcleft.getData(), (CrossRoad) vmlc
 								.getData()), vmtcleft, vmlc, true);
+		
+		//reset v4
+		v4 = VectorUtils.add2Vectors(pMLC, hor_s_pos);
 
 		// outer bottom to middle bottom
+		v6 = VectorUtils.add2Vectors(pBMC, ver_s_neg);
 		g.addEdge(
 				new Road(new ParametricCurve(new C_Linear(v6, v9)), 2,
 						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
@@ -493,8 +498,11 @@ public class GraphFactory {
 						TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
 						(CrossRoad) vmtcbottom.getData(), (CrossRoad) vbmc
 								.getData()), vmtcbottom, vbmc, true);
+		//reset v6
+		v6 = VectorUtils.add2Vectors(pBMC, ver_s_pos);
 		
 		// outer right to middle right
+		v7 = VectorUtils.add2Vectors(pMRC, hor_s_pos);
 				g.addEdge(
 						new Road(new ParametricCurve(new C_Linear(v7, v10)), 2,
 								TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
@@ -505,6 +513,9 @@ public class GraphFactory {
 								TrafficSimConstants.HIGHWAY_SPEED_LIMIT,
 								(CrossRoad) vmtcright.getData(), (CrossRoad) vrmc
 										.getData()), vmtcright, vrmc, true);
+				
+				//reset v7
+				v7 = VectorUtils.add2Vectors(pMRC, hor_s_neg);
 
 
 		// middle left to middle of map
@@ -537,6 +548,7 @@ public class GraphFactory {
 								.getData()), vmtcbot, vbmc, true);
 
 		// middle right to middle of map
+		
 		v3 = VectorUtils.add2Vectors(mtcbot.getPosition(),
 				new Vector2(+mtcbot.getSize() / 2, 0));
 		g.addEdge(

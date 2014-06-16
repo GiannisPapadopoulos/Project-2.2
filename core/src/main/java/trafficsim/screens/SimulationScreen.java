@@ -25,6 +25,7 @@ import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SpawnSystem;
+import ui.tables.CurrentFocus;
 import ui.tables.InfoPop;
 import utils.ExportData;
 
@@ -58,6 +59,8 @@ public class SimulationScreen extends SuperScreen {
 	private boolean firstTimeSimulationRun = true;
 	@Getter
 	private InfoPop pop;
+	@Getter
+	private CurrentFocus focus;
 
 	private WorldRenderer wr;
 
@@ -145,6 +148,7 @@ public class SimulationScreen extends SuperScreen {
 			TIMER.reset();
 		TIMER.start();
 		pop = new InfoPop(renderSystem.getBatch());
+		focus = super.getFocus();
 		world.process();
 
 		// getCamera().translate(900, 0);
@@ -189,8 +193,10 @@ public class SimulationScreen extends SuperScreen {
 				System.out.println(frameTime + " milliseconds ");
 		}
 		pop.render();
+		focus.render();
 		super.setWaitTimeUI(world);
 		super.setCarsUI(world);
+		super.setAverageSpeed(world);
 		
 		if (!exported && TIMER.getTime() > 1.0 * secsToSave * 1000) {
 			DataGatherer dataGatherer = world.getDataGatherer();

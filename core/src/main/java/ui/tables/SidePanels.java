@@ -13,6 +13,7 @@ import trafficsim.systems.ManageSpawnRateChangeSystem;
 import trafficsim.systems.ManageSpeedLimitChangeSystem;
 import utils.Assets;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -53,7 +54,7 @@ public class SidePanels extends Table {
 	@Getter
 	private TextButton roundabout, standardRoad, intersection, showhidetext,simleft, simright;
 	@Getter
-	private Label averageLightTime,carsOnRoadLabel ;
+	private Label averageLightTime,carsOnRoadLabel,avgspeed ;
 	
 	@Setter
 	private TrafficSimWorld world;
@@ -64,7 +65,7 @@ public class SidePanels extends Table {
 	private BitmapFont black;
 	
 	@Getter
-	private Table worldStatistics,worldVariables,expandCollapse, switchPanel, editorPanel,sidepanel,hide,tabbed1,tabbed2,tabbed3;	
+	private Table worldStatistics,worldVariables,expandCollapse, switchPanel, editorPanel,sidepanel,hide,fourthPage;	
 	
 	private ArrayList<Table> simPageList;
 	private TextButton weightedTL;
@@ -129,7 +130,7 @@ public class SidePanels extends Table {
 	//	carsOnRoad = world.getSystem(MovementSystem.class).;		
 		carsOnRoadLabel = new Label(Integer.toString(0), Assets.skin);
 		averageLightTime = new Label("not updated",Assets.skin);
-
+		avgspeed = new Label("not updated",Assets.skin);
 		avtimewait = 30;
 		
 		
@@ -145,11 +146,7 @@ public class SidePanels extends Table {
 		worldStatistics.add(new Label("Average % of route waited: ", Assets.skin)).left(); // average time waited image
 		worldStatistics.add(averageLightTime); // average time waited number
 	
-		
-		/** Switch Panel */
-		
-		switchPanel = new Table();
-		switchPanel.add(worldVariables);
+	
 
 		
 		/** Expand - Collapse Table */	
@@ -174,8 +171,7 @@ public class SidePanels extends Table {
 		    }
 			
 		);
-	
-
+		
 		expandCollapse = new Table();		
 		expandCollapse.add(simTools).size(80); // button with image		
 		expandCollapse.add(editMode).size(80);
@@ -210,19 +206,15 @@ public class SidePanels extends Table {
 			
 		);
 		Table simt = new Table();
-		
-		simt.add(simleft).left();
-		simt.add(worldVariablesLabel).pad(20);
-		simt.add(simright).right();
+
 		
 		
-		expandCollapse.add(simt);
+		expandCollapse.add(simleft);
+		expandCollapse.add(worldVariablesLabel);
+		expandCollapse.add(simright);
 		
 		/** World Variables Table */		
 		worldVariables = new Table();
-	
-	
-		//worldVariables.add(simt).fillX();
 		worldVariables.row();
 		worldVariables.add(new Label("Car Spawning Rate", Assets.skin)); // first adjusting tool
 		worldVariables.row();
@@ -237,8 +229,12 @@ public class SidePanels extends Table {
 		worldVariables.row();
 		
 		
-		/** Second Page Sim Panel */
+		/** Switch Panel */
 		
+		switchPanel = new Table();
+		switchPanel.add(worldVariables);
+		
+		/** Second Page Sim Panel */
 		
 		weightedTL = new TextButton("Priority Traffic Lights", Assets.skin);
 		timedTL = new TextButton("Timed Traffic Lights", Assets.skin);
@@ -263,6 +259,24 @@ public class SidePanels extends Table {
 		secondPage.add(weightedTL);
 		secondPage.row();
 		secondPage.add(timedTL);
+		secondPage.row();
+		secondPage.add(thirdTL);
+		
+		/** Third Page Sim Panel*/
+		
+		Table thirdPage = new Table();
+		
+		thirdPage.add(new Label("Average Speed: ", Assets.skin));
+		thirdPage.add(avgspeed);
+		thirdPage.row();
+		
+		Label stats1 = new Label("",Assets.skin);
+		
+		/** Fourth Page Sim Panel (Current Focus) */ 
+		
+		fourthPage = new Table();
+		fourthPage.add(new Label("test", Assets.skin));
+		
 		
 		/** Editor Panel */
 		
@@ -310,6 +324,8 @@ public class SidePanels extends Table {
 		//sim page lists initialised
 		simPageList.add(worldVariables);
 		simPageList.add(secondPage);
+		simPageList.add(thirdPage);
+		//simPageList.add(fourthPage);
 		
 		Drawable background = new TextureRegionDrawable(atlas.findRegion("bg"));
 		
@@ -318,9 +334,9 @@ public class SidePanels extends Table {
 		sidepanel.add(worldStatistics).width(panelwidth).top();/// world stats
 		
 		sidepanel.row(); 
-		sidepanel.add(expandCollapse).width(panelwidth); // show hide
+		sidepanel.add(expandCollapse); // show hide
 		sidepanel.row();
-		sidepanel.add(switchPanel).width(panelwidth).padLeft(50).padRight(5); // world variables
+		sidepanel.add(switchPanel).width(panelwidth);//.padLeft(50).padRight(5); // world variables
 
 		add(getTransitionButtons()).expand().top().left();
 		
@@ -330,6 +346,12 @@ public class SidePanels extends Table {
 		add(hide).top().right();
 	
 		debug();
+	}
+	public void setCurrentFocus(Table table) {
+		if (simPageList.size() >= 4)
+			simPageList.remove(3);
+		simPageList.add(table);
+		
 	}
 	
 	private Button createButton(String name, TextureAtlas atlas){
@@ -352,20 +374,16 @@ public class SidePanels extends Table {
 		
 	}
 	
+	
 	private Button createImage(String name, TextureAtlas atlas){
 
 		Drawable up = new TextureRegionDrawable( atlas.findRegion(name + "_normal"));
-	
 
 		ButtonStyle style = new ButtonStyle();
 		
-		
 		style.up = up;
-		
-
 		return new Button(style);
-		
-		
+
 	}
 	
 	private void nextSimPage(){
@@ -411,6 +429,13 @@ private void prevSimPage(){
 			}
 	    }
 	}
+
+	public void setFourthPanelEntity(Entity entity) {
+		
+		
+	}
+
+
 
 
 

@@ -302,6 +302,18 @@ textures2.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+maasmap
+  rotate: false
+  xy: 2, 2
+  size: 2835, 2835
+  orig: 2835, 2835
+  offset: 0, 0
+  index: -1
+
+textures3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
 .picasaoriginals/road1x1
   rotate: false
   xy: 2, 2

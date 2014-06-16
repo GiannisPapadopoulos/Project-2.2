@@ -1,6 +1,8 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.*;
+import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
+import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
+import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
 
 import java.util.List;
 
@@ -11,6 +13,7 @@ import trafficsim.TrafficSimWorld;
 import trafficsim.systems.InputEditorSystem;
 import trafficsim.systems.InputSystem;
 import trafficsim.systems.MovementSystem;
+import ui.tables.CurrentFocus;
 import ui.tables.SidePanels;
 import utils.Stats;
 
@@ -47,6 +50,8 @@ public abstract class SuperScreen implements Screen {
 	@Getter
 	private SidePanels sidePanels;
 
+	private CurrentFocus focus;
+	
 	public SuperScreen(Screens screens) {
 		this.screens = screens;
 
@@ -141,9 +146,18 @@ public abstract class SuperScreen implements Screen {
 				Integer.toString(timewaited) + "%");
 	}
 
+	public void setAverageSpeed(TrafficSimWorld world) {
+
+		int speed = (int) (Stats.mean(world.getDataGatherer().getAverageVelocities()));
+	
+		sidePanels.getAvgspeed().setText(
+				Integer.toString(speed) + "km/h");
+	}
+
 	private void populateCommonLayers() {
 
 		sidePanels = new SidePanels();
+		focus = new CurrentFocus(sidePanels);
 
 		getUILayer().addActor(sidePanels);
 

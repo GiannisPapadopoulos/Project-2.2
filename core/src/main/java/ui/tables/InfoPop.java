@@ -1,6 +1,7 @@
 package ui.tables;
 
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import trafficsim.components.DataComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
@@ -30,6 +31,7 @@ public class InfoPop {
 	private Entity entityToRender;
 	private Label popUp;
 	private SpriteBatch batch;
+
 	
 	private Drawable glow, destination, start ;
 	private ShapeRenderer shapeRenderer;
@@ -42,7 +44,6 @@ public class InfoPop {
 		glow = new TextureRegionDrawable( atlas.findRegion("car glow"));
 		start = new TextureRegionDrawable(atlas.findRegion("target"));
 		destination = new TextureRegionDrawable(atlas.findRegion("target"));
-		
 		
 		
 	}

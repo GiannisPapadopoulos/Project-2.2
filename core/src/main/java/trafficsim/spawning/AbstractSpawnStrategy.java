@@ -22,4 +22,9 @@ public abstract class AbstractSpawnStrategy {
 	// used to update
 	public abstract void spawned(float currentTime);
 
+	public enum SpawnStrategyType {
+		UNIFORM,
+		POISSON
+	}
+
 }

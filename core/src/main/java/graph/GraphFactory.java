@@ -143,18 +143,27 @@ public class GraphFactory {
 		return graph;
 	}
 
-	public static Graph<NavigationObject> createTestOneGraph() {
+	public static Graph<NavigationObject> createTestOneGraph(boolean GiannisRound) {
 		Graph<NavigationObject> graph = new Graph<NavigationObject>();
 
 		float halfW = TrafficSimConstants.LANE_WIDTH * 2;
 		float crossroadSize = 4 * LANE_WIDTH;
 		float roadLength = 100;
 		
+		CrossRoad.CR_TYPE type;
+		float bob;
 		
-
+		if(GiannisRound){
+			bob = crossroadSize*2;
+			type = CrossRoad.CR_TYPE.Roundabout;
+		}
+		else{
+			bob = crossroadSize;
+			type = CrossRoad.CR_TYPE.CrossRoad;
+		}
 		// center point
-		CrossRoad cCross = new CrossRoad(crossroadSize*2, new Vector2(0, 0),
-				CrossRoad.CR_TYPE.Roundabout);
+		CrossRoad cCross = new CrossRoad(bob, new Vector2(0, 0),
+				type);
 		Vertex<NavigationObject> vCCross = graph.addVertex(cCross);
 
 		// left point

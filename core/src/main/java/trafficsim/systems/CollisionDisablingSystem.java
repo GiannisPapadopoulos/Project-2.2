@@ -82,6 +82,21 @@ public class CollisionDisablingSystem
 
 		@Override
 		public void preSolve(Contact contact, Manifold oldManifold) {
+			disableCollision(contact);
+		}
+
+		private void disableCollision(Contact contact) {
+			if (contact.isTouching() && bothDynamic(contact)) {
+				contact.setEnabled(false);
+				if (!firstHit) {
+					System.out.println("first hit " + TIMER.getTime() / 1000.0 + " pos "
+										+ contact.getFixtureA().getBody().getPosition());
+					firstHit = true;
+				}
+			}
+		}
+
+		private void handleCollision(Contact contact) {
 			if (contact.isTouching() && bothDynamic(contact)) {
 				Body physBody1 = contact.getFixtureA().getBody();
 				Body physBody2 = contact.getFixtureB().getBody();

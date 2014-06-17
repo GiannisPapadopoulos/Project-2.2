@@ -88,10 +88,12 @@ public class MovementSystem
 											.cpy()
 											.scl(1f)
 											.add(steeringForce.scl(SPEED_SCALING_FACTOR));
+				//
 				steer(physComp, routeComp, steeringComp, newVel);
 				newVel.clamp(0, maxSpeed);
+				// System.out.println(routeComp.getCurrentEdge().getData().getSpeedLimit());
 				physComp.setLinearVelocity(newVel);
-
+				// System.out.println(world.getSystem(RenderSystem.class));
 				// correctionVectors(routeComp, physComp);
 			}
 		}

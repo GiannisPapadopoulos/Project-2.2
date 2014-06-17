@@ -71,7 +71,7 @@ public class MovementFunctions {
 	}
 
 	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath) {
-		return buildWaypointsParametric(transitionPath, 50);
+		return buildWaypointsParametric(transitionPath, 20);
 	}
 
 	/**

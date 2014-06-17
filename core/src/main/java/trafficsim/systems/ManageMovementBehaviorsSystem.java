@@ -100,14 +100,14 @@ public class ManageMovementBehaviorsSystem
 		float rayLength = 3 * CAR_LENGTH;
 		TrafficRayCastCallBack rayCallBack = new TrafficRayCastCallBack();
 		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
-		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angle45.cpy().scl(rayLength)));
-		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleMinus45.cpy().scl(rayLength)));
+		// box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angle45.cpy().scl(rayLength)));
+		// box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleMinus45.cpy().scl(rayLength)));
 
 		if (rayCallBack.foundSomething()) {
 			Entity otherCar = world.getEntity(rayCallBack.getClosestId());
 			if (otherCar == null) {
-				System.out.println("Could not retrieve entity with ID " + rayCallBack.getClosestId() + " loc "
-									+ position);
+				// System.out.println("Could not retrieve entity with ID " + rayCallBack.getClosestId() + " loc "
+				// + position);
 			}
 			else if (otherCar != null && isOnSameEdge(routeComp, otherCar)) {
 				float distance = physicsBodyMapper.get(otherCar).getPosition().dst(position);

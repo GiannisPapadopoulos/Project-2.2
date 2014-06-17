@@ -27,8 +27,10 @@ public class PredefinedParameters {
 	public static void createParameters() {
 		int size = 6; // of manhattan graph
 		ManhattanGraphInfo graphInfo = new ManhattanGraphInfo(size, size, 100f);
-		int[] indices = { 0, size * size - 1, (int) Math.sqrt(size * size - 1),
-							size * size - (int) Math.sqrt(size * size) };
+		// int[] indices = { 0, size * size - 1, (int) Math.sqrt(size * size - 1),
+		// size * size - (int) Math.sqrt(size * size) };
+		int vertexCount = size * size;
+		int[] indices = { vertexCount, vertexCount + 1, vertexCount = 2, vertexCount + 3 };
 		List<SpawnInfo> noSpawnPoints = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> spawnInfo = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> manhattanSpawnInfo = new ArrayList<SpawnInfo>();
@@ -38,6 +40,7 @@ public class PredefinedParameters {
 			manhattanSpawnInfo.add(new SpawnInfo(indices[i], intervals[i], SpawnStrategyType.POISSON));
 		}
 		float totalTime = 60 * 3;
+		float manhattanTime = 60 * 10;
 		timedLightsSimpleGraph = new SimulationParameters(false, false, null, DEFAULT_CITY_SPEED_LIMIT,
 															AbstractToggleStrategy.basicToggleStrategy, spawnInfo,
 															totalTime);
@@ -50,7 +53,7 @@ public class PredefinedParameters {
 															totalTime);
 		priorityLightsmanhattanGraph = new SimulationParameters(true, false, graphInfo, DEFAULT_CITY_SPEED_LIMIT,
 																AbstractToggleStrategy.priorityToggleStrategy,
-																manhattanSpawnInfo, totalTime);
+																manhattanSpawnInfo, manhattanTime);
 	}
 	
 

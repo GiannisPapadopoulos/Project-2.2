@@ -25,7 +25,7 @@ public class PredefinedParameters {
 	}
 
 	public static void createParameters() {
-		int size = 6; // of manhattan graph
+		int size = 15; // of manhattan graph
 		ManhattanGraphInfo graphInfo = new ManhattanGraphInfo(size, size, 100f);
 		int[] indices = { 0, size * size - 1, (int) Math.sqrt(size * size - 1),
 							size * size - (int) Math.sqrt(size * size) };

@@ -70,55 +70,53 @@ public class SubsystemFactory {
 		Vector2 angleIN = null;
 		Vector2 angleOUT = null;
 
-		// TODO This is causing problems because at the time (eg) the in-edge is
-		// created, the out edge doesn't exist
-		// yet. Maybe this and addConnection() in CrossRoad should be called for
-		// all vertices after the creation of the
-		// graph is finished. For now I removed the check cIN == cOUT
-		if (cIN == cOUT || true) {
-			ArrayList<Vector2> pIN = new ArrayList<Vector2>();
-			ArrayList<Vector2> pOUT = new ArrayList<Vector2>();
+		ArrayList<Vector2> pIN = new ArrayList<Vector2>();
+		ArrayList<Vector2> pOUT = new ArrayList<Vector2>();
 
-			for (CrossRoadTransition crt : rIN.getRSubSystems().keySet())
-				if (crt.getDestination() == cr) {
-					for (int i = 0; i < rIN.getRSubSystems().get(crt)
-							.getLanes().size(); i++)
-						pIN.add(rIN
-								.getRSubSystems()
-								.get(crt)
-								.getLanes()
-								.get(i)
-								.get(rIN.getRSubSystems().get(crt).getLanes()
-										.get(i).size() - 1).getEnd());
-					angleIN = rIN
+		for (CrossRoadTransition crt : rIN.getRSubSystems().keySet())
+			if (crt.getDestination() == cr) {
+				for (int i = 0; i < rIN.getRSubSystems().get(crt).getLanes()
+						.size(); i++)
+					pIN.add(rIN
 							.getRSubSystems()
 							.get(crt)
 							.getLanes()
-							.get(0)
+							.get(i)
 							.get(rIN.getRSubSystems().get(crt).getLanes()
-									.get(0).size() - 1).getTrajectory()
-							.getEndDirection();
-				}
-
-			for (CrossRoadTransition crt : rOUT.getRSubSystems().keySet())
-				if (crt.getOrigin() == cr) {
-					for (int i = 0; i < rOUT.getRSubSystems().get(crt)
-							.getLanes().size(); i++)
-						pOUT.add(rOUT.getRSubSystems().get(crt).getLanes()
-								.get(i).get(0).getStart());
-					angleOUT = rOUT.getRSubSystems().get(crt).getLanes().get(0)
-							.get(0).getTrajectory().getStartDirection();
-				}
-
-			for (Vector2 v : pIN)
-				EditorData.debugPoints.add(v);
-			for (Vector2 v : pOUT)
-				EditorData.debugPoints.add(v);
-
-			if (DEGUG_SUBSYSTEMS) {
-				System.out.println(angleIN.x + " " + angleIN.y);
-				System.out.println(angleOUT.x + " " + angleOUT.y);
+									.get(i).size() - 1).getEnd());
+				angleIN = rIN
+						.getRSubSystems()
+						.get(crt)
+						.getLanes()
+						.get(0)
+						.get(rIN.getRSubSystems().get(crt).getLanes().get(0)
+								.size() - 1).getTrajectory().getEndDirection();
 			}
+
+		for (CrossRoadTransition crt : rOUT.getRSubSystems().keySet())
+			if (crt.getOrigin() == cr) {
+				for (int i = 0; i < rOUT.getRSubSystems().get(crt).getLanes()
+						.size(); i++)
+					pOUT.add(rOUT.getRSubSystems().get(crt).getLanes().get(i)
+							.get(0).getStart());
+				angleOUT = rOUT.getRSubSystems().get(crt).getLanes().get(0)
+						.get(0).getTrajectory().getStartDirection();
+			}
+
+		float angleDiff = (float) (VectorUtils.getAngleDifference(
+				angleIN, angleOUT));
+		if(angleDiff<0)
+			angleDiff += 360.0f;
+		if(angleDiff>360.0f)
+			angleDiff -= 360.0f;
+		
+
+		for (Vector2 v : pIN)
+			EditorData.debugPoints.add(v);
+		for (Vector2 v : pOUT)
+			EditorData.debugPoints.add(v);
+
+		if (cIN == cOUT) {
 
 			if (Math.abs(VectorUtils.getAbsAngleDifference(angleIN, angleOUT) - 180.0) < SAME_DIR_LIMIT) {
 				SubSystem result = new SubSystem();
@@ -187,8 +185,119 @@ public class SubsystemFactory {
 			}
 
 		} else if (cIN > cOUT) {
+			if (Math.abs(angleDiff - 270.0f) < SAME_DIR_LIMIT) {
+				SubSystem result = new SubSystem();
+				ArrayList<Lane> ss = new ArrayList<Lane>();
 
+				Vector2 initShift = VectorUtils.multiplyVector(
+						VectorUtils.getUnitVectorDegrees(angleIN.angle()),
+						TrafficSimConstants.LANE_WIDTH);
+				initShift = VectorUtils.add2Vectors(pIN.get(pIN.size() - 1),
+						initShift);
+
+				ss.add(new Lane(new ParametricCurve(new C_Linear(pIN.get(pIN
+						.size() - 1), initShift))));
+
+				angleIN.rotate(-90.0f);
+				Vector2 side_rect_length = new Vector2();
+				side_rect_length.x = initShift.x - pOUT.get(0).x;
+				side_rect_length.y = initShift.y - pOUT.get(0).y;
+
+				Vector2 vv = VectorUtils.multiplyVector(
+						VectorUtils.getUnitVectorDegrees(angleIN.angle()),
+						(float) Math.sqrt(side_rect_length.len2() / 2.0));
+
+				Vector2 circleCenter = VectorUtils.add2Vectors(vv, initShift);
+				EditorData.debugPoints2.add(circleCenter);
+
+				Float radius = (float) VectorUtils.getLength(circleCenter,
+						initShift);
+				ss.add(new Lane(new ParametricCurve(new C_Circular(
+						circleCenter, radius, initShift, pOUT.get(0), true))));
+				result.addSubsystem(ss);
+				return result;
+			} else if ( Math.abs(angleDiff -90.0f) < SAME_DIR_LIMIT) {
+				
+				SubSystem result = new SubSystem();
+				ArrayList<Lane> ss = new ArrayList<Lane>();
+				angleIN.rotate(90.0f);
+				Vector2 side_rect_length = new Vector2();
+				side_rect_length.x = pIN.get(0).x - pOUT.get(0).x;
+				side_rect_length.y = pIN.get(0).y - pOUT.get(0).y;
+
+				Vector2 vv = VectorUtils.multiplyVector(
+						VectorUtils.getUnitVectorDegrees(angleIN.angle()),
+						(float) Math.sqrt(side_rect_length.len2() / 2.0));
+
+				Vector2 circleCenter = VectorUtils.add2Vectors(vv, pIN.get(0));
+				EditorData.debugPoints2.add(circleCenter);
+
+				Float radius = (float) VectorUtils.getLength(circleCenter,
+						pIN.get(0));
+				ss.add(new Lane(new ParametricCurve(new C_Circular(
+						circleCenter, radius, pIN.get(0), pOUT.get(0), false))));
+				result.addSubsystem(ss);
+				return result;
+			}
 		} else if (cIN < cOUT) {
+			if (Math.abs(angleDiff - 270.0f) < SAME_DIR_LIMIT) {
+				SubSystem result = new SubSystem();
+				ArrayList<Lane> ss = new ArrayList<Lane>();
+				
+				Vector2 initShift = VectorUtils.multiplyVector(
+						VectorUtils.getUnitVectorDegrees(angleOUT.angle()),
+						TrafficSimConstants.LANE_WIDTH);
+				initShift = VectorUtils.add2Vectors(pOUT.get(pOUT.size() - 1),
+						initShift);
+
+				angleIN.rotate(-90.0f);
+				Vector2 side_rect_length = new Vector2();
+				side_rect_length.x = pIN.get(0).x - initShift.x;
+				side_rect_length.y = pIN.get(0).y - initShift.y;
+
+				Vector2 vv = VectorUtils.multiplyVector(
+						VectorUtils.getUnitVectorDegrees(angleIN.angle()),
+						(float) Math.sqrt(side_rect_length.len2() / 2.0));
+
+				Vector2 circleCenter = VectorUtils.add2Vectors(vv, pIN.get(0));
+				EditorData.debugPoints2.add(circleCenter);
+
+				Float radius = (float) VectorUtils.getLength(circleCenter,
+						pIN.get(0));
+				ss.add(new Lane(new ParametricCurve(new C_Circular(
+						circleCenter, radius, pIN.get(0), initShift, true))));
+				result.addSubsystem(ss);
+				
+
+
+				ss.add(new Lane(new ParametricCurve(new C_Linear(pOUT.get(pOUT
+						.size() - 1), initShift))));
+
+				result.addSubsystem(ss);
+				return result;
+			} else if ( Math.abs(angleDiff -90.0f) < SAME_DIR_LIMIT) {
+				
+				SubSystem result = new SubSystem();
+				ArrayList<Lane> ss = new ArrayList<Lane>();
+				angleIN.rotate(90.0f);
+				Vector2 side_rect_length = new Vector2();
+				side_rect_length.x = pIN.get(0).x - pOUT.get(0).x;
+				side_rect_length.y = pIN.get(0).y - pOUT.get(0).y;
+
+				Vector2 vv = VectorUtils.multiplyVector(
+						VectorUtils.getUnitVectorDegrees(angleIN.angle()),
+						(float) Math.sqrt(side_rect_length.len2() / 2.0));
+
+				Vector2 circleCenter = VectorUtils.add2Vectors(vv, pIN.get(0));
+				EditorData.debugPoints2.add(circleCenter);
+
+				Float radius = (float) VectorUtils.getLength(circleCenter,
+						pIN.get(0));
+				ss.add(new Lane(new ParametricCurve(new C_Circular(
+						circleCenter, radius, pIN.get(0), pOUT.get(0), false))));
+				result.addSubsystem(ss);
+				return result;
+			}
 
 		}
 		return null;

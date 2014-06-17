@@ -82,12 +82,12 @@ public class InitializeWorld {
 		Graph<NavigationObject> graph;
 		if (parameters.isManhattanGraph()) {
 			ManhattanGraphInfo graphInfo = parameters.getGraphInfo();
-			/*graph = GraphFactory.createManhattanGraph(	graphInfo.getWidth(), graphInfo.getHeight(),
+			graph = GraphFactory.createManhattanGraphWithCircuit(	graphInfo.getWidth(), graphInfo.getHeight(),
 														graphInfo.getLaneLength(), 0, 0);
-			GraphFactory.addHighway(graph, graphInfo.getWidth(), graphInfo.getHeight(), graphInfo.getLaneLength(), 0, 0);
-			*/
-			graph = new Graph<NavigationObject>();
-			GraphFactory.laneSwitchTest(graph);
+			
+			
+			//graph = new Graph<NavigationObject>();
+			//GraphFactory.laneSwitchTest(graph);
 			
 		}
 		else {

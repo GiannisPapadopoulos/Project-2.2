@@ -509,7 +509,9 @@ public class EntityFactory {
 		for (Vertex<NavigationObject> vertex : graph.getVertexIterator()) {
 			if (vertex.getAdjacentVertices().size() == 1) {
 				// Entity vertexEntity = world.getEntity(world.getVertexToEntityMap().get(vertex.getID()));
+				System.out.println(index);
 				Entity vertexEntity = vertexEntities.get(index);
+				System.out.println(vertexEntities.size());
 				if (vertexEntity.getComponent(SpawnComponent.class) == null) {
 					float interval = 2000;
 					// AbstractSpawnStrategy spawnStrategy = new FixedIntervalSpawningStrategy(interval);

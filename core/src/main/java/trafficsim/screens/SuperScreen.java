@@ -6,6 +6,8 @@ import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
 
 import java.util.List;
 
+import org.apache.commons.lang3.time.StopWatch;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
@@ -26,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Timer;
 
 import editor.MousePosition;
 
@@ -152,6 +155,23 @@ public abstract class SuperScreen implements Screen {
 	
 		sidePanels.getAvgspeed().setText(
 				Integer.toString(speed) + "km/h");
+	}
+	
+	public void setCarsReached(TrafficSimWorld world) {
+
+		int cars = world.getDataGatherer().getAverageDistanceTravelled().size();
+	
+		sidePanels.getCarsreached().setText(
+				Integer.toString(cars) + " cars");
+	}
+	
+	public void setTimeElapsed(StopWatch timer) {
+		
+		//t.
+
+		//int cars = world.getDataGatherer().g;
+	
+		sidePanels.getTimeElapsed().setText(timer.toString());
 	}
 
 	private void populateCommonLayers() {

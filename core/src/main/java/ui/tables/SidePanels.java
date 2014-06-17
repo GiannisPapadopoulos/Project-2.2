@@ -54,7 +54,7 @@ public class SidePanels extends Table {
 	@Getter
 	private TextButton roundabout, standardRoad, intersection, showhidetext,simleft, simright;
 	@Getter
-	private Label averageLightTime,carsOnRoadLabel,avgspeed ;
+	private Label averageLightTime,carsOnRoadLabel,avgspeed,carsreached, timeElapsed ;
 	
 	@Getter
 	@Setter
@@ -85,7 +85,7 @@ public class SidePanels extends Table {
 		LabelStyle style = new LabelStyle();
 		style.font = black;
 		defaultstep = 1;
-		cspawnmin = 1;
+		cspawnmin = 0;
 		cspawnmax = 20;
 
 		slimitmin =	10;
@@ -93,7 +93,7 @@ public class SidePanels extends Table {
 		
 		panelwidth = 300;
 
-		carSpawningRate = new Slider(cspawnmin, cspawnmax, defaultstep, false, Assets.skin);
+		carSpawningRate = new Slider(cspawnmin+1, cspawnmax, defaultstep, false, Assets.skin);
 		speedLimitSlider = new Slider(slimitmin, slimitmax, defaultstep*10, false, Assets.skin);
 		
 		speedLimitSlider.setValue(TrafficSimConstants.CITY_SPEED_LIMIT);
@@ -132,6 +132,8 @@ public class SidePanels extends Table {
 		carsOnRoadLabel = new Label(Integer.toString(0), Assets.skin);
 		averageLightTime = new Label("not updated",Assets.skin);
 		avgspeed = new Label("not updated",Assets.skin);
+		carsreached = new Label("not updated", Assets.skin);
+		timeElapsed = new Label("not updated", Assets.skin);
 		avtimewait = 30;
 		
 		
@@ -267,12 +269,19 @@ public class SidePanels extends Table {
 		
 		Table thirdPage = new Table();
 		
+		
+		thirdPage.add(new Label("Time Elapsed", Assets.skin));
+		thirdPage.add(timeElapsed);
+		thirdPage.row();
+		
 		thirdPage.add(new Label("Average Speed: ", Assets.skin));
 		thirdPage.add(avgspeed);
 		thirdPage.row();
+		thirdPage.add(new Label("Reached Destination: ", Assets.skin));
+		thirdPage.add(carsreached);
+
 		
-		Label stats1 = new Label("",Assets.skin);
-		
+	
 		/** Fourth Page Sim Panel (Current Focus) */ 
 		
 		fourthPage = new Table();
@@ -326,7 +335,6 @@ public class SidePanels extends Table {
 		simPageList.add(worldVariables);
 		simPageList.add(secondPage);
 		simPageList.add(thirdPage);
-		//simPageList.add(fourthPage);
 		
 		Drawable background = new TextureRegionDrawable(atlas.findRegion("bg"));
 		

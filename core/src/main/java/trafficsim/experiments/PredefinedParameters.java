@@ -32,7 +32,8 @@ public class PredefinedParameters {
 		List<SpawnInfo> noSpawnPoints = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> spawnInfo = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> manhattanSpawnInfo = new ArrayList<SpawnInfo>();
-		double[] intervals = { 2000, 2000, 2000, 2000 };
+		int spawnInterval = 2000;
+		double[] intervals = { spawnInterval, spawnInterval, spawnInterval, spawnInterval };
 		for (int i = 0; i < 4; i++) {
 			spawnInfo.add(new SpawnInfo(i + 1, intervals[i], SpawnStrategyType.POISSON));
 			manhattanSpawnInfo.add(new SpawnInfo(indices[i], intervals[i], SpawnStrategyType.POISSON));

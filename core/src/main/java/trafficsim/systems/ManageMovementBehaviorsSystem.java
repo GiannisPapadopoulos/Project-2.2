@@ -106,8 +106,8 @@ public class ManageMovementBehaviorsSystem
 		if (rayCallBack.foundSomething()) {
 			Entity otherCar = world.getEntity(rayCallBack.getClosestId());
 			if (otherCar == null) {
-				System.out.println("Could not retrieve entity with ID " + rayCallBack.getClosestId() + " loc "
-									+ position);
+				// System.out.println("Could not retrieve entity with ID " + rayCallBack.getClosestId() + " loc "
+				// + position);
 			}
 			else if (otherCar != null && isOnSameEdge(routeComp, otherCar)) {
 				float distance = physicsBodyMapper.get(otherCar).getPosition().dst(position);

@@ -13,10 +13,12 @@ public class RunExperiments {
 	public static void main(String[] args) {
 
 		ExperimentDefiniton definition = roundaboutExperiment;
+		// ExperimentDefiniton definition = intersectionExperiment;
 
 		AbstractExperiment experiment = new IntersectionThroughputExperiment(definition.getParameters());
 
-		RepeatedExperiment repeatedExp = new RepeatedExperiment(experiment, 3, definition.getTextFile());
+		int timesToRepeat = 10;
+		RepeatedExperiment repeatedExp = new RepeatedExperiment(experiment, timesToRepeat, definition.getTextFile());
 		repeatedExp.run();
 	}
 

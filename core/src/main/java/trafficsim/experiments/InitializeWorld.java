@@ -21,7 +21,6 @@ import trafficsim.spawning.AbstractSpawnStrategy.SpawnStrategyType;
 import trafficsim.spawning.FixedIntervalSpawningStrategy;
 import trafficsim.spawning.PoissonSpawnStrategy;
 import trafficsim.systems.AbstractToggleStrategy;
-import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.GroupedTrafficLightSystem;
@@ -60,7 +59,7 @@ public class InitializeWorld {
 		world.setSystem(new ManageMovementBehaviorsSystem());
 
 		// Temporary hack
-		 world.setSystem(new CollisionDisablingSystem());
+		// world.setSystem(new CollisionDisablingSystem());
 
 		world.setSystem(new ExpirySystem());
 		world.setSystem(new ManageSpawnRateChangeSystem());
@@ -82,6 +81,7 @@ public class InitializeWorld {
 			ManhattanGraphInfo graphInfo = parameters.getGraphInfo();
 			graph = GraphFactory.createManhattanGraph(	graphInfo.getWidth(), graphInfo.getHeight(),
 														graphInfo.getLaneLength(), 0, 0);
+
 			// GraphFactory.addHighway(graph, graphInfo.getWidth(), graphInfo.getHeight(), graphInfo.getLaneLength(), 0,
 			// 0);
 		}
@@ -89,23 +89,24 @@ public class InitializeWorld {
 			graph = GraphFactory.createTestOneGraph(parameters.isRoundabout());
 		}
 		world.setGraph(graph);
-		// EntityFactory.addSpawnPointsTest(world, world.getGraph());
+		if (parameters.isManhattanGraph()) {
+			EntityFactory.addSpawnPointsTest(world, world.getGraph());
+		}
 		// EntityFactory.addSpawnPoints(world, graph);
 		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
+
 		for (Entity vertexEntity : vertexEntities) {
 			int vertexID = ((EntityIdentificationData) vertexEntity.getComponent(PhysicsBodyComponent.class)
 																	.getUserData()).getID();
 			for (SpawnInfo spawnInfo : parameters.getSpawnpoints()) {
 				if (spawnInfo.getVertexID() == vertexID) {
 					if (spawnInfo.getStrategy() == SpawnStrategyType.POISSON) {
-						vertexEntity.addComponent(new SpawnComponent(
-																		graph.getVertex(vertexID),
+						vertexEntity.addComponent(new SpawnComponent(graph.getVertex(vertexID),
 																		new PoissonSpawnStrategy(spawnInfo.getSpawnInterval())));
 					}
 					else {
 
-						vertexEntity.addComponent(new SpawnComponent(
-																		graph.getVertex(vertexID),
+						vertexEntity.addComponent(new SpawnComponent(graph.getVertex(vertexID),
 																		new FixedIntervalSpawningStrategy(spawnInfo.getSpawnInterval())));
 					}
 				}

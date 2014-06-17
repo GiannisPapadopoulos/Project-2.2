@@ -79,9 +79,13 @@ public class InitializeWorld {
 		Graph<NavigationObject> graph;
 		if (parameters.isManhattanGraph()) {
 			ManhattanGraphInfo graphInfo = parameters.getGraphInfo();
-			graph = GraphFactory.createManhattanGraph(	graphInfo.getWidth(), graphInfo.getHeight(),
+			/*graph = GraphFactory.createManhattanGraph(	graphInfo.getWidth(), graphInfo.getHeight(),
 														graphInfo.getLaneLength(), 0, 0);
 			GraphFactory.addHighway(graph, graphInfo.getWidth(), graphInfo.getHeight(), graphInfo.getLaneLength(), 0, 0);
+			*/
+			graph = new Graph<NavigationObject>();
+			GraphFactory.laneSwitchTest(graph);
+			
 		}
 		else {
 			graph = GraphFactory.createTestOneGraph(parameters.isRoundabout());
@@ -108,6 +112,8 @@ public class InitializeWorld {
 					}
 				}
 			}
+			
+			EntityFactory.addSpawnPoints(world, graph, vertexEntities);
 		}
 
 		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);

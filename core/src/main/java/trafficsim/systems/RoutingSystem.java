@@ -4,6 +4,7 @@ import static functions.MovementFunctions.buildWaypointsParametric;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.SPEED_RATIO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import trafficsim.TrafficSimWorld;
@@ -13,6 +14,7 @@ import trafficsim.components.RouteComponent;
 import trafficsim.components.SteeringComponent;
 import trafficsim.components.SteeringComponent.State;
 import trafficsim.components.VehiclesOnRoadComponent;
+import trafficsim.roads.Lane;
 import trafficsim.roads.Road;
 import trafficsim.roads.SubSystem;
 
@@ -94,29 +96,33 @@ public class RoutingSystem
 			if (transition == null) {
 				System.out.println(routeComp.getCurrentVertex() + " " + routeComp.getCurrentEdge());
 			}
-			Vector2 nextTransitionPoint = getNextTransitionPoint(transition);
+			ArrayList<Vector2> nextTransitionPoints = getNextTransitionPoints(transition);
 
-			if (physComp.getPosition().dst(nextTransitionPoint) < switchThreshold
-				|| reachedLastWaypoint(routeComp, physComp)) {
-				List<Vector2> waypoints = buildWaypointsParametric(transition);
-				routeComp.setWayPoints(waypoints);
-				routeComp.setWayPointIndex(0);
-				if (routeComp.isFollowingEdge()) {
-					// If we are leaving an edge, remove the car from the list
-					updateRoadReference(routeComp, carID, true);
+			for (Vector2 nextTransitionPoint : nextTransitionPoints) {
+				if (physComp.getPosition().dst(nextTransitionPoint) < switchThreshold
+						|| reachedLastWaypoint(routeComp, physComp)) {
+					List<Vector2> waypoints = buildWaypointsParametric(
+							transition, physComp.getPosition());
+					routeComp.setWayPoints(waypoints);
+					routeComp.setWayPointIndex(0);
+					if (routeComp.isFollowingEdge()) {
+						// If we are leaving an edge, remove the car from the
+						// list
+						updateRoadReference(routeComp, carID, true);
 
+					} else {
+						// If we are entering an edge, add the car to the list
+						routeComp.setCurrentVertex(routeComp.getNextVertex());
+						routeComp.incrementEdgeIndex();
+						updateRoadReference(routeComp, carID, false);
+					}
+					routeComp.setFollowingEdge(!routeComp.isFollowingEdge());
+				return;
+				} else {
+					
 				}
-				else {
-					// If we are entering an edge, add the car to the list
-					routeComp.setCurrentVertex(routeComp.getNextVertex());
-					routeComp.incrementEdgeIndex();
-					updateRoadReference(routeComp, carID, false);
-				}
-				routeComp.setFollowingEdge(!routeComp.isFollowingEdge());
 			}
-			else {
-				updateWayPointIndex(routeComp, physComp);
-			}
+			updateWayPointIndex(routeComp, physComp);
 		}
 	}
 
@@ -134,8 +140,12 @@ public class RoutingSystem
 		}
 	}
 
-	private Vector2 getNextTransitionPoint(SubSystem transition) {
-		return transition.getLanes().get(0).get(0).getStart();
+	private ArrayList<Vector2> getNextTransitionPoints(SubSystem transition) {
+		ArrayList<Vector2> result = new ArrayList<Vector2>();
+		for(ArrayList<Lane> lane: transition.getLanes()){
+			result.add(lane.get(0).getStart());
+		}
+		return result;
 	}
 
 	/** Returns the next edge or crossroad subsystem */

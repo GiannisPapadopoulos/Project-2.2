@@ -46,6 +46,7 @@ public class RouteComponent
 	/** */
 	private Vertex<NavigationObject> currentVertex;
 	/** */
+
 	// @Setter(AccessLevel.NONE)
 	private int edgeIndex;
 

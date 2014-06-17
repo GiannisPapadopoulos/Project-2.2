@@ -6,9 +6,12 @@ import static functions.VectorUtils.getAngle;
 import graph.Edge;
 import graph.Vertex;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import paramatricCurves.ParametricCurve;
 import trafficsim.components.RouteComponent;
+import trafficsim.roads.Lane;
 import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 import trafficsim.roads.SubSystem;
@@ -43,15 +46,15 @@ public class MovementFunctions {
 	}
 
 	/** Build waypoints for the current edge */
-	public static List<Vector2> buildWaypointsParametric(RouteComponent routeComp) {
-		return buildWaypointsParametric(routeComp, 10);
+	public static List<Vector2> buildWaypointsParametric(RouteComponent routeComp, Vector2 car_loc) {
+		return buildWaypointsParametric(routeComp, 10, car_loc);
 	}
 
 	/** Build waypoints for the current edge */
-	public static List<Vector2> buildWaypointsParametric(RouteComponent routeComp, int numPoints) {
+	public static List<Vector2> buildWaypointsParametric(RouteComponent routeComp, int numPoints, Vector2 car_loc) {
 		Road road = getRoad(routeComp.getCurrentEdge());
 		SubSystem transitionPath = road.getSubSystem();
-		return buildWaypointsParametric(transitionPath, numPoints);
+		return buildWaypointsParametric(transitionPath, numPoints, car_loc);
 
 		// Vertex<NavigationObject> v1 = routeComp.getCurrentVertex();
 		// Vertex<NavigationObject> v2 = v1.getNeighbor(routeComp.getCurrentEdge());
@@ -62,16 +65,27 @@ public class MovementFunctions {
 		// return waypoints;
 	}
 
-	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath) {
-		return buildWaypointsParametric(transitionPath, 50);
+	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath,Vector2 car_loc) {
+		return buildWaypointsParametric(transitionPath, 50, car_loc);
 	}
 
 	/**
 	 * Builds waypoints for the given subsystem
 	 * TODO Generalize for multiple lanes
 	 */
-	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath, int numPoints) {
-		List<Vector2> waypoints = transitionPath.getLanes().get(0).get(0).getTrajectory().getSamplePoints(numPoints);
+	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath, int numPoints, Vector2 car_loc) {
+		ArrayList<Lane> closest = null;
+		float closest_dist = Float.MAX_VALUE;
+		for(ArrayList<Lane> lanes : transitionPath.getLanes())  {
+			if(closest_dist>VectorUtils.getLength(lanes.get(0).getStart(),car_loc)) {
+				closest = lanes;
+				closest_dist = VectorUtils.getLength(lanes.get(0).getStart(),car_loc);
+			}
+		}
+		List<Vector2> waypoints = new ArrayList<Vector2>();
+		for(Lane lane : closest) {
+			waypoints = lane.getTrajectory().addSamplePoints(waypoints,numPoints);
+		}
 		return waypoints;
 	}
 

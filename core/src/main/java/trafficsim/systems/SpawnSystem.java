@@ -1,17 +1,27 @@
 package trafficsim.systems;
 
-import static com.badlogic.gdx.math.MathUtils.*;
+import static com.badlogic.gdx.math.MathUtils.cos;
+import static com.badlogic.gdx.math.MathUtils.degRad;
+import static com.badlogic.gdx.math.MathUtils.sin;
 import static functions.VectorUtils.getAngle;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.*;
-import functions.VectorUtils;
+import static trafficsim.TrafficSimConstants.CAR_LENGTH;
+import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import static trafficsim.TrafficSimConstants.MAX_SPEED;
+import static trafficsim.TrafficSimConstants.RANDOM;
+import static trafficsim.TrafficSimConstants.TIMER;
 import graph.Vertex;
+
+import java.util.Collection;
+
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.TrafficRayCastCallBack;
 import trafficsim.components.RouteComponent;
 import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
+import trafficsim.roads.CrossRoad;
 import trafficsim.roads.NavigationObject;
+import trafficsim.roads.SubSystem;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -22,8 +32,7 @@ import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class SpawnSystem
-		extends EntitySystem {
+public class SpawnSystem extends EntitySystem {
 
 	@Mapper
 	ComponentMapper<SpawnComponent> spawnComponentMapper;
@@ -47,20 +56,30 @@ public class SpawnSystem
 			if (spawnComp.shouldSpawn(TIMER.getTime())) {
 
 				Vertex<NavigationObject> spawnVertex = spawnComp.getVertex();
-				Vertex<NavigationObject> connection = spawnVertex.getParent().getVertex(spawnVertex.getAdjacentVertices().get(0));
-				
-				float angle = getAngle(spawnVertex.getData().getPosition(), connection.getData().getPosition())
-								* degRad;
-				Vector2 position = VectorUtils.getMidPoint(spawnVertex.getData());
-				Vector2 connectionVector = getVector(spawnVertex.getData().getPosition(), connection.getData()
-																									.getPosition());
-				Vector2 laneCorrection = connectionVector.cpy().nor().rotate(-90).scl(LANE_WIDTH / 2);
-				position.add(laneCorrection);
-				Vector2 castPostion = position.cpy().sub(connectionVector.cpy().nor().scl(CAR_LENGTH));
+				Vertex<NavigationObject> connection = spawnVertex.getParent()
+						.getVertex(spawnVertex.getAdjacentVertices().get(0));
+
+				float angle = getAngle(spawnVertex.getData().getPosition(),
+						connection.getData().getPosition()) * degRad;
+				Vector2 position = null;
+				CrossRoad cr = (CrossRoad) spawnVertex.getData();
+				for(SubSystem ss: cr.getRoadsOUT()
+						.get(0).getRSubSystems().values()) {
+					position = ss.getLanes().get(RANDOM.nextInt(ss.getLanes().size())).get(0).getStart();
+				}
+					
+				Vector2 connectionVector = getVector(spawnVertex.getData()
+						.getPosition(), connection.getData().getPosition());
+				Vector2 laneCorrection = connectionVector.cpy().nor()
+						.rotate(-90).scl(LANE_WIDTH / 2);
+				//position.add(laneCorrection);
+				Vector2 castPostion = position.cpy().sub(
+						connectionVector.cpy().nor().scl(CAR_LENGTH));
 				if (canSpawn(spawnComp, castPostion, angle)) {
 					int randInt = RANDOM.nextInt(7) + 1;
-					Entity car = EntityFactory.createCar(	(TrafficSimWorld) world, position, 1f, MAX_SPEED, angle,
-															"car" + randInt);
+					Entity car = EntityFactory.createCar(
+							(TrafficSimWorld) world, position, 1f, MAX_SPEED,
+							angle, "car" + randInt);
 					car.addComponent(new RouteComponent(spawnComp.getVertex()));
 					car.addToWorld();
 					spawnComp.spawned(TIMER.getTime());
@@ -72,10 +91,12 @@ public class SpawnSystem
 
 	/**
 	 * @param position
-	 * @param angle the car will be spawned at
+	 * @param angle
+	 *            the car will be spawned at
 	 * @return If it's legal to spawn i.e. there is no other car there
 	 */
-	private boolean canSpawn(SpawnComponent spawnComp, Vector2 position, float angle) {
+	private boolean canSpawn(SpawnComponent spawnComp, Vector2 position,
+			float angle) {
 		World box2dWorld = ((TrafficSimWorld) world).getBox2dWorld();
 		// Vector2 position = getMidPoint(spawnComp.getVertex().getData());
 		Vector2 angleAdjustment = new Vector2(cos(angle), sin(angle));
@@ -84,7 +105,8 @@ public class SpawnSystem
 		float rayLength = 1.5f * CAR_LENGTH;
 
 		TrafficRayCastCallBack rayCallBack = new TrafficRayCastCallBack();
-		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
+		box2dWorld.rayCast(rayCallBack, position,
+				position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
 
 		return rayCallBack.foundSomething() ? false : true;
 	}

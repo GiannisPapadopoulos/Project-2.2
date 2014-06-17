@@ -90,8 +90,7 @@ public class ParametricCurve {
 		return new Vector2((float) u_t.getFt(t), (float) v_t.getFt(t));
 	}
 
-	public List<Vector2> getSamplePoints(int numPoints) {
-		List<Vector2> samplePoints = new ArrayList<Vector2>();
+	public List<Vector2> addSamplePoints(List<Vector2> samplePoints,int numPoints) {
 		List<Float> range = r_t.getDiscreteCover(numPoints);
 		for (Float value : range) {
 			samplePoints.add(getPoint(value));

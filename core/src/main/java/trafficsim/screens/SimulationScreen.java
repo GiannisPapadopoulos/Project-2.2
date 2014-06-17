@@ -31,7 +31,7 @@ public class SimulationScreen extends SuperScreen {
 	/** Used to dispose the finished simulation */
 	public static LwjglApplication application;
 
-	private SimulationParameters parameters = PredefinedParameters.roundaboutSimpleGraph;
+	private SimulationParameters parameters = PredefinedParameters.priorityLightsmanhattanGraph;
 
 	private RepeatedExperiment experiment;
 
@@ -77,8 +77,10 @@ public class SimulationScreen extends SuperScreen {
 	@Override
 	public void show() {
 
-		if (world != null)
+		if (world != null) {
 			world.dispose();
+			world = null;
+		}
 		world = new TrafficSimWorld();
 		InitializeWorld.init(world, parameters, this);
 	}

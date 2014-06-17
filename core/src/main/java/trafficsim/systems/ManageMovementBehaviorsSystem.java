@@ -2,9 +2,7 @@ package trafficsim.systems;
 
 import static com.badlogic.gdx.math.MathUtils.*;
 import static functions.MovementFunctions.getRoad;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.DEFAULT_BRAKING_FACTOR;
-import static trafficsim.TrafficSimConstants.SPEED_RATIO;
+import static trafficsim.TrafficSimConstants.*;
 import graph.Vertex;
 
 import java.util.List;
@@ -102,8 +100,9 @@ public class ManageMovementBehaviorsSystem
 		float rayLength = 3 * CAR_LENGTH;
 		FrontRayCastCallBack rayCallBack = new FrontRayCastCallBack();
 		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
-		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angle45.cpy().scl(rayLength)));
-		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleMinus45.cpy().scl(rayLength)));
+		// TODO Some combination of this
+		// box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angle45.cpy().scl(rayLength)));
+		// box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleMinus45.cpy().scl(rayLength)));
 
 		if (rayCallBack.foundSomething()) {
 			Entity otherCar = world.getEntity(rayCallBack.getClosestId());

@@ -9,7 +9,6 @@ import graph.Vertex;
 import java.util.ArrayList;
 import java.util.List;
 
-import paramatricCurves.ParametricCurve;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
 import trafficsim.roads.Lane;
@@ -73,8 +72,8 @@ public class MovementFunctions {
 		// return waypoints;
 	}
 
-	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath) {
-		return buildWaypointsParametric(transitionPath, 20);
+	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath, Vector2 carLoc) {
+		return buildWaypointsParametric(transitionPath, 20, carLoc);
 	}
 
 	/**

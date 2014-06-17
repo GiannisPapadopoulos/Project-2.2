@@ -103,11 +103,12 @@ public class RoutingSystem
 			if (transition == null) {
 				System.out.println(routeComp.getCurrentVertex() + " " + routeComp.getCurrentEdge());
 			}
-			Vector2 nextTransitionPoint = getNextTransitionPoint(transition);
+			// TODO Not sure about this
+			Vector2 nextTransitionPoint = getNextTransitionPoints(transition).get(0);
 
 			if (physComp.getPosition().dst(nextTransitionPoint) < switchThreshold
 				|| reachedLastWaypoint(routeComp, physComp)) {
-				List<Vector2> waypoints = buildWaypointsParametric(transition);
+				List<Vector2> waypoints = buildWaypointsParametric(transition, physComp.getPosition());
 				routeComp.setWayPoints(waypoints);
 				routeComp.setWayPointIndex(0);
 				if (routeComp.isFollowingEdge()) {

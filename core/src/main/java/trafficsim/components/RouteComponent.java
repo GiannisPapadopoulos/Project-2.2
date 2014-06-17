@@ -17,6 +17,7 @@ import pathfinding.GraphAction;
 import pathfinding.GraphState;
 import search.Path;
 import trafficsim.roads.NavigationObject;
+import editor.EditorData;
 
 import com.artemis.Component;
 import com.badlogic.gdx.math.Vector2;
@@ -30,9 +31,7 @@ import com.badlogic.gdx.math.Vector2;
 @Setter
 @RequiredArgsConstructor
 @ToString
-public class RouteComponent
- extends Component {
-
+public class RouteComponent extends Component {
 
 	@NonNull
 	private Vertex<NavigationObject> source;
@@ -59,8 +58,8 @@ public class RouteComponent
 	private boolean set;
 
 	/**
-	 * If the car is currently following an edge (will search crossroad transition out) or a crossroad (will search edge
-	 * transition)
+	 * If the car is currently following an edge (will search crossroad
+	 * transition out) or a crossroad (will search edge transition)
 	 */
 	private boolean followingEdge;
 
@@ -117,9 +116,14 @@ public class RouteComponent
 	public boolean isLastEdge() {
 		return edgeIndex >= path.getRoute().size() - 1;
 	}
-	
+
 	public boolean isLastWaypoint() {
 		return wayPointIndex >= wayPoints.size() - 1;
+	}
+
+	public void setWayPointsLaneSwitch(List<Vector2> wayPoints) {
+		this.wayPoints = wayPoints;
+		this.wayPointIndex = 0;
 	}
 
 }

@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import paramatricCurves.curveDefs.C_Linear;
 
 import com.badlogic.gdx.math.Vector2;
+
+import functions.VectorUtils;
 
 public class ParametricCurve {
 
@@ -62,8 +65,8 @@ public class ParametricCurve {
 				@Override
 				public float getFt(float t) {
 
-					return (float) (((Vector2) (cd.getParams()[2])).x
-							+ (Float) (cd.getParams()[3]) * Math.cos(t));
+					return (float) (((Vector2) (cd.getParams()[2])).x + (Float) (cd
+							.getParams()[3]) * Math.cos(t));
 				}
 
 			});
@@ -73,12 +76,12 @@ public class ParametricCurve {
 				@Override
 				public float getFt(float t) {
 
-					return (float) (((Vector2) (cd.getParams()[2])).y
-							+ (Float) (cd.getParams()[3]) * Math.sin(t));
+					return (float) (((Vector2) (cd.getParams()[2])).y + (Float) (cd
+							.getParams()[3]) * Math.sin(t));
 				}
 
 			});
-			r_t = new RangeT((Float)(cd.getParams()[0]),
+			r_t = new RangeT((Float) (cd.getParams()[0]),
 					(Float) (cd.getParams()[1]));
 
 		} else {
@@ -90,7 +93,8 @@ public class ParametricCurve {
 		return new Vector2((float) u_t.getFt(t), (float) v_t.getFt(t));
 	}
 
-	public List<Vector2> addSamplePoints(List<Vector2> samplePoints,int numPoints) {
+	public List<Vector2> addSamplePoints(List<Vector2> samplePoints,
+			int numPoints) {
 		List<Float> range = r_t.getDiscreteCover(numPoints);
 		for (Float value : range) {
 			samplePoints.add(getPoint(value));
@@ -98,8 +102,7 @@ public class ParametricCurve {
 		return samplePoints;
 	}
 
-	
-	// Vector directing out of pc  <-- |----------|
+	// Vector directing out of pc <-- |----------|
 	public Vector2 getStartDirection() {
 		if (startDir == null) {
 			ArrayList<Float> precise = r_t.getDiscreteCover(1000);
@@ -109,14 +112,14 @@ public class ParametricCurve {
 			a.y = a.y - b.y;
 			startDir = a;
 		}
-		
+
 		Vector2 result = new Vector2();
 		result.x = startDir.x;
 		result.y = startDir.y;
 		return result;
 	}
 
-	// Vector directing out of pc  |----------| -->
+	// Vector directing out of pc |----------| -->
 	public Vector2 getEndDirection() {
 		if (endDir == null) {
 			ArrayList<Float> precise = r_t.getDiscreteCover(1000);
@@ -132,9 +135,29 @@ public class ParametricCurve {
 		return result;
 	}
 
+	public List<Vector2> addSampleFrom(List<Vector2> samplePoints,
+			int numPoints, Vector2 v2) {
+
+		ParametricCurve dummy = new ParametricCurve(new C_Linear(
+				getPoint(r_t.getLow()), getPoint(r_t.getHigh())));
+		float low_t = -10000000;
+		float dist = Float.MAX_VALUE;
+
+		for (Float d : dummy.getR_t().getDiscreteCover(1000))
+			if (VectorUtils.getLength(dummy.getPoint(d), v2) < dist) {
+				low_t = d;
+				dist = VectorUtils.getLength(dummy.getPoint(d), v2);
+			}
+		dummy.r_t.setLow(low_t);
+
+		dummy.addSamplePoints(samplePoints, 50);
+
+		return samplePoints;
+	}
+
 	@Override
 	public String toString() {
-		return "ParametricCurve [u_t=" + u_t + ", v_t=" + v_t + ", r_t=" + r_t + ", startDir=" + startDir + ", endDir="
-				+ endDir + "]";
+		return "ParametricCurve [u_t=" + u_t + ", v_t=" + v_t + ", r_t=" + r_t
+				+ ", startDir=" + startDir + ", endDir=" + endDir + "]";
 	}
 }

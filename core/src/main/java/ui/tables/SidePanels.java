@@ -56,6 +56,7 @@ public class SidePanels extends Table {
 	@Getter
 	private Label averageLightTime,carsOnRoadLabel,avgspeed ;
 	
+	@Getter
 	@Setter
 	private TrafficSimWorld world;
 	

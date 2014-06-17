@@ -1,7 +1,6 @@
 package trafficsim.systems;
 
-import static com.badlogic.gdx.math.MathUtils.cos;
-import static com.badlogic.gdx.math.MathUtils.sin;
+import static com.badlogic.gdx.math.MathUtils.*;
 import static functions.MovementFunctions.getRoad;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.DEFAULT_BRAKING_FACTOR;
@@ -95,10 +94,16 @@ public class ManageMovementBehaviorsSystem
 			PhysicsBodyComponent physComp, SteeringComponent steeringComp) {
 		World box2dWorld = ((TrafficSimWorld) world).getBox2dWorld();
 		Vector2 position = physComp.getPosition();
-		Vector2 angleAdjustment = new Vector2(cos(physComp.getAngle()), sin(physComp.getAngle()));
+		float angle = physComp.getAngle();
+		Vector2 angleAdjustment = new Vector2(cos(angle), sin(angle));
+		int deltaAngle = 30;
+		Vector2 angle45 = new Vector2(cos(angle + deltaAngle * degRad), sin(angle + deltaAngle * degRad));
+		Vector2 angleMinus45 = new Vector2(cos(angle - deltaAngle * degRad), sin(angle - deltaAngle * degRad));
 		float rayLength = 3 * CAR_LENGTH;
 		FrontRayCastCallBack rayCallBack = new FrontRayCastCallBack();
 		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
+		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angle45.cpy().scl(rayLength)));
+		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleMinus45.cpy().scl(rayLength)));
 
 		if (rayCallBack.foundSomething()) {
 			Entity otherCar = world.getEntity(rayCallBack.getClosestId());
@@ -118,7 +123,7 @@ public class ManageMovementBehaviorsSystem
 				}
 				else if (distance < carInFrontThreshold) {
 					setBrakeBehavior(movementComp, DEFAULT_BRAKING_FACTOR);
-					steeringComp.setState(State.STOPPED);
+					steeringComp.setState(State.STOPPING);
 					return;
 				}
 			}
@@ -139,13 +144,20 @@ public class ManageMovementBehaviorsSystem
 		}
 		steeringComp.setState(State.DEFAULT);
 		setSeekBehavior(movementComp, routeComp);
-
 	}
 
 	private boolean isOnSameEdge(RouteComponent routeComp, Entity otherCar) {
 		assert otherCar != null && routeComp != null;
 		RouteComponent otherRouteComponent = routeComponentMapper.get(otherCar);
+		SteeringComponent otherSteeringComp = steeringComponentMapper.get(otherCar);
 		if (!otherRouteComponent.isSet() || !routeComp.isSet()) {
+			return false;
+		}
+		boolean bothOnIntersection = !routeComp.isFollowingEdge() && !otherRouteComponent.isFollowingEdge();
+		// if (otherSteeringComp.getState() == State.STOPPED) {
+		// return false;
+		// }
+		if (!routeComp.isFollowingEdge() && routeComp.getWayPointIndex() > 5) {
 			return false;
 		}
 		return getRoad(otherRouteComponent.getCurrentEdge()).getDirection() == getRoad(routeComp.getCurrentEdge()).getDirection();
@@ -167,6 +179,7 @@ public class ManageMovementBehaviorsSystem
 	private void setSeekBehavior(MovementComponent movementComp, RouteComponent routeComp) {
 		for (Behavior behavior : movementComp.getBehaviors().keys()) {
 			if (behavior instanceof SeekBehavior && routeComp.getWayPoints() != null) {
+				// System.out.println(routeComp.getNextWaypoint());
 				movementComp.getBehaviors().put(behavior, 1f);
 				((SeekBehavior) behavior).setTargetLocation(routeComp.getNextWaypoint());
 			}
@@ -174,6 +187,7 @@ public class ManageMovementBehaviorsSystem
 				movementComp.getBehaviors().put(behavior, 0f);
 			}
 		}
+
 	}
 
 	// TODO
@@ -197,7 +211,7 @@ public class ManageMovementBehaviorsSystem
 		GroupedTrafficLightComponent lightComp = groupedTrafficLightsMapper.get(vertexEntity);
 		List<GroupedTrafficLightData> tfLightList = lightComp.getLightsOnEdge(routeComp.getCurrentEdge().getID());
 		if (tfLightList == null) {
-			System.out.println(lightComp);
+			//System.out.println(lightComp);
 		}
 		else {
 			int lightID = tfLightList.get(0).getID();

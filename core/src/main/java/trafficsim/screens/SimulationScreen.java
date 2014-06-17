@@ -4,16 +4,16 @@ import static trafficsim.TrafficSimConstants.*;
 import lombok.Getter;
 import lombok.Setter;
 import trafficsim.TrafficSimWorld;
-import trafficsim.data.DataGatherer;
 import trafficsim.experiments.InitializeWorld;
 import trafficsim.experiments.PredefinedParameters;
+import trafficsim.experiments.RepeatedExperiment;
 import trafficsim.experiments.SimulationParameters;
 import ui.tables.CurrentFocus;
 import ui.tables.InfoPop;
-import utils.ExportData;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -27,6 +27,13 @@ import editor.WorldRenderer;
  * 
  */
 public class SimulationScreen extends SuperScreen {
+
+	/** Used to dispose the finished simulation */
+	public static LwjglApplication application;
+
+	private SimulationParameters parameters = PredefinedParameters.priorityLightsmanhattanGraph;
+
+	private RepeatedExperiment experiment;
 
 	@Getter
 	// So it's accessible by EditorScreen
@@ -46,11 +53,6 @@ public class SimulationScreen extends SuperScreen {
 
 	private WorldRenderer wr;
 
-	// If data have been exported
-	private boolean exported = false;
-
-	// Export data after this many seconds
-	private int secsToSave = 300;
 
 	@Getter
 	@Setter
@@ -61,13 +63,25 @@ public class SimulationScreen extends SuperScreen {
 		super(screens);
 	}
 
+	public SimulationScreen(Screens screens, SimulationParameters parameters) {
+		this(screens);
+		this.parameters = parameters;
+	}
+
+	public SimulationScreen(Screens screens, RepeatedExperiment experiment) {
+		this(screens);
+		this.parameters = experiment.getExperiment().getParameters();
+		this.experiment = experiment;
+	}
+
 	@Override
 	public void show() {
 
-		if (world != null)
+		if (world != null) {
 			world.dispose();
+			world = null;
+		}
 		world = new TrafficSimWorld();
-		SimulationParameters parameters = PredefinedParameters.priorityLightsmanhattanGraph;
 		InitializeWorld.init(world, parameters, this);
 	}
 
@@ -119,13 +133,23 @@ public class SimulationScreen extends SuperScreen {
 		super.setCarsUI(world);
 		super.setAverageSpeed(world);
 		
-		if (!exported && TIMER.getTime() > 1.0 * secsToSave * 1000) {
-			DataGatherer dataGatherer = world.getDataGatherer();
-			ExportData.writeToFile(dataGatherer, "data/simulationData");
-			exported = true;
-
-			System.out.println(dataGatherer.getAverageDistanceTravelled().size() + " cars have reached destination");
+		if (TIMER.getTime() > parameters.getTotalTimeInSecs() * 1000) {
+			TIMER.reset();
+			if (experiment != null) {
+				experiment.notifySimulationEnded(world);
+			}
+			// world.dispose();
+			// world = null;
+			// application.exit();
 		}
+
+		// if (!exported && TIMER.getTime() > 1.0 * secsToSave * 1000) {
+		// DataGatherer dataGatherer = world.getDataGatherer();
+		// ExportData.writeToFile(dataGatherer, "data/simulationData");
+		// exported = true;
+		//
+		// System.out.println(dataGatherer.getAverageDistanceTravelled().size() + " cars have reached destination");
+		// }
 	}
 	
 

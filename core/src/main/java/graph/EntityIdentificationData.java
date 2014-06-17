@@ -12,10 +12,10 @@ import lombok.Getter;
 @Getter
 public class EntityIdentificationData {
 
-	private ElementType type;
+	private EntityType type;
 	private int ID;
 
-	public enum ElementType {
+	public enum EntityType {
 		VERTEX,
 		EDGE,
 		CAR

@@ -28,6 +28,7 @@ public class ExpirySystem
 	@Mapper
 	private ComponentMapper<DataComponent> dataComponentMapper;
 
+
 	@SuppressWarnings("unchecked")
 	public ExpirySystem() {
 		super(Aspect.getAspectForAll(ExpiryComponent.class));

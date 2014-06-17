@@ -13,8 +13,20 @@ import java.util.Scanner;
 
 import trafficsim.components.DataComponent;
 import trafficsim.data.DataGatherer;
+import trafficsim.experiments.RepeatedExperiment;
 
 public class ExportData {
+
+	public static void writeToFile(RepeatedExperiment experiment, String fileName) {
+		try {
+			FileWriter writer = new FileWriter(fileName);
+			writer.write(experiment.toString());
+			writer.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void writeToFile(DataGatherer dataGatherer, String fileName) {
 		try {

@@ -10,16 +10,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import paramatricCurves.ParametricCurve;
+import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
 import trafficsim.roads.Lane;
 import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 import trafficsim.roads.SubSystem;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class MovementFunctions {
+
+	public static Vector2 getPredictedPosition(Entity entity, float dT) {
+		PhysicsBodyComponent physComp = entity.getComponent(PhysicsBodyComponent.class);
+		assert physComp != null;
+		return physComp.getPosition().cpy().add(physComp.getLinearVelocity().scl(dT));
+	}
 
 	// TODO fix
 	public static boolean isLeftTurn(RouteComponent routeComp) {
@@ -65,8 +73,8 @@ public class MovementFunctions {
 		// return waypoints;
 	}
 
-	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath,Vector2 car_loc) {
-		return buildWaypointsParametric(transitionPath, 50, car_loc);
+	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath) {
+		return buildWaypointsParametric(transitionPath, 20);
 	}
 
 	/**

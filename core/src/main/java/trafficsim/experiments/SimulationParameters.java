@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import trafficsim.spawning.AbstractSpawnStrategy.SpawnStrategyType;
 import trafficsim.systems.AbstractToggleStrategy;
@@ -13,6 +14,7 @@ import trafficsim.systems.AbstractToggleStrategy;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SimulationParameters {
 
@@ -33,6 +35,8 @@ public class SimulationParameters {
 	/** Spawn-component will be added to those vertices */
 	List<SpawnInfo> spawnpoints;
 
+	/** How long the simulation will be run for */
+	float totalTimeInSecs;
 
 
 	@AllArgsConstructor

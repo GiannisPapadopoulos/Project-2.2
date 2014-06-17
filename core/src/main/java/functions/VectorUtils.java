@@ -12,6 +12,10 @@ public class VectorUtils {
 	public static float getLength(Road road) {
 		return getLength(road.getPointA(), road.getPointB());
 	}
+	
+	public static float getLength(NavigationObject road) {
+		return getLength(((Road) road).getPointA(), ((Road) road).getPointB());
+	}
 
 	public static float getLength(Vector2 pointA, Vector2 pointB) {
 		return pointA.dst(pointB);

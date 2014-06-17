@@ -93,5 +93,7 @@ public final class TrafficSimConstants {
 	public static final int TRAFFIC_LIGHT_ORANGE_INTERVAL = 1;
 
 	public static double spawnRate = 2000;
+	
+	public static final float LANE_SWITCH_ANGLE = 30.0f;
 
 }

@@ -17,6 +17,7 @@ import pathfinding.GraphAction;
 import pathfinding.GraphState;
 import search.Path;
 import trafficsim.roads.NavigationObject;
+import editor.EditorData;
 
 import com.artemis.Component;
 import com.badlogic.gdx.math.Vector2;
@@ -120,6 +121,13 @@ public class RouteComponent
 	
 	public boolean isLastWaypoint() {
 		return wayPointIndex >= wayPoints.size() - 1;
+	}
+	
+	public void setWayPointsDEBUG(List<Vector2> wayPoints) {
+		this.wayPoints = wayPoints;
+		this.wayPointIndex = 0;
+		for(Vector2 v:wayPoints)
+		EditorData.debugPoints.add(v);
 	}
 
 }

@@ -467,7 +467,6 @@ public class EntityFactory {
 		}
 		else {
 			// roadEdge = graph.addEdge(edge, connection, spawn1, false);
-			System.out.println(edgeA + " " + edgeB);
 			roadEdge1 = graph.addEdge(	new Road(new ParametricCurve(new C_Linear(edgeA, edgeB)), 1,
 													TrafficSimConstants.CITY_SPEED_LIMIT,
 													(CrossRoad) connection.getData(), (CrossRoad) spawn1.getData(),

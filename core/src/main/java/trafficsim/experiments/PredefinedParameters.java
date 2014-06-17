@@ -3,6 +3,7 @@ package trafficsim.experiments;
 import static trafficsim.TrafficSimConstants.DEFAULT_CITY_SPEED_LIMIT;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import trafficsim.experiments.SimulationParameters.ManhattanGraphInfo;
@@ -30,7 +31,7 @@ public class PredefinedParameters {
 		// int[] indices = { 0, size * size - 1, (int) Math.sqrt(size * size - 1),
 		// size * size - (int) Math.sqrt(size * size) };
 		int vertexCount = size * size;
-		int[] indices = { vertexCount, vertexCount + 1, vertexCount = 2, vertexCount + 3 };
+		int[] indices = { vertexCount, vertexCount + 1, vertexCount + 2, vertexCount + 3 };
 		List<SpawnInfo> noSpawnPoints = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> spawnInfo = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> manhattanSpawnInfo = new ArrayList<SpawnInfo>();
@@ -54,6 +55,7 @@ public class PredefinedParameters {
 		priorityLightsmanhattanGraph = new SimulationParameters(true, false, graphInfo, DEFAULT_CITY_SPEED_LIMIT,
 																AbstractToggleStrategy.priorityToggleStrategy,
 																manhattanSpawnInfo, manhattanTime);
+		System.out.println(Arrays.toString(indices));
 	}
 	
 

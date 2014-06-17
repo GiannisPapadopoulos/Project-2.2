@@ -3,7 +3,12 @@ package trafficsim.factories;
 import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getMidPoint;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.*;
+import static trafficsim.TrafficSimConstants.CAR_LENGTH;
+import static trafficsim.TrafficSimConstants.CAR_WIDTH;
+import static trafficsim.TrafficSimConstants.DEFAULT_BRAKING_FACTOR;
+import static trafficsim.TrafficSimConstants.LANE_WIDTH;
+import static trafficsim.TrafficSimConstants.TRAFFIC_LIGHT_GREEN_INTERVAL;
+import static trafficsim.TrafficSimConstants.TRAFFIC_LIGHT_ORANGE_INTERVAL;
 import functions.VectorUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
@@ -262,6 +267,9 @@ public class EntityFactory {
 		int index = 0;
 
 		for (Vertex<NavigationObject> vertex : graph.getVertexIterator()) {
+			if(((CrossRoad)vertex.getData()).getCrossRoadType()!=CrossRoad.CR_TYPE.CrossRoad)
+				continue;
+				
 			List<List<GroupedTrafficLightData>> groupedLights = new ArrayList<List<GroupedTrafficLightData>>();
 			int edgesPerVertex = vertex.getAdjacentEdges().size();
 			for (Edge<NavigationObject> edge : vertex.getIncomingEdgeIterator()) {
@@ -295,6 +303,8 @@ public class EntityFactory {
 			Vertex<NavigationObject> vertex,
 			int edgesPerVertex,
 			float angleOfRoad, boolean onPointA) {
+		
+
 		TIntList trafficLightIDs = new TIntArrayList();
 		if (vertex.getAdjacentVertices().size() > 1) {
 

@@ -126,10 +126,10 @@ public class LaneSwitchingSystem extends EntitySystem {
 							.getTrajectory()
 							.addSampleFrom(newSampling, densitySample * 3, vEnd);
 					lsComp.setSwitchPoint(newSampling.get(densitySample + 10));
-					EditorData.debugPoints2.add(newSampling
-							.get(densitySample + 10));
+					// EditorData.debugPoints2.add(newSampling.get(densitySample
+					// + 10));
 
-					routeComp.setWayPointsDEBUG(newSampling);
+					routeComp.setWayPointsLaneSwitch(newSampling);
 				}
 
 			}

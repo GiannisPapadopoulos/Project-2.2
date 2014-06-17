@@ -9,7 +9,7 @@ import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import graph.Edge;
 import graph.EntityIdentificationData;
-import graph.EntityIdentificationData.ElementType;
+import graph.EntityIdentificationData.EntityType;
 import graph.Graph;
 import graph.Vertex;
 
@@ -27,6 +27,7 @@ import trafficsim.components.DimensionComponent;
 import trafficsim.components.ExpiryComponent;
 import trafficsim.components.GroupedTrafficLightComponent;
 import trafficsim.components.GroupedTrafficLightComponent.GroupedTrafficLightData;
+import trafficsim.components.IntersectionThroughputComponent;
 import trafficsim.components.LightToRoadMappingComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.MovementComponent;
@@ -42,6 +43,7 @@ import trafficsim.movement.BrakeBehavior;
 import trafficsim.movement.SeekBehavior;
 import trafficsim.movement.WeightedBehavior;
 import trafficsim.roads.CrossRoad;
+import trafficsim.roads.CrossRoad.CR_TYPE;
 import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 import trafficsim.roads.Road.Direction;
@@ -84,7 +86,7 @@ public class EntityFactory {
 				.restitution(0.2f).friction(0f);
 		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
 				.type(BodyType.DynamicBody).position(position)
-				.angle(angleInRads).userData(new EntityIdentificationData(ElementType.CAR, car.getId())).build();
+				.angle(angleInRads).userData(new EntityIdentificationData(EntityType.CAR, car.getId())).build();
 		/** @formatter:on */
 		car.addComponent(new PhysicsBodyComponent(body));
 
@@ -151,7 +153,7 @@ public class EntityFactory {
 															.type(BodyType.StaticBody)
 															.position(position)
 															.angle(angle)
-															.userData(	new EntityIdentificationData(ElementType.EDGE,
+															.userData(	new EntityIdentificationData(EntityType.EDGE,
 																									edge.getID()))
 															.build();
 		road.addComponent(new PhysicsBodyComponent(body));
@@ -196,7 +198,8 @@ public class EntityFactory {
 
 		// boxShape takes the half width/height as input
 		// TODO Check number of lanes here
-		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, LANE_WIDTH * 2 / 2)
+		// length / 2, LANE_WIDTH * 2 / 2
+		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, length / 2)
 																.density(1.0f)
 																.restitution(1.0f)
 																.friction(0f)
@@ -206,7 +209,7 @@ public class EntityFactory {
 															.type(BodyType.StaticBody)
 															.position(position)
 															.angle(angle)
-															.userData(	new EntityIdentificationData(ElementType.VERTEX,
+															.userData(	new EntityIdentificationData(EntityType.VERTEX,
 																									vertex.getID()))
 															.build();
 		crossRoad.addComponent(new PhysicsBodyComponent(body));
@@ -214,6 +217,8 @@ public class EntityFactory {
 
 		SpriteComponent sprite = new SpriteComponent(name);
 		crossRoad.addComponent(sprite);
+
+		crossRoad.addComponent(new IntersectionThroughputComponent());
 		// || vertex.getID() == vertex.getParent().getVertexCount() - 1
 		// double spawnInterval = spawnRate;
 		// if (GraphFactory.useManhattanGraph) {
@@ -259,6 +264,10 @@ public class EntityFactory {
 		int index = 0;
 
 		for (Vertex<NavigationObject> vertex : graph.getVertexIterator()) {
+			CrossRoad crossRoad = (CrossRoad) vertex.getData();
+			if (crossRoad.getCrossRoadType() == CR_TYPE.Roundabout) {
+				continue;
+			}
 			List<List<GroupedTrafficLightData>> groupedLights = new ArrayList<List<GroupedTrafficLightData>>();
 			int edgesPerVertex = vertex.getAdjacentEdges().size();
 			for (Edge<NavigationObject> edge : vertex.getIncomingEdgeIterator()) {

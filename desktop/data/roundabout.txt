@@ -1,0 +1,6 @@
+Average Velocity:: 3
+
+
+
+CarsPerMinute: : 3
+12.0 24.0 18.0 

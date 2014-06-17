@@ -3,10 +3,12 @@ package trafficsim.systems;
 import static functions.MovementFunctions.buildWaypointsParametric;
 import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.SPEED_RATIO;
+import static utils.EntityRetrievalUtils.getVertexEntity;
 
 import java.util.List;
 
 import trafficsim.TrafficSimWorld;
+import trafficsim.components.IntersectionThroughputComponent;
 import trafficsim.components.MovementComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
@@ -42,6 +44,8 @@ public class RoutingSystem
 	private ComponentMapper<MovementComponent> movementComponentMapper;
 	@Mapper
 	private ComponentMapper<VehiclesOnRoadComponent> vehiclesOnRoadComponentMapper;
+	@Mapper
+	private ComponentMapper<IntersectionThroughputComponent> throughputMapper;
 
 	/** Threshold for changing to the next waypoint */
 	private float waypointThreshold = 1.5f * SPEED_RATIO;
@@ -83,7 +87,10 @@ public class RoutingSystem
 		if (routeComp.isLastEdge()) {
 			if (routeComp.isLastWaypoint()) {
 				// TODO arrival behavior
-				steeringComp.setState(State.ARRIVED);
+				if (steeringComp.getState() != State.ARRIVED) {
+					steeringComp.setState(State.ARRIVED);
+					updateRoadReference(routeComp, carID, true);
+				}
 			}
 			else {
 				updateWayPointIndex(routeComp, physComp);
@@ -104,13 +111,14 @@ public class RoutingSystem
 				if (routeComp.isFollowingEdge()) {
 					// If we are leaving an edge, remove the car from the list
 					updateRoadReference(routeComp, carID, true);
-
 				}
 				else {
-					// If we are entering an edge, add the car to the list
 					routeComp.setCurrentVertex(routeComp.getNextVertex());
 					routeComp.incrementEdgeIndex();
+					// If we are entering an edge, add the car to the list
 					updateRoadReference(routeComp, carID, false);
+					// Increment cars that have gone through the intersection
+					throughputMapper.get(getVertexEntity(world, routeComp.getCurrentVertex())).increment();
 				}
 				routeComp.setFollowingEdge(!routeComp.isFollowingEdge());
 			}
@@ -161,7 +169,6 @@ public class RoutingSystem
 			boolean b = vehiclesOnRoad.getVehiclesOnLaneIDs().remove(carID);
 			// System.out.println("edge " + edgeIndex + " " + b + " v " + " c " + carID + " "
 			// + vehiclesOnRoad.getVehiclesOnLaneIDs());
-			assert b;
 		}
 		else {
 			// System.out.println("adding " + "edge " + edgeIndex + " id " + carID);

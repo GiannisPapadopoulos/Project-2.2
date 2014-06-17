@@ -1,7 +1,7 @@
 package trafficsim.callbacks;
 
 import graph.EntityIdentificationData;
-import graph.EntityIdentificationData.ElementType;
+import graph.EntityIdentificationData.EntityType;
 import lombok.Getter;
 
 import com.badlogic.gdx.math.Vector2;
@@ -19,7 +19,7 @@ public class TrafficRayCastCallBack
 		Object userData = fixture.getBody().getUserData();
 		if (userData != null && userData.getClass() == EntityIdentificationData.class) {
 			EntityIdentificationData idData = (EntityIdentificationData) userData;
-			if (idData.getType() == ElementType.CAR) {
+			if (idData.getType() == EntityType.CAR) {
 				closestId = idData.getID();
 				return fraction;
 			}

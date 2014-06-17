@@ -25,7 +25,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import editor.MousePosition.Coordinates;
 import graph.Edge;
 import graph.EntityIdentificationData;
-import graph.EntityIdentificationData.ElementType;
+import graph.EntityIdentificationData.EntityType;
 
 /** System to control the camera and other input commands we might define */
 public class InputSystem extends VoidEntitySystem implements InputProcessor {
@@ -75,6 +75,12 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 		else if (keycode == Keys.R) {
 			printCoordinates = !printCoordinates;
 		}
+		else if (keycode == Keys.D) {
+			DEBUG_RENDER = !DEBUG_RENDER;
+		}
+		else if (keycode == Keys.T) {
+			System.out.println("time " + TIMER.getTime() / 1000.0);
+		}
 		return false;
 	}
 
@@ -110,7 +116,7 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 				PhysicsBodyComponent physComp = entity.getComponent(PhysicsBodyComponent.class);
 				if (physComp != null && physComp.getUserData().getClass() == EntityIdentificationData.class) {
 					EntityIdentificationData graphData = (EntityIdentificationData) physComp.getUserData();
-					if (graphData.getType() == ElementType.EDGE) {
+					if (graphData.getType() == EntityType.EDGE) {
 						Edge<NavigationObject> edge = ((TrafficSimWorld) world).getGraph().getEdge(graphData.getID());
 						if (DEBUG_CLICKS)
 							System.out.println(getRoad(edge).getDirection());

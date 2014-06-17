@@ -1,10 +1,8 @@
 package desktop;
 
-import static trafficsim.TrafficSimConstants.FPS;
-import static trafficsim.TrafficSimConstants.PACK;
-import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
-import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
+import static trafficsim.TrafficSimConstants.*;
 import trafficsim.TrafficSimulation;
+import trafficsim.screens.SimulationScreen;
 import utils.ImagePacker;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
@@ -21,6 +19,6 @@ public class Main {
 		config.width = WINDOW_WIDTH;
 		config.height = WINDOW_HEIGHT;
 		config.foregroundFPS = config.backgroundFPS = FPS;
-		new LwjglApplication(new TrafficSimulation(), config);
+		SimulationScreen.application = new LwjglApplication(new TrafficSimulation(), config);
 	}
 }

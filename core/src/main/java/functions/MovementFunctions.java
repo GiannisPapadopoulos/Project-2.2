@@ -8,15 +8,23 @@ import graph.Vertex;
 
 import java.util.List;
 
+import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.RouteComponent;
 import trafficsim.roads.NavigationObject;
 import trafficsim.roads.Road;
 import trafficsim.roads.SubSystem;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class MovementFunctions {
+
+	public static Vector2 getPredictedPosition(Entity entity, float dT) {
+		PhysicsBodyComponent physComp = entity.getComponent(PhysicsBodyComponent.class);
+		assert physComp != null;
+		return physComp.getPosition().cpy().add(physComp.getLinearVelocity().scl(dT));
+	}
 
 	// TODO fix
 	public static boolean isLeftTurn(RouteComponent routeComp) {

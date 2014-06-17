@@ -1,12 +1,9 @@
 package trafficsim.systems;
 
 import static trafficsim.TrafficSimConstants.spawnRate;
-import graph.Vertex;
 import lombok.Getter;
 import lombok.Setter;
-import trafficsim.TrafficSimWorld;
 import trafficsim.components.SpawnComponent;
-import trafficsim.roads.NavigationObject;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -38,12 +35,6 @@ public class ManageSpawnRateChangeSystem
 	@Override
 	protected boolean checkProcessing() {
 		return spawnRateModified;
-	}
-
-	private void setSpawnRates() {
-		for (Vertex<NavigationObject> vertex : ((TrafficSimWorld) world).getGraph().getVertexIterator()) {
-			// SpawnC
-		}
 	}
 
 	@Override

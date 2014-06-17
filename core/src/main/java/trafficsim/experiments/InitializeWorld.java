@@ -116,8 +116,9 @@ public class InitializeWorld {
 				}
 			}
 			
-			EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+			
 		}
+		EntityFactory.addSpawnPoints(world, graph, vertexEntities);
 
 		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 

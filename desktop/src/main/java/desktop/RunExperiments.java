@@ -18,7 +18,7 @@ public class RunExperiments {
 		AbstractExperiment experiment = new IntersectionThroughputExperiment(definition.getParameters());
 		experiment = new ManhattanExperiment(definition.getParameters());
 
-		int timesToRepeat = 1;
+		int timesToRepeat = 5;
 		RepeatedExperiment repeatedExp = new RepeatedExperiment(experiment, timesToRepeat, definition.getTextFile());
 		repeatedExp.run();
 	}
@@ -35,6 +35,9 @@ public class RunExperiments {
 																				"data/intersection",
 																				PredefinedParameters.priorityLightsmanhattanGraph);
 	
+	static ExperimentDefiniton basicManhattanExperiment = new ExperimentDefiniton(
+																						"data/intersection",
+																						PredefinedParameters.priorityLightsmanhattanGraph);
 	
 	@AllArgsConstructor
 	@Getter

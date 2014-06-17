@@ -81,6 +81,9 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 		else if (keycode == Keys.T) {
 			System.out.println("time " + TIMER.getTime() / 1000.0);
 		}
+		else if (keycode == Keys.W) {
+			DEBUG_CLICKS = !DEBUG_CLICKS;
+		}
 		return false;
 	}
 

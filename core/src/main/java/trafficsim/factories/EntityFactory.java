@@ -27,6 +27,7 @@ import trafficsim.components.DimensionComponent;
 import trafficsim.components.ExpiryComponent;
 import trafficsim.components.GroupedTrafficLightComponent;
 import trafficsim.components.GroupedTrafficLightComponent.GroupedTrafficLightData;
+import trafficsim.components.LaneSwitchingComponent;
 import trafficsim.components.LightToRoadMappingComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.MovementComponent;
@@ -107,6 +108,8 @@ public class EntityFactory {
 		behavior.add(new SeekBehavior(), 1f);
 		behavior.add(new BrakeBehavior(DEFAULT_BRAKING_FACTOR), 0f);
 		car.addComponent(new MovementComponent(behavior));
+		// Add lane switching component
+		car.addComponent(new LaneSwitchingComponent());
 		return car;
 	}
 

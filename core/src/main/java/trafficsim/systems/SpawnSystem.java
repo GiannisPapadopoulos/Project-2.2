@@ -11,11 +11,8 @@ import static trafficsim.TrafficSimConstants.MAX_SPEED;
 import static trafficsim.TrafficSimConstants.RANDOM;
 import static trafficsim.TrafficSimConstants.TIMER;
 import graph.Vertex;
-
-import java.util.Collection;
-
 import trafficsim.TrafficSimWorld;
-import trafficsim.callbacks.TrafficRayCastCallBack;
+import trafficsim.callbacks.FrontRayCastCallBack;
 import trafficsim.components.RouteComponent;
 import trafficsim.components.SpawnComponent;
 import trafficsim.factories.EntityFactory;
@@ -104,7 +101,7 @@ public class SpawnSystem extends EntitySystem {
 		// If there is a car within this distance we will not spawn
 		float rayLength = 1.5f * CAR_LENGTH;
 
-		TrafficRayCastCallBack rayCallBack = new TrafficRayCastCallBack();
+		FrontRayCastCallBack rayCallBack = new FrontRayCastCallBack();
 		box2dWorld.rayCast(rayCallBack, position,
 				position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
 

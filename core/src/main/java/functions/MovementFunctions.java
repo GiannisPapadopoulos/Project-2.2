@@ -88,6 +88,22 @@ public class MovementFunctions {
 		}
 		return waypoints;
 	}
+	
+	public static List<Vector2> buildWaypointsParametricInLane(SubSystem transitionPath, int numPoints, Vector2 car_loc) {
+		return null;
+	}
+	
+	public static int determineCurrentLane(SubSystem transitionPath, Vector2 car_loc) {
+		float closest_dist = Float.MAX_VALUE;
+		ArrayList<Lane> closest = null;
+		for(ArrayList<Lane> lanes : transitionPath.getLanes())  {
+			if(closest_dist>VectorUtils.getLength(lanes.get(0).getStart(),car_loc)) {
+				closest = lanes;
+				closest_dist = VectorUtils.getLength(lanes.get(0).getStart(),car_loc);
+			}
+		}
+		return transitionPath.getLanes().indexOf(closest);
+	}
 
 	/** Constraint angle to [-pi, pi] */
 	public static float constrainAngle(float angle) {

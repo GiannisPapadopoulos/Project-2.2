@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 @Getter
-public class TrafficRayCastCallBack
+public class FrontRayCastCallBack
 		implements RayCastCallback {
 
 	private int closestId = -1;

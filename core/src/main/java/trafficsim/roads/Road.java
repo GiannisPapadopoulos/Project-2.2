@@ -151,5 +151,9 @@ public class Road extends NavigationObject {
 	public float getLength() {
 		return VectorUtils.getLength(this);
 	}
+	
+	public ArrayList<SubSystem> getAllSubSystems() {
+		return new ArrayList<SubSystem>(rSubSystems.values());
+	}
 
 }

@@ -405,7 +405,7 @@ public class GraphFactory {
 						.add2Vectors(c_0_0.getPosition(),
 								new Vector2(c_0_0.getSize()/2,0)), VectorUtils
 						.add2Vectors(c_1_0.getPosition(),
-								new Vector2(-c_1_0.getSize()/2,0)))), 2,
+								new Vector2(-c_1_0.getSize()/2,0)))), 3,
 						TrafficSimConstants.HIGHWAY_SPEED_LIMIT, c_0_0, c_1_0,
 						Direction.UPSTREAM), v_0_0, v_1_0, true);
 		
@@ -414,7 +414,7 @@ public class GraphFactory {
 						.add2Vectors(c_1_0.getPosition(),
 								new Vector2(-c_1_0.getSize()/2,0)),VectorUtils
 								.add2Vectors(c_0_0.getPosition(),
-										new Vector2(c_0_0.getSize()/2,0)))), 2,
+										new Vector2(c_0_0.getSize()/2,0)))), 3,
 						TrafficSimConstants.HIGHWAY_SPEED_LIMIT, c_1_0, c_0_0,
 						Direction.DOWNSTREAM), v_1_0, v_0_0, true);
 		

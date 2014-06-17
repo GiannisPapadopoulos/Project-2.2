@@ -3,13 +3,15 @@ package trafficsim.systems;
 import static com.badlogic.gdx.math.MathUtils.cos;
 import static com.badlogic.gdx.math.MathUtils.sin;
 import static functions.MovementFunctions.getRoad;
-import static trafficsim.TrafficSimConstants.*;
+import static trafficsim.TrafficSimConstants.CAR_LENGTH;
+import static trafficsim.TrafficSimConstants.DEFAULT_BRAKING_FACTOR;
+import static trafficsim.TrafficSimConstants.SPEED_RATIO;
 import graph.Vertex;
 
 import java.util.List;
 
 import trafficsim.TrafficSimWorld;
-import trafficsim.callbacks.TrafficRayCastCallBack;
+import trafficsim.callbacks.FrontRayCastCallBack;
 import trafficsim.components.AttachedLightsComponent;
 import trafficsim.components.GroupedTrafficLightComponent;
 import trafficsim.components.GroupedTrafficLightComponent.GroupedTrafficLightData;
@@ -95,7 +97,7 @@ public class ManageMovementBehaviorsSystem
 		Vector2 position = physComp.getPosition();
 		Vector2 angleAdjustment = new Vector2(cos(physComp.getAngle()), sin(physComp.getAngle()));
 		float rayLength = 3 * CAR_LENGTH;
-		TrafficRayCastCallBack rayCallBack = new TrafficRayCastCallBack();
+		FrontRayCastCallBack rayCallBack = new FrontRayCastCallBack();
 		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
 
 		if (rayCallBack.foundSomething()) {

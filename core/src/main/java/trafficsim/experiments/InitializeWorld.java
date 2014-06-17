@@ -25,6 +25,7 @@ import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.GroupedTrafficLightSystem;
 import trafficsim.systems.InputSystem;
+import trafficsim.systems.LaneSwitchingSystem;
 import trafficsim.systems.ManageMovementBehaviorsSystem;
 import trafficsim.systems.ManageSpawnRateChangeSystem;
 import trafficsim.systems.ManageSpeedLimitChangeSystem;
@@ -64,6 +65,7 @@ public class InitializeWorld {
 		world.setSystem(new ExpirySystem());
 		world.setSystem(new ManageSpawnRateChangeSystem());
 		world.setSystem(new ManageSpeedLimitChangeSystem());
+		world.setSystem(new LaneSwitchingSystem());
 
 		InputSystem inputSystem = new InputSystem(screen);
 		screen.initMultiplexer();

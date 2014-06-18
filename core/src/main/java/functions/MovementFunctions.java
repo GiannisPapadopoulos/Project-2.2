@@ -3,6 +3,7 @@ package functions;
 import static com.badlogic.gdx.math.MathUtils.PI;
 import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getAngle;
+import editor.EditorData;
 import graph.Edge;
 import graph.Vertex;
 
@@ -73,7 +74,7 @@ public class MovementFunctions {
 	}
 
 	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath, Vector2 carLoc) {
-		return buildWaypointsParametric(transitionPath, 20, carLoc);
+		return buildWaypointsParametric(transitionPath, 30, carLoc);
 	}
 
 	/**
@@ -82,12 +83,17 @@ public class MovementFunctions {
 	 */
 	public static List<Vector2> buildWaypointsParametric(SubSystem transitionPath, int numPoints, Vector2 car_loc) {
 		ArrayList<Lane> closest = null;
+		//System.out.println("===== "+ car_loc + " points: ");
 		float closest_dist = Float.MAX_VALUE;
 		for(ArrayList<Lane> lanes : transitionPath.getLanes())  {
 			if(closest_dist>VectorUtils.getLength(lanes.get(0).getStart(),car_loc)) {
 				closest = lanes;
 				closest_dist = VectorUtils.getLength(lanes.get(0).getStart(),car_loc);
 			}
+			//System.out.print(lanes.get(0).getStart()+" | ");
+			//EditorData.debugPoints2.add(lanes.get(0).getStart());
+			//System.out.println();
+			//System.out.println( VectorUtils.getLength(lanes.get(0).getStart(),car_loc));
 		}
 		List<Vector2> waypoints = new ArrayList<Vector2>();
 		for(Lane lane : closest) {

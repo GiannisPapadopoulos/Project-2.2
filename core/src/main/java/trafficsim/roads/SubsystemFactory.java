@@ -103,13 +103,12 @@ public class SubsystemFactory {
 						.get(0).getTrajectory().getStartDirection();
 			}
 
-		float angleDiff = (float) (VectorUtils.getAngleDifference(
-				angleIN, angleOUT));
-		if(angleDiff<0)
+		float angleDiff = (float) (VectorUtils.getAngleDifference(angleIN,
+				angleOUT));
+		if (angleDiff < 0)
 			angleDiff += 360.0f;
-		if(angleDiff>360.0f)
+		if (angleDiff > 360.0f)
 			angleDiff -= 360.0f;
-		
 
 		for (Vector2 v : pIN)
 			EditorData.debugPoints.add(v);
@@ -216,8 +215,8 @@ public class SubsystemFactory {
 						circleCenter, radius, initShift, pOUT.get(0), true))));
 				result.addSubsystem(ss);
 				return result;
-			} else if ( Math.abs(angleDiff -90.0f) < SAME_DIR_LIMIT) {
-				
+			} else if (Math.abs(angleDiff - 90.0f) < SAME_DIR_LIMIT) {
+
 				SubSystem result = new SubSystem();
 				ArrayList<Lane> ss = new ArrayList<Lane>();
 				angleIN.rotate(90.0f);
@@ -243,7 +242,7 @@ public class SubsystemFactory {
 			if (Math.abs(angleDiff - 270.0f) < SAME_DIR_LIMIT) {
 				SubSystem result = new SubSystem();
 				ArrayList<Lane> ss = new ArrayList<Lane>();
-				
+
 				Vector2 initShift = VectorUtils.multiplyVector(
 						VectorUtils.getUnitVectorDegrees(angleOUT.angle()),
 						TrafficSimConstants.LANE_WIDTH);
@@ -267,16 +266,14 @@ public class SubsystemFactory {
 				ss.add(new Lane(new ParametricCurve(new C_Circular(
 						circleCenter, radius, pIN.get(0), initShift, true))));
 				result.addSubsystem(ss);
-				
-
 
 				ss.add(new Lane(new ParametricCurve(new C_Linear(pOUT.get(pOUT
 						.size() - 1), initShift))));
 
 				result.addSubsystem(ss);
 				return result;
-			} else if ( Math.abs(angleDiff -90.0f) < SAME_DIR_LIMIT) {
-				
+			} else if (Math.abs(angleDiff - 90.0f) < SAME_DIR_LIMIT) {
+
 				SubSystem result = new SubSystem();
 				ArrayList<Lane> ss = new ArrayList<Lane>();
 				angleIN.rotate(90.0f);
@@ -484,9 +481,8 @@ public class SubsystemFactory {
 			ss.addSubsystem(subsys);
 		} else if (Math.abs((VectorUtils.getAbsAngleDifference(angleIN,
 				angleOUT)) - 180) < SAME_DIR_LIMIT) {
-			ArrayList<Lane> subsys = new ArrayList<Lane>();
 			for (int i = 0; i < pIN.size(); i++) {
-
+				ArrayList<Lane> subsys = new ArrayList<Lane>();
 				subsys.add(new Lane(new ParametricCurve(new C_Linear(
 						pIN.get(i), pOUT.get(i)))));
 				ss.addSubsystem(subsys);

@@ -451,7 +451,7 @@ public class GraphFactory {
 				2, TrafficSimConstants.CITY_SPEED_LIMIT);
 		
 		
-		Vertex<NavigationObject> v_m1_1 = addCrossRoad(g, 8*TrafficSimConstants.LANE_WIDTH,new Vector2(startX-2*distance,VectorUtils.getMidPoint(v_0_0.getData().getPosition(), v_0_2.getData().getPosition()).y),CR_TYPE.CrossRoad);
+		Vertex<NavigationObject> v_m1_1 = addCrossRoad(g, 8*TrafficSimConstants.LANE_WIDTH,new Vector2(startX-3*distance,VectorUtils.getMidPoint(v_0_0.getData().getPosition(), v_0_2.getData().getPosition()).y),CR_TYPE.CrossRoad);
 		
 		addEdgeBoth(g,v_0_1, v_m1_1,2,TrafficSimConstants.CITY_SPEED_LIMIT);
 

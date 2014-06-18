@@ -119,6 +119,7 @@ public class LaneSwitchingSystem extends EntitySystem {
 					// carBody.getPosition());
 					SubSystem ss = ((Road) routeComp.getCurrentEdge().getData())
 							.getAllSubSystems().get(0);
+
 					newSampling = ss
 							.getLanes()
 							.get(properStrategy)
@@ -130,6 +131,7 @@ public class LaneSwitchingSystem extends EntitySystem {
 					// + 10));
 
 					routeComp.setWayPointsLaneSwitch(newSampling);
+
 				}
 
 			}
@@ -155,24 +157,44 @@ public class LaneSwitchingSystem extends EntitySystem {
 		} else {
 			Edge<NavigationObject> next = routeComp.getNextEdge();
 			CrossRoad nextC = (CrossRoad) (routeComp.getNextVertex().getData());
+
+			double angleIN = VectorUtils.getAngle(nextC.getPosition(), current
+					.getData().getPosition());
+			double angleOUT = VectorUtils.getAngle(nextC.getPosition(), next
+					.getData().getPosition());
+
 			if (nextC.getCrossRoadType() == CR_TYPE.HighWay_Cross) {
 
-				double angleIN = VectorUtils.getAngle(nextC.getPosition(),
-						current.getData().getPosition());
-				double angleOUT = VectorUtils.getAngle(nextC.getPosition(),
-						next.getData().getPosition());
+				float angleDiff = (float) (angleIN - angleOUT);
+				if (angleDiff < 0)
+					angleDiff += 360.0f;
+				if (angleDiff > 360.0f)
+					angleDiff -= 360.0f;
 
-				// TODO IS THIS RIGHT OR THE OTHER WAY?
-				if (Math.abs(Math.abs(angleIN - angleOUT) - 270.0f) < SAME_DIR_DIF)
+				if (Math.abs(angleDiff - 270.0f) < SAME_DIR_DIF) {
 					lsComp.setExitLaneIndex(lsComp.getMaxLaneIndex());
-				else if (Math.abs(Math.abs(angleIN - angleOUT) - 90.0f) < SAME_DIR_DIF)
+				} else if (Math.abs(angleDiff - 90.0f) < SAME_DIR_DIF) {
+
 					lsComp.setExitLaneIndex(lsComp.getMaxLaneIndex());
-				else
+				} else
 					lsComp.setExitLaneIndex(-1);
 			}
 			if (nextC.getCrossRoadType() == CR_TYPE.CrossRoad) {
-				// TODO
+
+				float angleDiff = (float) (angleIN - angleOUT);
+				if (angleDiff < 0)
+					angleDiff += 360.0f;
+				if (angleDiff > 360.0f)
+					angleDiff -= 360.0f;
+
+				if (Math.abs(angleDiff - 270.0f) < SAME_DIR_DIF) {
+					lsComp.setExitLaneIndex(lsComp.getMaxLaneIndex());
+				} else if (Math.abs(angleDiff - 90.0f) < SAME_DIR_DIF) {
+					lsComp.setExitLaneIndex(lsComp.getMinLaneIndex());
+				} else
+					lsComp.setExitLaneIndex(-1);
 			}
+
 		}
 	}
 
@@ -199,7 +221,7 @@ public class LaneSwitchingSystem extends EntitySystem {
 					return exit;
 				}
 			} else {
-				if (RANDOM.nextInt(100) < 1) {
+				if (RANDOM.nextInt(500) < 1) {
 					int randInt012 = RANDOM.nextInt(3);
 					if (randInt012 == 0)
 						return current;
@@ -217,7 +239,7 @@ public class LaneSwitchingSystem extends EntitySystem {
 					return current;
 			}
 		} else {
-			if (RANDOM.nextInt(100) < 1) {
+			if (RANDOM.nextInt(500) < 1) {
 				int randInt012 = RANDOM.nextInt(3);
 				if (randInt012 == 0)
 					return current;

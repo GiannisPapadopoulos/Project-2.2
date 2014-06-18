@@ -61,7 +61,7 @@ public class InitializeWorld {
 		world.setSystem(new ManageMovementBehaviorsSystem());
 
 		// Temporary hack
-		 world.setSystem(new CollisionDisablingSystem());
+		 //world.setSystem(new CollisionDisablingSystem());
 
 		world.setSystem(new ExpirySystem());
 		world.setSystem(new ManageSpawnRateChangeSystem());

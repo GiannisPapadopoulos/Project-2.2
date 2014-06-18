@@ -1,19 +1,71 @@
-poisson = importdata('poisson');
-uniform = importdata('uniform');
+
 
 % 1: distance, 2: time, 3: speed, 4 : % of time spent on traffic lights
 row = 3;
 
-lengths = [length(poisson), length(uniform)];
-M = [mean(poisson(row:row,:)), mean(uniform(row:row,:))];
-stdDevs = [std(poisson(row:row,:)), std(uniform(row:row,:))];
-confidenceInterval = zeros(1, length(M));
-for i=1:length(M)
-    confidenceInterval(i) = 1.96*stdDevs(i) / sqrt(lengths(i));
-end
+size = 6;
+X = 1:1:6;
+priority = [9.676064186909098, 9.842599565476188, 10.911805248630145, 11.337565306306299, 11.713668995402296, 11.804260253378374];
+prStd = [2.0095378628037404, 1.5880099122598754, 1.6482498906687468, 1.46440832351753, 1.4065091534231717, 1.6124070604205403];
+prCon = [0.16794648546224344, 0.15187442094330628, 0.1890547969083709, 0.19263791667238372, 0.20898928014724127, 0.25977652610000135];
+%variancePlot(priority, prCon);
+%errorbar(X, priority, prCon);
+hold on;
 
-errorbar(M, confidenceInterval);
+smart=[67.4 , 65.7 , 64.4 , 64.0 , 63.7];
+timed= [64.7 , 63.7 , 62.4 , 61.0 , 59.0];
+sC1 = [1.4, 1.2, 1.1, 0.7, 0.5];
+sC2 = [1.4, 1.2, 1.1, 1.3, 1.5];
+
+
+timedMean = [6.849328285161292, 6.9745613026007796, 7.820297280566797, 8.220147047282605, 8.272730385714286, 8.326992214285715] ;
+timedStd = [0.6717091763099329, 0.6861259932604773, 0.633911692330573, 0.6222476233064606, 0.6073034751838396, 0.6306871782964932];
+timedCon = [0.07477501446808432, 0.04849497881500753, 0.07905627677681792, 0.08991049865717926, 0.09591830094136888, 0.11012471583944539];
+
+sm = [ 7.1,   7.5 ,  8.9 , 9.5 ,  10.2 ,  10.5 ] ;
+smCom = (prCon + timedCon)/2;
+
+X = [5, 10,  15];
+
+%figure();
+highways = [6.706604692635663, 11.5, 15.90013829796955 ];
+noHighWays = [6.557018413725496, 8.3, 11.406419487628858];
+
+
+
+conH = [ 0.19218160319860988, 0.4, 0.6739166262954814];
+ConNo = [ 0.1433115022293494, 0.3, 0.35887170784312694];
+
+smart = [68 , 66.6 , 58.1 , 48.9 , 40.3]
+simple = [68.3 , 64.7 , 55.6 , 47.9 , 38.9]
+round = [115.1 , 79.4 , 60.8 , 50.3 , 41.2]
+
+sC1 = [1.4, 1.2, 1.1, 0.9, 0.7];
+sC2 = [1.5, 1.3, 1.1, 1.3, 1.5];
+sC3 = [2.4, 3.2, 2.1, 1.7, 1.9];
+
+X = 2:6;
+
+errorbar(X, smart, sC1, 'b');
+errorbar(X, simple, sC2, 'r');
+errorbar(X, round, sC3, 'm');
+
+
+%errorbar(X, smart, timedCon, 'r');
+
+%errorbar(X, sm, smCom, 'm');
+
+
+
+title('Traffic flow through intersection');
+
+legend('Timed lights', 'Smart lights', 'Roundabout', 'Location', 'SouthEast');
+
+xlabel('Spawn rate');
+ylabel('Cars crossing intersection');
+
+% errorbar(M, confidenceInterval);
 yL = ylim;
 yL(1) = 0;
-yL(2) = yL(2) * 1.1;
+%yL(2) = yL(2) * 1.1;
 ylim(yL);

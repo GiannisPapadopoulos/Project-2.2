@@ -46,7 +46,7 @@ public class PredefinedParameters {
 		List<SpawnInfo> spawnInfo = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> manhattanSpawnInfo = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> unbalanced = new ArrayList<SpawnInfo>();
-		int spawnRate = 5 * 1000;
+		int spawnRate = 2 * 1000;
 		int fast = 2000;
 		double[] intervals = { fast, spawnRate, spawnRate, spawnRate };
 		double[] ub = { fast, spawnRate, spawnRate, spawnRate };

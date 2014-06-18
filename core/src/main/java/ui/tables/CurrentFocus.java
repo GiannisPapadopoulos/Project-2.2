@@ -90,10 +90,12 @@ public class CurrentFocus extends Table {
 			totalCarsPassed.setText(String.format("%.3g%n", 1.0f * totalCarsPassed2));
 			GroupedTrafficLightComponent gComp = entityToRender.getComponent(GroupedTrafficLightComponent.class);
 			String timers = "";
-			for (List<GroupedTrafficLightData> lightList : gComp.getGroupedLightsData()) {
-				timers += lightList.get(0).getGreenTimer() + " ";
+			if (gComp != null) {
+				for (List<GroupedTrafficLightData> lightList : gComp.getGroupedLightsData()) {
+					timers += lightList.get(0).getGreenTimer() + " ";
+				}
+				groupComp.setText(timers);
 			}
-			groupComp.setText(timers);
 			
 		}
 		else if (entityType == entityType.EDGE) {

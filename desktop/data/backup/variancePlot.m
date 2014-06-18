@@ -1,0 +1,2 @@
+function [] = variancePlot(mean, confidence)
+    

@@ -12,7 +12,7 @@ public class RunExperiments {
 
 	public static void main(String[] args) {
 
-		ExperimentDefiniton definition = qlearningExp;
+		ExperimentDefiniton definition = roundaboutExperiment;
 
 		AbstractExperiment experiment = new IntersectionThroughputExperiment(definition.getParameters());
 		// experiment = new ManhattanExperiment(definition.getParameters());
@@ -38,6 +38,9 @@ public class RunExperiments {
 																					"data/manhattanBasic6",
 																					PredefinedParameters.timedLightsmanhattanGraph);
 	
+	static ExperimentDefiniton toggleLights = new ExperimentDefiniton("data/toggleLights2",
+																		PredefinedParameters.timedLightsmanhattanGraph);
+
 	static ExperimentDefiniton greenWaveManhattanExperiment = new ExperimentDefiniton(
 																						"data/manhattanGreenWave",
 																						PredefinedParameters.greenWaveManhattanGraph);

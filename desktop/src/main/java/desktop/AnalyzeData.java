@@ -14,8 +14,74 @@ import utils.Stats;
 public class AnalyzeData {
 
 	public static void main(String[] args) {
-		testManhattan();
-		testRoundabout();
+		// testManhattan();
+		// testRoundabout();
+		// manhattanMeans();
+		highways();
+	}
+
+	public static void highways() {
+		String high = "data/setHighWays.txt";
+		String noHigh = "data/setNoHighWays.txt";
+		RepeatedExperimentData highway = ExportData.readFromFile(high, 1, 0);
+		RepeatedExperimentData noHighway = ExportData.readFromFile(noHigh, 1, 0);
+		double[] speedHighway = toDoubleArray(highway.getDataLists().get(0).getAggregatedList().get(0));
+		double[] speedNoHighway = toDoubleArray(noHighway.getDataLists().get(0).getAggregatedList().get(0));
+
+		double highMean = Stats.mean(speedHighway);
+		double noHighMean = Stats.mean(speedNoHighway);
+
+		double conHigh = Stats.confidenceHi(speedHighway) - highMean;
+		double conNoHigh = Stats.confidenceHi(speedNoHighway) - noHighMean;
+
+		System.out.println("Highways " + highMean + " con " + conHigh);
+		System.out.println("NoHighways " + noHighMean + " con " + conNoHigh);
+
+
+	}
+
+	private static void manhattanMeans() {
+		double[] meanSpeedP = new double[6];
+		double[] meanSpeedT = new double[6];
+
+
+		double[] stdSpeedP = new double[6];
+		double[] stdSpeedT = new double[6];
+
+		double[] confidenceSpeedT = new double[6];
+		double[] confidenceSpeedP = new double[6];
+
+		boolean[] pairedT = new boolean[6];
+		double[] pTTest = new double[6];
+
+		for (int i = 1; i <= 6; i++) {
+			String basic = "data/manhattanBasic" + i + ".txt";
+			String pr = "data/manhattanPriority" + i + ".txt";
+			RepeatedExperimentData timed = ExportData.readFromFile(basic, 2, 0);
+			RepeatedExperimentData priority = ExportData.readFromFile(pr, 2, 0);
+			double[] speedTimed = toDoubleArray(timed.getDataLists().get(0).getAggregatedList().get(0));
+			double[] speedPriority = toDoubleArray(priority.getDataLists().get(0).getAggregatedList().get(0));
+			meanSpeedP[i - 1] = Stats.mean(speedPriority);
+			stdSpeedP[i - 1] = Stats.stddev(speedPriority);
+			confidenceSpeedP[i - 1] = Stats.confidenceHi(speedPriority) - meanSpeedP[i - 1];
+
+			meanSpeedT[i - 1] = Stats.mean(speedTimed);
+			stdSpeedT[i - 1] = Stats.stddev(speedTimed);
+			confidenceSpeedT[i - 1] = Stats.confidenceHi(speedTimed) - meanSpeedT[i - 1];
+
+			try {
+				double pValue = TestUtils.pairedTTest(speedPriority, speedTimed);
+				boolean significant = TestUtils.pairedTTest(speedPriority, speedTimed, .05);
+				pairedT[i - 1] = significant;
+				pTTest[i - 1] = pValue;
+			}
+			catch (IllegalArgumentException | MathException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println("Priority mean " + Arrays.toString(meanSpeedP) + " std " + Arrays.toString(stdSpeedP) + " con " + Arrays.toString(confidenceSpeedP) 
+							+ "\nTimed mean" + Arrays.toString(meanSpeedT) + " std " + Arrays.toString(stdSpeedT) + " con " + Arrays.toString(confidenceSpeedT) );
+		System.out.println("Significant " + Arrays.toString(pairedT) + " pvalue " + Arrays.toString(pTTest));
 	}
 
 	private static void testManhattan() {

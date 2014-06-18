@@ -13,12 +13,12 @@ public class RunExperiments {
 
 	public static void main(String[] args) {
 
-		ExperimentDefiniton definition = priorityManhattanExperiment;
+		ExperimentDefiniton definition = basicManhattanExperiment;
 
 		AbstractExperiment experiment = new IntersectionThroughputExperiment(definition.getParameters());
 		experiment = new ManhattanExperiment(definition.getParameters());
 
-		int timesToRepeat = 5;
+		int timesToRepeat = 1;
 		RepeatedExperiment repeatedExp = new RepeatedExperiment(experiment, timesToRepeat, definition.getTextFile());
 		repeatedExp.run();
 	}
@@ -32,11 +32,11 @@ public class RunExperiments {
 																			PredefinedParameters.prioritydLightsSimpleGraph);
 
 	static ExperimentDefiniton priorityManhattanExperiment = new ExperimentDefiniton(
-																						"data/manhattanPriority",
+																						"data/manhattanPriority1",
 																				PredefinedParameters.priorityLightsmanhattanGraph);
 	
 	static ExperimentDefiniton basicManhattanExperiment = new ExperimentDefiniton(
-																					"data/manhattanBasic",
+																					"data/manhattanBasic6",
 																					PredefinedParameters.timedLightsmanhattanGraph);
 	
 	static ExperimentDefiniton greenWaveManhattanExperiment = new ExperimentDefiniton(

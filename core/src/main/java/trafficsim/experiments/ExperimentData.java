@@ -72,4 +72,35 @@ public class ExperimentData {
 		}
 	}
 
+	@AllArgsConstructor
+	@Getter
+	public static class RepeatedExperimentData {
+
+		private List<AggregatedDataList> dataLists;
+		private List<AggregatedScalar> scalars;
+
+		@Override
+		public String toString() {
+			String result = "";
+			for (AggregatedDataList aggList : dataLists) {
+				result += aggList.getLabel() + ": " + aggList.getAggregatedList().size() + "\n";
+				for (DataList dataList : aggList.getAggregatedList()) {
+					for (Float value : dataList.getData()) {
+						result += value + " ";
+					}
+					result += "\n";
+				}
+			}
+			for (AggregatedScalar aggScalar : scalars) {
+				result += aggScalar.getLabel() + ": " + aggScalar.getAggregatedList().size() + "\n";
+				for (Scalar scalar : aggScalar.getAggregatedList()) {
+					result += scalar.getValue() + " ";
+				}
+				result += "\n";
+			}
+			return result;
+		}
+
+	}
+
 }

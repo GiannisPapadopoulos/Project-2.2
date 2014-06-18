@@ -43,13 +43,14 @@ public class PredefinedParameters {
 		List<SpawnInfo> noSpawnPoints = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> spawnInfo = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> manhattanSpawnInfo = new ArrayList<SpawnInfo>();
-		double[] intervals = { 2000, 2000, 2000, 2000 };
+		int spawnRate = 6 * 1000;
+		double[] intervals = { spawnRate, spawnRate, spawnRate, spawnRate };
 		for (int i = 0; i < 4; i++) {
 			spawnInfo.add(new SpawnInfo(i + 1, intervals[i], SpawnStrategyType.POISSON));
 			manhattanSpawnInfo.add(new SpawnInfo(indices[i], intervals[i], SpawnStrategyType.POISSON));
 		}
 		float totalTime = 60 * 3;
-		float manhattanTime = 60 * 10;
+		float manhattanTime = 60 * 5f;
 		float defaultGreenInterval = 5;
 		float longGreenInterval = 15;
 		timedLightsSimpleGraph = new SimulationParameters(false, false, null, DEFAULT_CITY_SPEED_LIMIT,

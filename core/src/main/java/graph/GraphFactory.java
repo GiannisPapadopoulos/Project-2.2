@@ -76,7 +76,7 @@ public class GraphFactory {
 				if (j < height - 1) {
 					Vertex<NavigationObject> v3 = graph.getVertex(i * height
 							+ j + 1);
-					if (i == width / 2 )//|| i == 0 || i == width - 1)
+					if (i == width / 2)// || i == 0 || i == width - 1)
 						addEdgeBoth(graph, v1, v3, 2,
 								TrafficSimConstants.CITY_SPEED_LIMIT);
 					else
@@ -91,7 +91,6 @@ public class GraphFactory {
 		return graph;
 
 	}
-
 
 	public static Graph<NavigationObject> createTestOneGraph(
 			boolean GiannisRound) {
@@ -449,11 +448,39 @@ public class GraphFactory {
 				2, TrafficSimConstants.CITY_SPEED_LIMIT);
 		addEdgeBoth(g, v_1_2, g.getVertex((width / 2) * height + height - 1),
 				2, TrafficSimConstants.CITY_SPEED_LIMIT);
-		
-		
-		Vertex<NavigationObject> v_m1_1 = addCrossRoad(g, 8*TrafficSimConstants.LANE_WIDTH,new Vector2(startX-3*distance,VectorUtils.getMidPoint(v_0_0.getData().getPosition(), v_0_2.getData().getPosition()).y),CR_TYPE.CrossRoad);
-		
-		addEdgeBoth(g,v_0_1, v_m1_1,2,TrafficSimConstants.CITY_SPEED_LIMIT);
+
+		Vertex<NavigationObject> v_m1_1 = addCrossRoad(
+				g,
+				8 * TrafficSimConstants.LANE_WIDTH,
+				new Vector2(startX - 3 * distance, VectorUtils.getMidPoint(
+						v_0_0.getData().getPosition(), v_0_2.getData()
+								.getPosition()).y), CR_TYPE.CrossRoad);
+
+		Vertex<NavigationObject> v_1_m1 = addCrossRoad(
+				g,
+				8 * TrafficSimConstants.LANE_WIDTH,
+				new Vector2(VectorUtils.getMidPoint(v_0_0.getData()
+						.getPosition(), v_2_0.getData().getPosition()).x,
+						startY - 3 * distance), CR_TYPE.CrossRoad);
+
+		Vertex<NavigationObject> v_3_1 = addCrossRoad(
+				g,
+				8 * TrafficSimConstants.LANE_WIDTH,
+				new Vector2(startX + (width + 3) * distance, VectorUtils
+						.getMidPoint(v_2_0.getData().getPosition(), v_2_2
+								.getData().getPosition()).y), CR_TYPE.CrossRoad);
+
+		Vertex<NavigationObject> v_1_3 = addCrossRoad(
+				g,
+				8 * TrafficSimConstants.LANE_WIDTH,
+				new Vector2(VectorUtils.getMidPoint(v_0_0.getData()
+						.getPosition(), v_2_0.getData().getPosition()).x,
+						startY + (height + 3) * distance), CR_TYPE.CrossRoad);
+
+		addEdgeBoth(g, v_0_1, v_m1_1, 2, TrafficSimConstants.CITY_SPEED_LIMIT);
+		addEdgeBoth(g, v_2_1, v_3_1, 2, TrafficSimConstants.CITY_SPEED_LIMIT);
+		addEdgeBoth(g, v_1_0, v_1_m1, 2, TrafficSimConstants.CITY_SPEED_LIMIT);
+		addEdgeBoth(g, v_1_2, v_1_3, 2, TrafficSimConstants.CITY_SPEED_LIMIT);
 
 		return g;
 	}

@@ -21,7 +21,7 @@ public class PredefinedParameters {
 	public static SimulationParameters priorityLightsmanhattanGraph;
 
 	static {
-		createParameters();
+		createParametersDense();
 	}
 
 	public static void createParameters() {
@@ -34,6 +34,49 @@ public class PredefinedParameters {
 		List<SpawnInfo> manhattanSpawnInfo = new ArrayList<SpawnInfo>();
 		double[] intervals = { 2000, 2000, 2000, 2000 };
 		for (int i = 0; i < 4; i++) {
+			spawnInfo.add(new SpawnInfo(i + 1, intervals[i], SpawnStrategyType.POISSON));
+			manhattanSpawnInfo.add(new SpawnInfo(indices[i], intervals[i], SpawnStrategyType.POISSON));
+		}
+		float totalTime = 60 * 3;
+		timedLightsSimpleGraph = new SimulationParameters(false, false, null, DEFAULT_CITY_SPEED_LIMIT,
+															AbstractToggleStrategy.basicToggleStrategy, spawnInfo,
+															totalTime);
+
+		prioritydLightsSimpleGraph = new SimulationParameters(false, false, null, DEFAULT_CITY_SPEED_LIMIT,
+																AbstractToggleStrategy.priorityToggleStrategy,
+																spawnInfo, totalTime);
+		roundaboutSimpleGraph = new SimulationParameters(false, true, null, DEFAULT_CITY_SPEED_LIMIT,
+															AbstractToggleStrategy.priorityToggleStrategy, spawnInfo,
+															totalTime);
+		priorityLightsmanhattanGraph = new SimulationParameters(true, false, graphInfo, DEFAULT_CITY_SPEED_LIMIT,
+																AbstractToggleStrategy.priorityToggleStrategy,
+																manhattanSpawnInfo, totalTime);
+	}
+	
+	public static void createParametersDense() {
+		int size = 15; // of manhattan graph
+		ManhattanGraphInfo graphInfo = new ManhattanGraphInfo(size, size, 100f);
+		
+		int[] indices;
+		double[] intervals;
+		ArrayList<Integer> indexes = new ArrayList<Integer>();
+		for(int index =0 ; index<size*size;index++) {
+			if(Math.random()<0.05)
+				indexes.add(index);
+		}
+		indices = new int[indexes.size()];
+		intervals = new double[indexes.size()];
+		for(Integer i:indexes) {
+			indices[indexes.indexOf(i)] = i;
+			intervals[indexes.indexOf(i)] = 2000;
+		}
+			
+			
+		List<SpawnInfo> noSpawnPoints = new ArrayList<SpawnInfo>();
+		List<SpawnInfo> spawnInfo = new ArrayList<SpawnInfo>();
+		List<SpawnInfo> manhattanSpawnInfo = new ArrayList<SpawnInfo>();
+		
+		for (int i = 0; i < indices.length; i++) {
 			spawnInfo.add(new SpawnInfo(i + 1, intervals[i], SpawnStrategyType.POISSON));
 			manhattanSpawnInfo.add(new SpawnInfo(indices[i], intervals[i], SpawnStrategyType.POISSON));
 		}

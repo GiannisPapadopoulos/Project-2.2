@@ -221,7 +221,7 @@ public class LaneSwitchingSystem extends EntitySystem {
 					return exit;
 				}
 			} else {
-				if (RANDOM.nextInt(500) < 1) {
+				if (RANDOM.nextInt(1500) < 1) {
 					int randInt012 = RANDOM.nextInt(3);
 					if (randInt012 == 0)
 						return current;
@@ -239,7 +239,7 @@ public class LaneSwitchingSystem extends EntitySystem {
 					return current;
 			}
 		} else {
-			if (RANDOM.nextInt(500) < 1) {
+			if (RANDOM.nextInt(1500) < 1) {
 				int randInt012 = RANDOM.nextInt(3);
 				if (randInt012 == 0)
 					return current;

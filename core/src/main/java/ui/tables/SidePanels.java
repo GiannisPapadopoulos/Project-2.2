@@ -54,7 +54,7 @@ public class SidePanels extends Table {
 	@Getter
 	private TextButton roundabout, standardRoad, intersection, showhidetext,simleft, simright;
 	@Getter
-	private Label averageLightTime,carsOnRoadLabel,avgspeed ;
+	private Label averageLightTime, carsOnRoadLabel, avgspeed, fps;
 	
 	@Getter
 	@Setter
@@ -132,6 +132,7 @@ public class SidePanels extends Table {
 		carsOnRoadLabel = new Label(Integer.toString(0), Assets.skin);
 		averageLightTime = new Label("not updated",Assets.skin);
 		avgspeed = new Label("not updated",Assets.skin);
+		fps = new Label("not updated", Assets.skin);
 		avtimewait = 30;
 		
 		
@@ -270,6 +271,8 @@ public class SidePanels extends Table {
 		thirdPage.add(new Label("Average Speed: ", Assets.skin));
 		thirdPage.add(avgspeed);
 		thirdPage.row();
+		thirdPage.add(new Label("FPS ", Assets.skin));
+		thirdPage.add(fps);
 		
 		Label stats1 = new Label("",Assets.skin);
 		

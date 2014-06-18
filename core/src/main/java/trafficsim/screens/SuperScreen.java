@@ -1,8 +1,6 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
-import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
-import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
+import static trafficsim.TrafficSimConstants.*;
 
 import java.util.List;
 
@@ -152,6 +150,10 @@ public abstract class SuperScreen implements Screen {
 	
 		sidePanels.getAvgspeed().setText(
 				Integer.toString(speed) + "km/h");
+	}
+
+	public void setFps(float delta) {
+		sidePanels.getFps().setText(String.format("%.3g", 1.0f / delta));
 	}
 
 	private void populateCommonLayers() {

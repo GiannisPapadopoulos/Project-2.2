@@ -132,6 +132,7 @@ public class SimulationScreen extends SuperScreen {
 		super.setWaitTimeUI(world);
 		super.setCarsUI(world);
 		super.setAverageSpeed(world);
+		super.setFps(delta);
 		
 		if (TIMER.getTime() > parameters.getTotalTimeInSecs() * 1000) {
 			TIMER.reset();

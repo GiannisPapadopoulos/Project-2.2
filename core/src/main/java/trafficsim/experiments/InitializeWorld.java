@@ -20,7 +20,6 @@ import trafficsim.spawning.AbstractSpawnStrategy.SpawnStrategyType;
 import trafficsim.spawning.FixedIntervalSpawningStrategy;
 import trafficsim.spawning.PoissonSpawnStrategy;
 import trafficsim.systems.AbstractToggleStrategy;
-import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.GroupedTrafficLightSystem;
@@ -31,6 +30,7 @@ import trafficsim.systems.ManageSpeedLimitChangeSystem;
 import trafficsim.systems.MovementSystem;
 import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
+import trafficsim.systems.QlearningSystem;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
 import trafficsim.systems.SetGreenWaveSystem;
@@ -60,7 +60,7 @@ public class InitializeWorld {
 		world.setSystem(new ManageMovementBehaviorsSystem());
 
 		// Temporary hack
-		world.setSystem(new CollisionDisablingSystem());
+		// world.setSystem(new CollisionDisablingSystem());
 
 		world.setSystem(new ExpirySystem());
 		world.setSystem(new ManageSpawnRateChangeSystem());
@@ -71,6 +71,11 @@ public class InitializeWorld {
 		screen.initMultiplexer();
 		screen.getMultiplexer().addProcessor(inputSystem);
 		world.setSystem(inputSystem, true);
+
+		if (parameters == PredefinedParameters.qlearning) {
+			System.out.println("q");
+			world.setSystem(new QlearningSystem());
+		}
 
 		CITY_SPEED_LIMIT = parameters.getSpeedLimit();
 		TRAFFIC_LIGHT_GREEN_INTERVAL = parameters.getGreenTimer();

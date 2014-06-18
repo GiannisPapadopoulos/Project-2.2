@@ -4,7 +4,12 @@ import static trafficsim.TrafficSimConstants.TIMER;
 import gnu.trove.list.TIntList;
 import graph.EntityIdentificationData;
 import graph.EntityIdentificationData.EntityType;
+
+import java.util.List;
+
 import trafficsim.components.DataComponent;
+import trafficsim.components.GroupedTrafficLightComponent;
+import trafficsim.components.GroupedTrafficLightComponent.GroupedTrafficLightData;
 import trafficsim.components.IntersectionThroughputComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.VehiclesOnRoadComponent;
@@ -23,7 +28,7 @@ public class CurrentFocus extends Table {
 	private EntityType entityType; // Vertex, edge or car
 	
 	private Label currentSpeed,distanceTravelled,averageSpeed,distanceRemaining; //car
-	private Label totalCarsPassed; //intersection
+	private Label totalCarsPassed, groupComp; // intersection
 	private Label vehiclesOnRoad, averageLaneSpeed; // edge
 	
 	private Slider velocity; //car sliders
@@ -45,6 +50,7 @@ public class CurrentFocus extends Table {
 		distanceRemaining = new Label ("loading..", Assets.skin);
 
 		totalCarsPassed = new Label("loading..", Assets.skin);
+		groupComp = new Label("loading..", Assets.skin);
 		vehiclesOnRoad = new Label("loading..", Assets.skin);
 		averageLaneSpeed = new Label("loading..", Assets.skin);
 		
@@ -78,10 +84,16 @@ public class CurrentFocus extends Table {
 		}
 		
 		else if (entityType == EntityType.VERTEX) {
-			float carsPerSecond = 60 * entityToRender.getComponent(IntersectionThroughputComponent.class)
-												.getTotalCarsPassed() / (TIMER.getTime() / 1000f);
-			totalCarsPassed.setText(String.format("%.3g%n", carsPerSecond));
-			
+			int totalCarsPassed2 = entityToRender.getComponent(IntersectionThroughputComponent.class)
+							.getTotalCarsPassed();
+			float carsPerSecond = 60 * totalCarsPassed2 / (0 * TIMER.getTime() / 1000f);
+			totalCarsPassed.setText(String.format("%.3g%n", 1.0f * totalCarsPassed2));
+			GroupedTrafficLightComponent gComp = entityToRender.getComponent(GroupedTrafficLightComponent.class);
+			String timers = "";
+			for (List<GroupedTrafficLightData> lightList : gComp.getGroupedLightsData()) {
+				timers += lightList.get(0).getGreenTimer() + " ";
+			}
+			groupComp.setText(timers);
 			
 		}
 		else if (entityType == entityType.EDGE) {
@@ -135,6 +147,9 @@ public class CurrentFocus extends Table {
 		else if (entityType == EntityType.VERTEX) {
 			add(new Label("Cars passing per minute: ", Assets.skin));
 			add(totalCarsPassed);
+			row();
+			add(new Label("Timers ", Assets.skin));
+			add(groupComp);
 		}
 
 		else if (entityType == EntityType.EDGE) {

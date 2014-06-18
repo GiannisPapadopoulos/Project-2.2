@@ -26,6 +26,8 @@ public class PredefinedParameters {
 
 	public static SimulationParameters greenWaveManhattanGraph;
 
+	public static SimulationParameters qlearning;
+
 	static {
 		createParameters();
 	}
@@ -43,11 +45,15 @@ public class PredefinedParameters {
 		List<SpawnInfo> noSpawnPoints = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> spawnInfo = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> manhattanSpawnInfo = new ArrayList<SpawnInfo>();
-		int spawnRate = 6 * 1000;
-		double[] intervals = { spawnRate, spawnRate, spawnRate, spawnRate };
+		List<SpawnInfo> unbalanced = new ArrayList<SpawnInfo>();
+		int spawnRate = 5 * 1000;
+		int fast = 2000;
+		double[] intervals = { fast, spawnRate, spawnRate, spawnRate };
+		double[] ub = { fast, spawnRate, spawnRate, spawnRate };
 		for (int i = 0; i < 4; i++) {
 			spawnInfo.add(new SpawnInfo(i + 1, intervals[i], SpawnStrategyType.POISSON));
 			manhattanSpawnInfo.add(new SpawnInfo(indices[i], intervals[i], SpawnStrategyType.POISSON));
+			unbalanced.add(new SpawnInfo(i + 1, ub[i], SpawnStrategyType.UNIFORM));
 		}
 		float totalTime = 60 * 3;
 		float manhattanTime = 60 * 5f;
@@ -75,6 +81,10 @@ public class PredefinedParameters {
 															AbstractToggleStrategy.basicToggleStrategy,
 															manhattanSpawnInfo, manhattanTime, gwInfo,
 															longGreenInterval);
+		qlearning = new SimulationParameters(false, false, null, DEFAULT_CITY_SPEED_LIMIT,
+																		AbstractToggleStrategy.basicToggleStrategy,
+																		unbalanced, 10 * totalTime, null,
+																		defaultGreenInterval);
 	}
 	
 

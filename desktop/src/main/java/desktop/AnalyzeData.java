@@ -15,6 +15,7 @@ public class AnalyzeData {
 
 	public static void main(String[] args) {
 		testManhattan();
+		testRoundabout();
 	}
 
 	private static void testManhattan() {
@@ -41,10 +42,20 @@ public class AnalyzeData {
 		}
 	}
 
-	public void testRoundabout() {
+	public static void testRoundabout() {
 		double[] intersection = { 67.0, 68.333336, 69.333336, 69.333336, 69.333336, 68.333336, 68.333336, 69.333336,
 									69.0, 69.0 };
-		double[] roundabout;
+		double[] roundabout = { 117.0, 112.666664, 113.0, 112.333336, 119.333336, 113.333336, 110.0, 111.0, 108.0,
+								112.0 };
+		try {
+			double pValue = TestUtils.pairedTTest(roundabout, intersection);
+			boolean significant = TestUtils.pairedTTest(roundabout, intersection, .05);
+			System.out.println("Significant " + significant + " pvalue " + pValue);
+		}
+		catch (IllegalArgumentException | MathException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public static double[] toDoubleArray(DataList dataList) {

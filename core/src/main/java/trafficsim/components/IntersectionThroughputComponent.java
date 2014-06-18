@@ -15,4 +15,8 @@ public class IntersectionThroughputComponent
 		totalCarsPassed++;
 	}
 
+	public void reset() {
+		totalCarsPassed = 0;
+	}
+
 }

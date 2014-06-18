@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import trafficsim.experiments.AbstractExperiment;
 import trafficsim.experiments.IntersectionThroughputExperiment;
-import trafficsim.experiments.ManhattanExperiment;
 import trafficsim.experiments.PredefinedParameters;
 import trafficsim.experiments.RepeatedExperiment;
 import trafficsim.experiments.SimulationParameters;
@@ -13,10 +12,10 @@ public class RunExperiments {
 
 	public static void main(String[] args) {
 
-		ExperimentDefiniton definition = basicManhattanExperiment;
+		ExperimentDefiniton definition = qlearningExp;
 
 		AbstractExperiment experiment = new IntersectionThroughputExperiment(definition.getParameters());
-		experiment = new ManhattanExperiment(definition.getParameters());
+		// experiment = new ManhattanExperiment(definition.getParameters());
 
 		int timesToRepeat = 1;
 		RepeatedExperiment repeatedExp = new RepeatedExperiment(experiment, timesToRepeat, definition.getTextFile());
@@ -42,6 +41,8 @@ public class RunExperiments {
 	static ExperimentDefiniton greenWaveManhattanExperiment = new ExperimentDefiniton(
 																						"data/manhattanGreenWave",
 																						PredefinedParameters.greenWaveManhattanGraph);
+
+	static ExperimentDefiniton qlearningExp = new ExperimentDefiniton("data/qlearning", PredefinedParameters.qlearning);
 
 	@AllArgsConstructor
 	@Getter

@@ -1,7 +1,6 @@
 package trafficsim.experiments;
 
-import static trafficsim.TrafficSimConstants.CITY_SPEED_LIMIT;
-import static trafficsim.TrafficSimConstants.TIMER;
+import static trafficsim.TrafficSimConstants.*;
 import graph.EntityIdentificationData;
 import graph.Graph;
 import graph.GraphFactory;
@@ -21,6 +20,7 @@ import trafficsim.spawning.AbstractSpawnStrategy.SpawnStrategyType;
 import trafficsim.spawning.FixedIntervalSpawningStrategy;
 import trafficsim.spawning.PoissonSpawnStrategy;
 import trafficsim.systems.AbstractToggleStrategy;
+import trafficsim.systems.CollisionDisablingSystem;
 import trafficsim.systems.DestinationSystem;
 import trafficsim.systems.ExpirySystem;
 import trafficsim.systems.GroupedTrafficLightSystem;
@@ -33,6 +33,7 @@ import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
+import trafficsim.systems.SetGreenWaveSystem;
 import trafficsim.systems.SpawnSystem;
 import ui.tables.CurrentFocus;
 import ui.tables.InfoPop;
@@ -59,11 +60,12 @@ public class InitializeWorld {
 		world.setSystem(new ManageMovementBehaviorsSystem());
 
 		// Temporary hack
-		// world.setSystem(new CollisionDisablingSystem());
+		world.setSystem(new CollisionDisablingSystem());
 
 		world.setSystem(new ExpirySystem());
 		world.setSystem(new ManageSpawnRateChangeSystem());
 		world.setSystem(new ManageSpeedLimitChangeSystem());
+		world.setSystem(new SetGreenWaveSystem(parameters));
 
 		InputSystem inputSystem = new InputSystem(screen);
 		screen.initMultiplexer();
@@ -71,6 +73,7 @@ public class InitializeWorld {
 		world.setSystem(inputSystem, true);
 
 		CITY_SPEED_LIMIT = parameters.getSpeedLimit();
+		TRAFFIC_LIGHT_GREEN_INTERVAL = parameters.getGreenTimer();
 
 		world.initialize();
 

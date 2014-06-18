@@ -145,13 +145,7 @@ public class SimulationScreen extends SuperScreen {
 			// application.exit();
 		}
 
-		// if (!exported && TIMER.getTime() > 1.0 * secsToSave * 1000) {
-		// DataGatherer dataGatherer = world.getDataGatherer();
-		// ExportData.writeToFile(dataGatherer, "data/simulationData");
-		// exported = true;
-		//
-		// System.out.println(dataGatherer.getAverageDistanceTravelled().size() + " cars have reached destination");
-		// }
+
 	}
 	
 

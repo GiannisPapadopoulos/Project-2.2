@@ -32,13 +32,17 @@ public class RunExperiments {
 																			PredefinedParameters.prioritydLightsSimpleGraph);
 
 	static ExperimentDefiniton priorityManhattanExperiment = new ExperimentDefiniton(
-																				"data/intersection",
+																						"data/manhattanPriority",
 																				PredefinedParameters.priorityLightsmanhattanGraph);
 	
 	static ExperimentDefiniton basicManhattanExperiment = new ExperimentDefiniton(
-																						"data/intersection",
-																						PredefinedParameters.priorityLightsmanhattanGraph);
+																					"data/manhattanBasic",
+																					PredefinedParameters.timedLightsmanhattanGraph);
 	
+	static ExperimentDefiniton greenWaveManhattanExperiment = new ExperimentDefiniton(
+																						"data/manhattanGreenWave",
+																						PredefinedParameters.greenWaveManhattanGraph);
+
 	@AllArgsConstructor
 	@Getter
 	static class ExperimentDefiniton {

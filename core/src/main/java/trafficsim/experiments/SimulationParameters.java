@@ -1,9 +1,12 @@
 package trafficsim.experiments;
 
+import gnu.trove.list.array.TIntArrayList;
+
 import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Delegate;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -38,6 +41,11 @@ public class SimulationParameters {
 	/** How long the simulation will be run for */
 	float totalTimeInSecs;
 
+	/** Greenmile */
+	private GreenWaveInfo greenWaveInfo;
+
+	private float greenTimer;
+
 
 	@AllArgsConstructor
 	@Getter
@@ -61,6 +69,13 @@ public class SimulationParameters {
 		private int width;
 		private int height;
 		private float laneLength;
-		
+	}
+
+	/** Vertex ids for greenMile */
+	@AllArgsConstructor
+	@Getter
+	public static class GreenWaveInfo {
+		@Delegate
+		private TIntArrayList vertexIDlist;
 	}
 }

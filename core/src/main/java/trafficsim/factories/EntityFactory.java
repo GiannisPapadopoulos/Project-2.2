@@ -251,7 +251,7 @@ public class EntityFactory {
 
 	public static void addTrafficLights(TrafficSimWorld world, Graph<NavigationObject> graph,
 			List<Entity> vertexEntities) {
-		int interval = TRAFFIC_LIGHT_GREEN_INTERVAL;
+		float interval = TRAFFIC_LIGHT_GREEN_INTERVAL;
 		int orangeInterval = TRAFFIC_LIGHT_ORANGE_INTERVAL;
 
 		// iterator
@@ -303,7 +303,7 @@ public class EntityFactory {
 			Vector2 corr = getVector(road).nor().rotate(90 * direction);
 
 			// int for changing speed of lights
-			int interval = TRAFFIC_LIGHT_GREEN_INTERVAL;
+			float interval = TRAFFIC_LIGHT_GREEN_INTERVAL;
 
 			Vector2 roadVector = getVector(road);
 			if (onPointA)
@@ -386,8 +386,9 @@ public class EntityFactory {
 
 	public static void addSpawnPointsTest(TrafficSimWorld world, Graph<NavigationObject> graph) {
 
-		float length = 60;
+		float length = 100;
 		int interval = 3000;
+		
 
 		int[] indices = { 0, graph.getVertexCount() - 1, (int) Math.sqrt(graph.getVertexCount() - 1),
 							graph.getVertexCount() - (int) Math.sqrt(graph.getVertexCount()) };

@@ -3,6 +3,7 @@ package trafficsim.systems;
 import static functions.MovementFunctions.getRoad;
 import static trafficsim.TrafficSimConstants.*;
 import static utils.EntityRetrievalUtils.getEntity;
+import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.FindBodyQueryCallback;
 import trafficsim.components.PhysicsBodyComponent;
@@ -83,6 +84,12 @@ public class InputSystem extends VoidEntitySystem implements InputProcessor {
 		}
 		else if (keycode == Keys.W) {
 			DEBUG_CLICKS = !DEBUG_CLICKS;
+		}
+		else if (keycode == Keys.Q) {
+			val system = world.getSystem(CollisionDisablingSystem.class);
+			if (system != null) {
+				System.out.println("Foricbly removed: " + system.getDeleted());
+			}
 		}
 		return false;
 	}

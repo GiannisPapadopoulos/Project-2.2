@@ -15,7 +15,6 @@ import com.artemis.Entity;
 public class GreenMile {
 
 	public static void createGreenMile(TrafficSimWorld world, List< Vertex<NavigationObject>> vertexList , int lengthOfMile) {
-
 		// The angle of the roads that will be part of the greenWave
 		//float angle = VectorUtils.getAngle(currentIntersection.getData(), nextIntersection.getData());
 
@@ -42,11 +41,12 @@ public class GreenMile {
 			groupedLightComp = vertexEntity.getComponent(GroupedTrafficLightComponent.class);
 			// float redTimer = groupedLightComp.getGroupedLightsData().get(correctIndex).get(0).getRedTimer();
 			float redTimer = groupedLightComp.getRedTimer(correctIndex);
-			if (redTimer < totalGreenWaveTime) {
+			if (redTimer > totalGreenWaveTime) {
 				setLight(	world, nextIntersection, currentIntersection.getNeighbor(nextIntersection),
 							redTimer - totalGreenWaveTime);
 			}
 			else {
+				System.out.println("done " + (i - 2) + " " + totalGreenWaveTime + " red " + redTimer);
 				break;
 			}
 

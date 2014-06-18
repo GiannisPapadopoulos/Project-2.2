@@ -4,6 +4,7 @@ import static trafficsim.TrafficSimConstants.CAR_LENGTH;
 import static trafficsim.TrafficSimConstants.TIMER;
 import static utils.EntityRetrievalUtils.getEntity;
 import graph.EntityIdentificationData;
+import lombok.Getter;
 import trafficsim.TrafficSimWorld;
 import trafficsim.components.ExpiryComponent;
 import trafficsim.components.PhysicsBodyComponent;
@@ -29,6 +30,9 @@ public class CollisionDisablingSystem
 	private ComponentMapper<PhysicsBodyComponent> physicsBodyMapper;
 	@Mapper
 	private ComponentMapper<ExpiryComponent> expiryMapper;
+
+	@Getter
+	private int deleted;
 
 	@SuppressWarnings("unchecked")
 	public CollisionDisablingSystem() {
@@ -82,6 +86,7 @@ public class CollisionDisablingSystem
 
 		@Override
 		public void preSolve(Contact contact, Manifold oldManifold) {
+			// disableCollision(contact);
 			handleCollision(contact);
 		}
 
@@ -102,14 +107,16 @@ public class CollisionDisablingSystem
 				Body physBody2 = contact.getFixtureB().getBody();
 				if (physBody1.getPosition().dst(physBody2.getPosition()) < CAR_LENGTH / 2) {
 					removeFromWorld(physBody1.getUserData());
+					deleted++;
+					if (!firstHit) {
+						System.out.println("first hit " + TIMER.getTime() / 1000.0 + " pos "
+											+ contact.getFixtureA().getBody().getPosition());
+						firstHit = true;
+					}
 				}
 				// removeFromWorld(physBody1.getUserData());
 				contact.setEnabled(false);
-				if (!firstHit) {
-					System.out.println("first hit " + TIMER.getTime() / 1000.0 + " pos "
-										+ contact.getFixtureA().getBody().getPosition());
-					firstHit = true;
-				}
+
 			}
 		}
 

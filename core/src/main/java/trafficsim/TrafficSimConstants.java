@@ -87,7 +87,7 @@ public final class TrafficSimConstants {
 	public static final boolean DEGUG_SUBSYSTEMS = false;
 
 	/** Default traffic light green interval */
-	public static final int TRAFFIC_LIGHT_GREEN_INTERVAL = 5;
+	public static float TRAFFIC_LIGHT_GREEN_INTERVAL = 5;
 
 	/** Default traffic light orange interval */
 	public static final int TRAFFIC_LIGHT_ORANGE_INTERVAL = 1;

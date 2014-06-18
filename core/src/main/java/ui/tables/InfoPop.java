@@ -42,7 +42,7 @@ public class InfoPop {
 		popUp = new Label(null, Assets.skin);
 		TextureAtlas atlas = new TextureAtlas("assets/packed-textures/ui-textures.pack");
 		glow = new TextureRegionDrawable( atlas.findRegion("car glow"));
-		start = new TextureRegionDrawable(atlas.findRegion("target"));
+		start = new TextureRegionDrawable(atlas.findRegion("source"));
 		destination = new TextureRegionDrawable(atlas.findRegion("target"));
 		
 		

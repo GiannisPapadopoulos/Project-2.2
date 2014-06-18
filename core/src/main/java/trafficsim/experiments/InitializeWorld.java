@@ -1,7 +1,6 @@
 package trafficsim.experiments;
 
-import static trafficsim.TrafficSimConstants.CITY_SPEED_LIMIT;
-import static trafficsim.TrafficSimConstants.TIMER;
+import static trafficsim.TrafficSimConstants.*;
 import graph.EntityIdentificationData;
 import graph.Graph;
 import graph.GraphFactory;
@@ -35,6 +34,7 @@ import trafficsim.systems.PathFindingSystem;
 import trafficsim.systems.PhysicsSystem;
 import trafficsim.systems.RenderSystem;
 import trafficsim.systems.RoutingSystem;
+import trafficsim.systems.SetGreenWaveSystem;
 import trafficsim.systems.SpawnSystem;
 import ui.tables.CurrentFocus;
 import ui.tables.InfoPop;
@@ -67,6 +67,7 @@ public class InitializeWorld {
 		world.setSystem(new ManageSpawnRateChangeSystem());
 		world.setSystem(new ManageSpeedLimitChangeSystem());
 		world.setSystem(new LaneSwitchingSystem());
+		world.setSystem(new SetGreenWaveSystem(parameters));
 
 		InputSystem inputSystem = new InputSystem(screen);
 		screen.initMultiplexer();
@@ -74,6 +75,7 @@ public class InitializeWorld {
 		world.setSystem(inputSystem, true);
 
 		CITY_SPEED_LIMIT = parameters.getSpeedLimit();
+		TRAFFIC_LIGHT_GREEN_INTERVAL = parameters.getGreenTimer();
 
 		world.initialize();
 
@@ -85,32 +87,36 @@ public class InitializeWorld {
 			graph = GraphFactory.createManhattanGraphWithCircuit(	graphInfo.getWidth(), graphInfo.getHeight(),
 														graphInfo.getLaneLength(), 0, 0);
 			
-			
+		
 			//graph = new Graph<NavigationObject>();
 			//GraphFactory.laneSwitchTest(graph);
 			
+
+			// GraphFactory.addHighway(graph, graphInfo.getWidth(), graphInfo.getHeight(), graphInfo.getLaneLength(), 0,
+			// 0);
 		}
 		else {
 			graph = GraphFactory.createTestOneGraph(parameters.isRoundabout());
 		}
 		world.setGraph(graph);
-		// EntityFactory.addSpawnPointsTest(world, world.getGraph());
+		if (parameters.isManhattanGraph()) {
+			EntityFactory.addSpawnPointsTest(world, world.getGraph());
+		}
 		// EntityFactory.addSpawnPoints(world, graph);
 		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
+
 		for (Entity vertexEntity : vertexEntities) {
 			int vertexID = ((EntityIdentificationData) vertexEntity.getComponent(PhysicsBodyComponent.class)
 																	.getUserData()).getID();
 			for (SpawnInfo spawnInfo : parameters.getSpawnpoints()) {
 				if (spawnInfo.getVertexID() == vertexID) {
 					if (spawnInfo.getStrategy() == SpawnStrategyType.POISSON) {
-						vertexEntity.addComponent(new SpawnComponent(
-																		graph.getVertex(vertexID),
+						vertexEntity.addComponent(new SpawnComponent(graph.getVertex(vertexID),
 																		new PoissonSpawnStrategy(spawnInfo.getSpawnInterval())));
 					}
 					else {
 
-						vertexEntity.addComponent(new SpawnComponent(
-																		graph.getVertex(vertexID),
+						vertexEntity.addComponent(new SpawnComponent(graph.getVertex(vertexID),
 																		new FixedIntervalSpawningStrategy(spawnInfo.getSpawnInterval())));
 					}
 				}

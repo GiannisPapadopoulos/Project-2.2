@@ -1,10 +1,12 @@
 package trafficsim.experiments;
 
 import static trafficsim.TrafficSimConstants.DEFAULT_CITY_SPEED_LIMIT;
+import gnu.trove.list.array.TIntArrayList;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import trafficsim.experiments.SimulationParameters.GreenWaveInfo;
 import trafficsim.experiments.SimulationParameters.ManhattanGraphInfo;
 import trafficsim.experiments.SimulationParameters.SpawnInfo;
 import trafficsim.spawning.AbstractSpawnStrategy.SpawnStrategyType;
@@ -20,6 +22,10 @@ public class PredefinedParameters {
 
 	public static SimulationParameters priorityLightsmanhattanGraph;
 
+	public static SimulationParameters timedLightsmanhattanGraph;
+
+	public static SimulationParameters greenWaveManhattanGraph;
+
 	static {
 		createParameters();
 	}
@@ -27,8 +33,13 @@ public class PredefinedParameters {
 	public static void createParameters() {
 		int size = 15; // of manhattan graph
 		ManhattanGraphInfo graphInfo = new ManhattanGraphInfo(size, size, 100f);
-		int[] indices = { 0, size * size - 1, (int) Math.sqrt(size * size - 1),
-							size * size - (int) Math.sqrt(size * size) };
+		TIntArrayList greenMileVertices = new TIntArrayList();
+		for (int i = 0; i < size; i++) {
+			greenMileVertices.add(i * size);
+		}
+		GreenWaveInfo gwInfo = new GreenWaveInfo(greenMileVertices);
+		int vertexCount = size * size;
+		int[] indices = { vertexCount, vertexCount + 1, vertexCount + 2, vertexCount + 3 };
 		List<SpawnInfo> noSpawnPoints = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> spawnInfo = new ArrayList<SpawnInfo>();
 		List<SpawnInfo> manhattanSpawnInfo = new ArrayList<SpawnInfo>();
@@ -82,19 +93,31 @@ public class PredefinedParameters {
 			manhattanSpawnInfo.add(new SpawnInfo(indices[i], intervals[i], SpawnStrategyType.POISSON));
 		}
 		float totalTime = 60 * 3;
+		float manhattanTime = 60 * 5;
+		float defaultGreenInterval = 5;
+		float longGreenInterval = 15;
 		timedLightsSimpleGraph = new SimulationParameters(false, false, null, DEFAULT_CITY_SPEED_LIMIT,
 															AbstractToggleStrategy.basicToggleStrategy, spawnInfo,
-															totalTime);
+															totalTime, null, defaultGreenInterval);
 
 		prioritydLightsSimpleGraph = new SimulationParameters(false, false, null, DEFAULT_CITY_SPEED_LIMIT,
 																AbstractToggleStrategy.priorityToggleStrategy,
-																spawnInfo, totalTime);
+																spawnInfo, totalTime, null, defaultGreenInterval);
 		roundaboutSimpleGraph = new SimulationParameters(false, true, null, DEFAULT_CITY_SPEED_LIMIT,
 															AbstractToggleStrategy.priorityToggleStrategy, spawnInfo,
-															totalTime);
+															totalTime, null, defaultGreenInterval);
 		priorityLightsmanhattanGraph = new SimulationParameters(true, false, graphInfo, DEFAULT_CITY_SPEED_LIMIT,
 																AbstractToggleStrategy.priorityToggleStrategy,
-																manhattanSpawnInfo, totalTime);
+																manhattanSpawnInfo, manhattanTime, null,
+																defaultGreenInterval);
+		timedLightsmanhattanGraph = new SimulationParameters(true, false, graphInfo, DEFAULT_CITY_SPEED_LIMIT,
+																AbstractToggleStrategy.basicToggleStrategy,
+																manhattanSpawnInfo, manhattanTime, null,
+																defaultGreenInterval);
+		greenWaveManhattanGraph = new SimulationParameters(true, false, graphInfo, DEFAULT_CITY_SPEED_LIMIT,
+															AbstractToggleStrategy.basicToggleStrategy,
+															manhattanSpawnInfo, manhattanTime, gwInfo,
+															longGreenInterval);
 	}
 	
 

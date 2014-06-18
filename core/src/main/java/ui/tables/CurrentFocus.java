@@ -81,6 +81,8 @@ public class CurrentFocus extends Table {
 			float carsPerSecond = 60 * entityToRender.getComponent(IntersectionThroughputComponent.class)
 												.getTotalCarsPassed() / (TIMER.getTime() / 1000f);
 			totalCarsPassed.setText(String.format("%.3g%n", carsPerSecond));
+			
+			
 		}
 		else if (entityType == entityType.EDGE) {
 			TIntList vehiclesOnLaneIDs = entityToRender.getComponent(VehiclesOnRoadComponent.class).getVehiclesOnLaneIDs();
@@ -127,6 +129,8 @@ public class CurrentFocus extends Table {
 			row();
 			add(new Label("Distance Remaining: ", Assets.skin));
 			add(distanceRemaining);
+			
+			
 		}
 
 		else if (entityType == EntityType.VERTEX) {

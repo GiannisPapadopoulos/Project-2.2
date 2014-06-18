@@ -132,6 +132,8 @@ public class SimulationScreen extends SuperScreen {
 		super.setWaitTimeUI(world);
 		super.setCarsUI(world);
 		super.setAverageSpeed(world);
+		super.setCarsReached(world);
+		super.setTimeElapsed(TIMER);
 		super.setFps(delta);
 		
 		if (TIMER.getTime() > parameters.getTotalTimeInSecs() * 1000) {
@@ -144,13 +146,7 @@ public class SimulationScreen extends SuperScreen {
 			// application.exit();
 		}
 
-		// if (!exported && TIMER.getTime() > 1.0 * secsToSave * 1000) {
-		// DataGatherer dataGatherer = world.getDataGatherer();
-		// ExportData.writeToFile(dataGatherer, "data/simulationData");
-		// exported = true;
-		//
-		// System.out.println(dataGatherer.getAverageDistanceTravelled().size() + " cars have reached destination");
-		// }
+
 	}
 	
 

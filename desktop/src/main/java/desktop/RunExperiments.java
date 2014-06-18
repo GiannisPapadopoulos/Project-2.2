@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import trafficsim.experiments.AbstractExperiment;
 import trafficsim.experiments.IntersectionThroughputExperiment;
+import trafficsim.experiments.ManhattanExperiment;
 import trafficsim.experiments.PredefinedParameters;
 import trafficsim.experiments.RepeatedExperiment;
 import trafficsim.experiments.SimulationParameters;
@@ -12,11 +13,13 @@ public class RunExperiments {
 
 	public static void main(String[] args) {
 
-		ExperimentDefiniton definition = roundaboutExperiment;
+		ExperimentDefiniton definition = priorityManhattanExperiment;
 
 		AbstractExperiment experiment = new IntersectionThroughputExperiment(definition.getParameters());
+		experiment = new ManhattanExperiment(definition.getParameters());
 
-		RepeatedExperiment repeatedExp = new RepeatedExperiment(experiment, 3, definition.getTextFile());
+		int timesToRepeat = 5;
+		RepeatedExperiment repeatedExp = new RepeatedExperiment(experiment, timesToRepeat, definition.getTextFile());
 		repeatedExp.run();
 	}
 
@@ -29,10 +32,17 @@ public class RunExperiments {
 																			PredefinedParameters.prioritydLightsSimpleGraph);
 
 	static ExperimentDefiniton priorityManhattanExperiment = new ExperimentDefiniton(
-																				"data/intersection",
+																						"data/manhattanPriority",
 																				PredefinedParameters.priorityLightsmanhattanGraph);
 	
+	static ExperimentDefiniton basicManhattanExperiment = new ExperimentDefiniton(
+																					"data/manhattanBasic",
+																					PredefinedParameters.timedLightsmanhattanGraph);
 	
+	static ExperimentDefiniton greenWaveManhattanExperiment = new ExperimentDefiniton(
+																						"data/manhattanGreenWave",
+																						PredefinedParameters.greenWaveManhattanGraph);
+
 	@AllArgsConstructor
 	@Getter
 	static class ExperimentDefiniton {

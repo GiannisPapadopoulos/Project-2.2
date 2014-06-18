@@ -100,7 +100,6 @@ public class ManageMovementBehaviorsSystem
 		float rayLength = 3 * CAR_LENGTH;
 		FrontRayCastCallBack rayCallBack = new FrontRayCastCallBack();
 		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
-		// TODO Some combination of this
 		// box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angle45.cpy().scl(rayLength)));
 		// box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleMinus45.cpy().scl(rayLength)));
 

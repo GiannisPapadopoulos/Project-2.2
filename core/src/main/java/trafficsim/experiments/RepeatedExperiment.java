@@ -7,6 +7,7 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 import trafficsim.TrafficSimWorld;
 import trafficsim.TrafficSimulation;
 import trafficsim.experiments.ExperimentData.AggregatedDataList;
@@ -14,6 +15,7 @@ import trafficsim.experiments.ExperimentData.AggregatedScalar;
 import trafficsim.experiments.ExperimentData.DataList;
 import trafficsim.experiments.ExperimentData.Scalar;
 import trafficsim.screens.SimulationScreen;
+import trafficsim.systems.CollisionDisablingSystem;
 import utils.ExportData;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
@@ -70,6 +72,10 @@ public class RepeatedExperiment {
 	public void notifySimulationEnded(TrafficSimWorld world) {
 		ExperimentData gatheredData = experiment.getGatheredData(world);
 		experimentData.add(gatheredData);
+		val system = world.getSystem(CollisionDisablingSystem.class);
+		if (system != null) {
+			System.out.println("Foricbly removed: " + system.getDeleted());
+		}
 		if (firstRun) {
 			for (int i = 0; i < gatheredData.getDataLists().size(); i++) {
 				DataList dataList = gatheredData.getDataLists().get(i);

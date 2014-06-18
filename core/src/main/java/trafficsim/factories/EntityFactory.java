@@ -3,12 +3,7 @@ package trafficsim.factories;
 import static com.badlogic.gdx.math.MathUtils.degRad;
 import static functions.VectorUtils.getMidPoint;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.CAR_WIDTH;
-import static trafficsim.TrafficSimConstants.DEFAULT_BRAKING_FACTOR;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
-import static trafficsim.TrafficSimConstants.TRAFFIC_LIGHT_GREEN_INTERVAL;
-import static trafficsim.TrafficSimConstants.TRAFFIC_LIGHT_ORANGE_INTERVAL;
+import static trafficsim.TrafficSimConstants.*;
 import functions.VectorUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
@@ -32,8 +27,8 @@ import trafficsim.components.DimensionComponent;
 import trafficsim.components.ExpiryComponent;
 import trafficsim.components.GroupedTrafficLightComponent;
 import trafficsim.components.GroupedTrafficLightComponent.GroupedTrafficLightData;
-import trafficsim.components.LaneSwitchingComponent;
 import trafficsim.components.IntersectionThroughputComponent;
+import trafficsim.components.LaneSwitchingComponent;
 import trafficsim.components.LightToRoadMappingComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.MovementComponent;
@@ -142,7 +137,15 @@ public class EntityFactory {
 
 		world.getEdgeToEntityMap().put(edge.getID(), road.getId());
 		road.addComponent(new AttachedLightsComponent());
-		name = "2edge";
+		if (roadData.getNumLanes() == 1) {
+			name = "1edge";
+		}
+		else if (roadData.getNumLanes() == 2) {
+			name = "highway2";
+		}
+		else {
+			name = "highway3";
+		}
 
 		Vector2 position = new Vector2(
 				(roadData.getPointB().x + roadData.getPointA().x) / 2,
@@ -202,7 +205,7 @@ public class EntityFactory {
 		else if (cr_type == CR_TYPE.CrossRoad)
 			name = "intersection";
 		else if (cr_type == CR_TYPE.HighWay_Cross)
-			name = "highway_cross";
+			name = "highway_flyover";
 		else
 			name = "intersection";
 

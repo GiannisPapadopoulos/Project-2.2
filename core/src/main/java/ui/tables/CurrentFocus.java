@@ -89,7 +89,9 @@ public class CurrentFocus extends Table {
 			float averageSpeed = 0;
 			for (int i = 0; i < vehiclesOnLaneIDs.size(); i++) {
 				Entity car = sidepanels.getWorld().getEntity(vehiclesOnLaneIDs.get(i));
-				averageSpeed += car.getComponent(DataComponent.class).getAverageSpeed();
+				if (car != null) {
+					averageSpeed += car.getComponent(DataComponent.class).getAverageSpeed();
+				}
 			}
 			averageSpeed /= vehiclesOnLaneIDs.size();
 			averageLaneSpeed.setText("" + averageSpeed);

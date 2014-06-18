@@ -3,303 +3,324 @@ textures.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+1edge
+  rotate: false
+  xy: 2, 1030
+  size: 2034, 224
+  orig: 2034, 224
+  offset: 0, 0
+  index: -1
 2edge
   rotate: false
-  xy: 2, 1002
+  xy: 2, 804
   size: 2034, 224
   orig: 2034, 224
   offset: 0, 0
   index: -1
 adjust_normal
   rotate: false
-  xy: 3644, 3356
+  xy: 3641, 2933
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 adjust_pressed
   rotate: false
-  xy: 2839, 1517
+  xy: 3641, 2675
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 background
   rotate: false
-  xy: 2, 1228
+  xy: 2, 1256
   size: 2835, 2835
   orig: 2835, 2835
   offset: 0, 0
   index: -1
 blue-car
   rotate: false
-  xy: 2839, 1969
+  xy: 2038, 654
   size: 600, 600
   orig: 600, 600
   offset: 0, 0
   index: -1
 car
   rotate: false
-  xy: 3441, 2071
+  xy: 1133, 84
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: 1
 car
   rotate: false
-  xy: 3441, 1972
+  xy: 3899, 2894
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: 6
 car
   rotate: false
-  xy: 1897, 812
+  xy: 3481, 2249
   size: 97, 188
   orig: 97, 188
   offset: 0, 0
   index: 7
 car1
   rotate: false
-  xy: 1446, 380
+  xy: 2, 12
   size: 327, 169
   orig: 327, 169
   offset: 0, 0
   index: -1
 lambo2
   rotate: false
-  xy: 1446, 380
+  xy: 2, 12
   size: 327, 169
   orig: 327, 169
   offset: 0, 0
   index: -1
 car2
   rotate: false
-  xy: 3902, 3515
+  xy: 3899, 3092
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car3
   rotate: false
-  xy: 506, 101
+  xy: 2640, 1157
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car4
   rotate: false
-  xy: 3644, 3257
+  xy: 943, 84
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car5
   rotate: false
-  xy: 804, 189
+  xy: 1514, 206
   size: 327, 169
   orig: 327, 169
   offset: 0, 0
   index: -1
 lambo
   rotate: false
-  xy: 804, 189
+  xy: 1514, 206
   size: 327, 169
   orig: 327, 169
   offset: 0, 0
   index: -1
 car6
   rotate: false
-  xy: 3441, 2170
+  xy: 3899, 2993
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 car7
   rotate: false
-  xy: 3902, 3416
+  xy: 2640, 1058
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 editor_normal
   rotate: false
-  xy: 2839, 1259
+  xy: 3641, 2417
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 editor_pressed
   rotate: false
-  xy: 3097, 1517
+  xy: 1989, 396
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
+highway2
+  rotate: false
+  xy: 2, 377
+  size: 1985, 168
+  orig: 1985, 168
+  offset: 0, 0
+  index: -1
+highway3
+  rotate: false
+  xy: 2, 547
+  size: 1985, 255
+  orig: 1985, 255
+  offset: 0, 0
+  index: -1
 highway_cross
   rotate: false
-  xy: 2839, 3213
+  xy: 2839, 3241
   size: 803, 850
   orig: 803, 850
   offset: 0, 0
   index: -1
 intersection
   rotate: false
-  xy: 3644, 3614
+  xy: 3644, 3642
   size: 449, 449
   orig: 449, 449
   offset: 0, 0
   index: -1
 lambo3
   rotate: false
-  xy: 1133, 189
+  xy: 331, 12
   size: 327, 169
   orig: 327, 169
   offset: 0, 0
   index: -1
 left_green
   rotate: false
-  xy: 3343, 1894
+  xy: 943, 9
   size: 60, 73
   orig: 60, 73
   offset: 0, 0
   index: -1
 left_orange
   rotate: false
-  xy: 1775, 476
+  xy: 1323, 108
   size: 60, 73
   orig: 60, 73
   offset: 0, 0
   index: -1
 left_red
   rotate: false
-  xy: 1700, 305
+  xy: 3899, 2819
   size: 60, 73
   orig: 60, 73
   offset: 0, 0
   index: -1
 light_green
   rotate: false
-  xy: 696, 125
+  xy: 3481, 2174
   size: 60, 73
   orig: 60, 73
   offset: 0, 0
   index: -1
 light_orange
   rotate: false
-  xy: 3834, 3281
+  xy: 2640, 884
   size: 60, 73
   orig: 60, 73
   offset: 0, 0
   index: -1
 light_red
   rotate: false
-  xy: 1897, 737
+  xy: 1005, 9
   size: 60, 73
   orig: 60, 73
   offset: 0, 0
   index: -1
 panelicon_normal
   rotate: false
-  xy: 3097, 1281
+  xy: 2247, 418
   size: 236, 234
   orig: 236, 234
   offset: 0, 0
   index: -1
 panelicon_pressed
   rotate: false
-  xy: 1462, 144
+  xy: 2485, 418
   size: 236, 234
   orig: 236, 234
   offset: 0, 0
   index: -1
 parking
   rotate: false
-  xy: 2542, 1047
+  xy: 660, 2
   size: 281, 179
   orig: 281, 179
   offset: 0, 0
   index: -1
 play_hover
   rotate: false
-  xy: 3481, 2977
+  xy: 1843, 141
   size: 236, 234
   orig: 236, 234
   offset: 0, 0
   index: -1
 play_hover2
   rotate: false
-  xy: 3481, 2741
+  xy: 2081, 160
   size: 236, 234
   orig: 236, 234
   offset: 0, 0
   index: -1
 play_normal
   rotate: false
-  xy: 3481, 2505
+  xy: 2319, 182
   size: 236, 234
   orig: 236, 234
   offset: 0, 0
   index: -1
 play_pressed
   rotate: false
-  xy: 3441, 2269
+  xy: 2557, 182
   size: 236, 234
   orig: 236, 234
   offset: 0, 0
   index: -1
 police
   rotate: false
-  xy: 506, 2
+  xy: 2640, 959
   size: 188, 97
   orig: 188, 97
   offset: 0, 0
   index: -1
 road1x1
   rotate: false
-  xy: 2839, 2571
+  xy: 2839, 1797
   size: 640, 640
   orig: 640, 640
   offset: 0, 0
   index: -1
 road1x1v
   rotate: false
-  xy: 804, 360
+  xy: 2839, 1155
   size: 640, 640
   orig: 640, 640
   offset: 0, 0
   index: -1
 road2x2
   rotate: false
-  xy: 2, 200
+  xy: 2839, 2439
   size: 800, 800
   orig: 800, 800
   offset: 0, 0
   index: -1
 roundabout
   rotate: false
-  xy: 1446, 551
+  xy: 3644, 3191
   size: 449, 449
   orig: 449, 449
   offset: 0, 0
   index: -1
 truck
   rotate: false
-  xy: 2038, 1034
+  xy: 2, 183
   size: 502, 192
   orig: 502, 192
   offset: 0, 0
   index: 1
 truck
   rotate: false
-  xy: 2, 6
+  xy: 506, 183
   size: 502, 192
   orig: 502, 192
   offset: 0, 0
   index: 2
 truck
   rotate: false
-  xy: 2839, 1775
+  xy: 1010, 183
   size: 502, 192
   orig: 502, 192
   offset: 0, 0
@@ -318,6 +339,18 @@ maasmap
   index: -1
 
 textures3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+highway_flyover
+  rotate: false
+  xy: 2, 2
+  size: 1877, 1985
+  orig: 1877, 1985
+  offset: 0, 0
+  index: -1
+
+textures4.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none

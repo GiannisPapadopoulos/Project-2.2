@@ -49,7 +49,7 @@ public class PredefinedParameters {
 			manhattanSpawnInfo.add(new SpawnInfo(indices[i], intervals[i], SpawnStrategyType.POISSON));
 		}
 		float totalTime = 60 * 3;
-		float manhattanTime = 60 * 5;
+		float manhattanTime = 60 * 10;
 		float defaultGreenInterval = 5;
 		float longGreenInterval = 15;
 		timedLightsSimpleGraph = new SimulationParameters(false, false, null, DEFAULT_CITY_SPEED_LIMIT,

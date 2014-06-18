@@ -1,16 +1,15 @@
 package trafficsim.screens;
 
-import static trafficsim.TrafficSimConstants.WINDOW_HEIGHT;
-import static trafficsim.TrafficSimConstants.WINDOW_WIDTH;
-import static trafficsim.TrafficSimConstants.WORLD_TO_BOX;
+import static trafficsim.TrafficSimConstants.*;
 
 import java.util.List;
-
-import org.apache.commons.lang3.time.StopWatch;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
+
+import org.apache.commons.lang3.time.StopWatch;
+
 import trafficsim.TrafficSimWorld;
 import trafficsim.systems.InputEditorSystem;
 import trafficsim.systems.InputSystem;
@@ -28,7 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Timer;
 
 import editor.MousePosition;
 
@@ -151,10 +149,9 @@ public abstract class SuperScreen implements Screen {
 
 	public void setAverageSpeed(TrafficSimWorld world) {
 
-		int speed = (int) (Stats.mean(world.getDataGatherer().getAverageVelocities()));
+		double speed = (Stats.mean(world.getDataGatherer().getAverageVelocities()));
 	
-		sidePanels.getAvgspeed().setText(
-				Integer.toString(speed) + "km/h");
+		sidePanels.getAvgspeed().setText(String.format("%.3g ", speed) + "m/s");
 	}
 	
 	public void setCarsReached(TrafficSimWorld world) {

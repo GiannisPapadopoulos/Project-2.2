@@ -53,9 +53,11 @@ public class DestinationSystem
 				assert source != null;
 				Graph<NavigationObject> graph = source.getParent();
 				// To showcase highway
-				if (source.getID() == 230 && !tagged) {
+				if (source.getID() == 234 && !tagged) {
 					tagged = true;
-					routeComp.setTarget(graph.getVertex(234));
+					routeComp.setTarget(graph.getVertex(233));
+					// To disappear
+					routeComp.setTagged(true);
 				}
 				else if (spawnPoints.size() <= 1) {
 					// int randIndex = RANDOM.nextInt(graph.getVertexCount() - 11);

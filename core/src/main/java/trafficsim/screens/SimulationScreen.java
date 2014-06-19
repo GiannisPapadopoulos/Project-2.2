@@ -85,7 +85,7 @@ public class SimulationScreen extends SuperScreen {
 		InitializeWorld.init(world, parameters, this);
 
 		if (parameters == PredefinedParameters.highwaysGraph) {
-			getCamera().translate(650, -40);
+			getCamera().translate(650, -220);
 		}
 	}
 

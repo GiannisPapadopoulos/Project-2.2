@@ -17,7 +17,6 @@ import pathfinding.GraphAction;
 import pathfinding.GraphState;
 import search.Path;
 import trafficsim.roads.NavigationObject;
-import editor.EditorData;
 
 import com.artemis.Component;
 import com.badlogic.gdx.math.Vector2;
@@ -62,6 +61,9 @@ public class RouteComponent extends Component {
 	 * transition out) or a crossroad (will search edge transition)
 	 */
 	private boolean followingEdge;
+
+	// Used for disappearing
+	private boolean tagged;
 
 	public RouteComponent(Vertex<NavigationObject> source,
 			Vertex<NavigationObject> target) {

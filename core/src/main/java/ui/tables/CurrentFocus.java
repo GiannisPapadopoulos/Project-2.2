@@ -7,6 +7,7 @@ import graph.EntityIdentificationData.EntityType;
 import trafficsim.components.DataComponent;
 import trafficsim.components.IntersectionThroughputComponent;
 import trafficsim.components.PhysicsBodyComponent;
+import trafficsim.components.RouteComponent;
 import trafficsim.components.VehiclesOnRoadComponent;
 import utils.Assets;
 
@@ -75,6 +76,7 @@ public class CurrentFocus extends Table {
 			/**set Distance remaining*/
 			distanceRemaining.setText(String.format("%.2g%n", entityToRender.getComponent(DataComponent.class)
 																			.getDistanceLeft()));
+
 		}
 		
 		else if (entityType == EntityType.VERTEX) {
@@ -131,12 +133,16 @@ public class CurrentFocus extends Table {
 			add(new Label("Distance Remaining: ", Assets.skin));
 			add(distanceRemaining);
 			
+			RouteComponent routeComp = entityToRender.getComponent(RouteComponent.class);
+			// if (routeComp.isSet()) {
+			// System.out.println(routeComp.getWayPointIndex() + " " + routeComp.getWayPoints());
+			// }
 			
 		}
 		else if (entityType == EntityType.VERTEX) {
 			add(new Label("Cars passing per minute: ", Assets.skin));
 			add(totalCarsPassed);
-			System.out.println("Vertex " + idData.getID());
+			// System.out.println("Vertex " + idData.getID());
 		}
 
 		else if (entityType == EntityType.EDGE) {

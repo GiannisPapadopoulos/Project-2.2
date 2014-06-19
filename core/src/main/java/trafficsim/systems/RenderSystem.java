@@ -6,6 +6,7 @@ import lombok.Getter;
 import trafficsim.components.DimensionComponent;
 import trafficsim.components.PhysicsBodyComponent;
 import trafficsim.components.PositionComponent;
+import trafficsim.components.RouteComponent;
 import trafficsim.components.SpriteComponent;
 import trafficsim.components.TrafficLightComponent;
 
@@ -35,6 +36,8 @@ public class RenderSystem
 	ComponentMapper<SpriteComponent> spriteMapper;
 	@Mapper
 	ComponentMapper<DimensionComponent> dimensionMapper;
+	@Mapper
+	ComponentMapper<RouteComponent> routeMapper;
 
 	private HashMap<String, AtlasRegion> regions;
 	private TextureAtlas textureAtlas;
@@ -94,6 +97,22 @@ public class RenderSystem
 	@Override
 	protected void process(Entity e) {
 		PhysicsBodyComponent physComp = physicsBodyMapper.get(e);
+		if (routeMapper.has(e)) {
+			RouteComponent routeComp = routeMapper.get(e);
+			if (routeComp.isSet()) {
+				Vector2 first = new Vector2(706.75f, -150);
+				boolean inv = routeComp.isSet() && first.epsilonEquals(routeComp.getWayPoints().get(0), 0.01f)
+								&& routeComp.getWayPointIndex() >= 65 && routeComp.getWayPointIndex() <= 75;
+				if(inv) {
+					// System.out.println("Now you see me, now you don't!");
+					return;
+				}
+			}
+			else {
+				// System.out.println("unt");
+			}
+		}
+
 		Vector2 position = getPosition(e);
 		if (position != null) {
 			 SpriteComponent spriteComp = spriteMapper.get(e);

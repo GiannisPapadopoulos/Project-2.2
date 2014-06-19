@@ -199,6 +199,9 @@ public class EntityFactory {
 
 		if (cr_type == CR_TYPE.Roundabout)
 			name = "roundabout";
+		else if (vertex.getID() >= 225 && vertex.getID() <= 228) {
+			name = "highwaycurve";
+		}
 		else if (cr_type == CR_TYPE.CrossRoad)
 			name = "intersection";
 		else if (cr_type == CR_TYPE.HighWay_Cross)
@@ -208,6 +211,16 @@ public class EntityFactory {
 
 		Vector2 position = crossRoadData.getPosition();
 		float angle = 0.0f;
+
+		if (vertex.getID() == 230)
+			angle = 90;
+
+		if (vertex.getID() == 226)
+			angle = 270;
+		if (vertex.getID() == 227)
+			angle = 90;
+		if (vertex.getID() == 228)
+			angle = 180;
 
 		float length = crossRoadData.getSize();
 
@@ -554,8 +567,8 @@ public class EntityFactory {
 				// Entity vertexEntity =
 				// world.getEntity(world.getVertexToEntityMap().get(vertex.getID()));
 				Entity vertexEntity = vertexEntities.get(index);
-				if (vertexEntity.getComponent(SpawnComponent.class) == null) {
-					float interval = 2000;
+				if (true || vertexEntity.getComponent(SpawnComponent.class) == null) {
+					float interval = 3000;
 					// AbstractSpawnStrategy spawnStrategy = new
 					// FixedIntervalSpawningStrategy(interval);
 					AbstractSpawnStrategy spawnStrategy = new PoissonSpawnStrategy(
@@ -569,13 +582,47 @@ public class EntityFactory {
 		}
 	}
 
+	public static Entity createCitySquare(TrafficSimWorld world, String name) {
+		Entity backGround = world.createEntity();
+
+		float length = 1000 * 2;
+		float width = 1000 * 2;
+
+		Vector2 position = new Vector2(length / 2 - length / 10, width / 2 - width / 10);
+		float angle = 0;
+
+		backGround.addComponent(new DimensionComponent(length, width));
+		angle *= MathUtils.degRad;
+
+		// boxShape takes the half width/height as input
+		// TODO Check number of lanes here
+		FixtureDefBuilder fixtureDef = new FixtureDefBuilder().boxShape(length / 2, width / 2)
+																.density(1.0f)
+																.restitution(1.0f)
+																.friction(0f)
+																.sensor(true)
+																// There should be a better way
+																.groupIndex((short) -2);
+		Body body = new BodyBuilder(world.getBox2dWorld()).fixture(fixtureDef)
+															.type(BodyType.StaticBody)
+															.position(position)
+															.angle(angle)
+															.build();
+		backGround.addComponent(new PhysicsBodyComponent(body));
+		// road.addComponent(new PositionComponent(position));
+
+		SpriteComponent sprite = new SpriteComponent(name);
+		backGround.addComponent(sprite);
+		return backGround;
+	}
+
 	public static Entity createBackground(TrafficSimWorld world, String name) {
 		Entity backGround = world.createEntity();
 
-		float length = 1000;
-		float width = 1000;
+		float length = 1000 * 2;
+		float width = 1000 * 2;
 
-		Vector2 position = new Vector2(250, 250);
+		Vector2 position = new Vector2(length / 2 - length / 10, width / 2 - width / 10);
 		float angle = 0;
 
 		backGround.addComponent(new DimensionComponent(length, width));

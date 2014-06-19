@@ -1,15 +1,9 @@
 package trafficsim.systems;
 
-import static com.badlogic.gdx.math.MathUtils.cos;
-import static com.badlogic.gdx.math.MathUtils.degRad;
-import static com.badlogic.gdx.math.MathUtils.sin;
+import static com.badlogic.gdx.math.MathUtils.*;
 import static functions.VectorUtils.getAngle;
 import static functions.VectorUtils.getVector;
-import static trafficsim.TrafficSimConstants.CAR_LENGTH;
-import static trafficsim.TrafficSimConstants.LANE_WIDTH;
-import static trafficsim.TrafficSimConstants.MAX_SPEED;
-import static trafficsim.TrafficSimConstants.RANDOM;
-import static trafficsim.TrafficSimConstants.TIMER;
+import static trafficsim.TrafficSimConstants.*;
 import graph.Vertex;
 import trafficsim.TrafficSimWorld;
 import trafficsim.callbacks.FrontRayCastCallBack;

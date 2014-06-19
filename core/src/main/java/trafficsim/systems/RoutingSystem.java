@@ -28,8 +28,6 @@ import com.artemis.annotations.Mapper;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.math.Vector2;
 
-import functions.MovementFunctions;
-
 /**
  * System responsible for updating the waypoints for each car, i.e. the next
  * target position
@@ -90,29 +88,28 @@ public class RoutingSystem extends EntitySystem {
 	 * if necessary The assumption is that the path is always vertex, edge,
 	 * vertex etc
 	 */
-	private void updatePath(RouteComponent routeComp,
-			SteeringComponent steeringComp, PhysicsBodyComponent physComp,
+	private void updatePath(RouteComponent routeComp, SteeringComponent steeringComp, PhysicsBodyComponent physComp,
 			int carID) {
 		if (routeComp.isLastEdge()) {
 			if (routeComp.isLastWaypoint()) {
 				// TODO arrival behavior
 				steeringComp.setState(State.ARRIVED);
-			} else {
+			}
+			else {
 				updateWayPointIndex(routeComp, physComp);
 			}
-		} else {
+		}
+		else {
 			SubSystem transition = getNextSubsystem(routeComp);
 			if (transition == null) {
-				System.out.println(routeComp.getCurrentVertex() + " "
-						+ routeComp.getCurrentEdge());
+				System.out.println(routeComp.getCurrentVertex() + " " + routeComp.getCurrentEdge());
 			}
 			ArrayList<Vector2> nextTransitionPoints = getNextTransitionPoints(transition);
 
 			for (Vector2 nextTransitionPoint : nextTransitionPoints) {
 				if (physComp.getPosition().dst(nextTransitionPoint) < switchThreshold
-						|| reachedLastWaypoint(routeComp, physComp)) {
-					List<Vector2> waypoints = buildWaypointsParametric(
-							transition, physComp.getPosition());
+					|| reachedLastWaypoint(routeComp, physComp)) {
+					List<Vector2> waypoints = buildWaypointsParametric(transition, physComp.getPosition());
 					routeComp.setWayPoints(waypoints);
 					routeComp.setWayPointIndex(0);
 					if (routeComp.isFollowingEdge()) {
@@ -120,15 +117,18 @@ public class RoutingSystem extends EntitySystem {
 						// list
 						updateRoadReference(routeComp, carID, true);
 
-					} else {
+					}
+					else {
 						// If we are entering an edge, add the car to the list
 						routeComp.setCurrentVertex(routeComp.getNextVertex());
 						routeComp.incrementEdgeIndex();
 						updateRoadReference(routeComp, carID, false);
+						throughputMapper.get(getVertexEntity(world, routeComp.getCurrentVertex())).increment();
 					}
 					routeComp.setFollowingEdge(!routeComp.isFollowingEdge());
 					break;
-				} else {
+				}
+				else {
 
 				}
 			}

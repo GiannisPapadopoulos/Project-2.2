@@ -54,10 +54,16 @@ public class ManageMovementBehaviorsSystem
 	private float brakingThreshold = 3f * SPEED_RATIO;
 	private float carInFrontThreshold = (CAR_LENGTH + brakingThreshold + 1f) * SPEED_RATIO;
 	private float emergencyThreshold = (CAR_LENGTH + 2f) * SPEED_RATIO;
+	private boolean diagonalScans;
 
 	@SuppressWarnings("unchecked")
 	public ManageMovementBehaviorsSystem() {
 		super(Aspect.getAspectForAll(RouteComponent.class, PhysicsBodyComponent.class, MovementComponent.class));
+	}
+
+	public ManageMovementBehaviorsSystem(boolean diagonalScans) {
+		this();
+		this.diagonalScans = diagonalScans;
 	}
 
 	public void setConstants() {
@@ -100,8 +106,10 @@ public class ManageMovementBehaviorsSystem
 		float rayLength = 3 * CAR_LENGTH;
 		FrontRayCastCallBack rayCallBack = new FrontRayCastCallBack();
 		box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleAdjustment.cpy().scl(rayLength)));
-		// box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angle45.cpy().scl(rayLength)));
-		// box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleMinus45.cpy().scl(rayLength)));
+		if (diagonalScans) {
+			box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angle45.cpy().scl(rayLength)));
+			box2dWorld.rayCast(rayCallBack, position, position.cpy().add(angleMinus45.cpy().scl(rayLength)));
+		}
 
 		if (rayCallBack.foundSomething()) {
 			Entity otherCar = world.getEntity(rayCallBack.getClosestId());

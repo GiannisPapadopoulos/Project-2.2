@@ -14,7 +14,6 @@ import trafficsim.roads.SubSystem;
 
 import com.badlogic.gdx.math.Vector2;
 
-import editor.EditorData;
 import functions.VectorUtils;
 
 public class GraphFactory {

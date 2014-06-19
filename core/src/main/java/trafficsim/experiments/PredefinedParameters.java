@@ -1,6 +1,7 @@
 package trafficsim.experiments;
 
 import static trafficsim.TrafficSimConstants.DEFAULT_CITY_SPEED_LIMIT;
+import static trafficsim.TrafficSimConstants.TRAFFIC_LIGHT_GREEN_INTERVAL;
 import gnu.trove.list.array.TIntArrayList;
 
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class PredefinedParameters {
 	public static SimulationParameters timedLightsmanhattanGraph;
 
 	public static SimulationParameters greenWaveManhattanGraph;
+
+	public static SimulationParameters highwaysGraph;
 
 	static {
 		createParameters();
@@ -52,17 +55,20 @@ public class PredefinedParameters {
 		float totalTime = 60 * 5;
 		timedLightsSimpleGraph = new SimulationParameters(false, false, null, DEFAULT_CITY_SPEED_LIMIT,
 															AbstractToggleStrategy.basicToggleStrategy, spawnInfo,
-															totalTime);
+															totalTime, null, TRAFFIC_LIGHT_GREEN_INTERVAL);
 
 		prioritydLightsSimpleGraph = new SimulationParameters(false, false, null, DEFAULT_CITY_SPEED_LIMIT,
 																AbstractToggleStrategy.priorityToggleStrategy,
-																spawnInfo, totalTime);
+																spawnInfo, totalTime, null, TRAFFIC_LIGHT_GREEN_INTERVAL);
 		roundaboutSimpleGraph = new SimulationParameters(false, true, null, DEFAULT_CITY_SPEED_LIMIT,
 															AbstractToggleStrategy.priorityToggleStrategy, spawnInfo,
-															totalTime);
+															totalTime, null, TRAFFIC_LIGHT_GREEN_INTERVAL);
 		priorityLightsmanhattanGraph = new SimulationParameters(true, false, graphInfo, DEFAULT_CITY_SPEED_LIMIT,
 																AbstractToggleStrategy.priorityToggleStrategy,
-																manhattanSpawnInfo, totalTime);
+																manhattanSpawnInfo, totalTime, null, TRAFFIC_LIGHT_GREEN_INTERVAL);
+		highwaysGraph = new SimulationParameters(true, false, graphInfo, DEFAULT_CITY_SPEED_LIMIT,
+													AbstractToggleStrategy.basicToggleStrategy,
+													noSpawnPoints, totalTime, null, TRAFFIC_LIGHT_GREEN_INTERVAL);
 	}
 	
 	public static void createParametersDense() {
@@ -114,10 +120,6 @@ public class PredefinedParameters {
 																AbstractToggleStrategy.basicToggleStrategy,
 																manhattanSpawnInfo, manhattanTime, null,
 																defaultGreenInterval);
-		greenWaveManhattanGraph = new SimulationParameters(true, false, graphInfo, DEFAULT_CITY_SPEED_LIMIT,
-															AbstractToggleStrategy.basicToggleStrategy,
-															manhattanSpawnInfo, manhattanTime, gwInfo,
-															longGreenInterval);
 	}
 	
 

@@ -13,7 +13,7 @@ public class RunExperiments {
 
 	public static void main(String[] args) {
 
-		ExperimentDefiniton definition = priorityManhattanExperiment;
+		ExperimentDefiniton definition = highwaysExperiment;
 
 		AbstractExperiment experiment = new IntersectionThroughputExperiment(definition.getParameters());
 		experiment = new ManhattanExperiment(definition.getParameters());
@@ -42,6 +42,8 @@ public class RunExperiments {
 	static ExperimentDefiniton greenWaveManhattanExperiment = new ExperimentDefiniton(
 																						"data/manhattanGreenWave",
 																						PredefinedParameters.greenWaveManhattanGraph);
+	
+	static ExperimentDefiniton highwaysExperiment = new ExperimentDefiniton("data/highways", PredefinedParameters.highwaysGraph);
 
 	@AllArgsConstructor
 	@Getter

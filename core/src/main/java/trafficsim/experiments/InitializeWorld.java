@@ -58,10 +58,12 @@ public class InitializeWorld {
 
 		world.setSystem(new RoutingSystem());
 		world.setSystem(new MovementSystem());
-		world.setSystem(new ManageMovementBehaviorsSystem());
+		world.setSystem(new ManageMovementBehaviorsSystem(parameters == PredefinedParameters.roundaboutSimpleGraph));
 
 		// Temporary hack
-		 //world.setSystem(new CollisionDisablingSystem());
+
+		if (parameters == PredefinedParameters.roundaboutSimpleGraph)
+			world.setSystem(new CollisionDisablingSystem());
 
 		world.setSystem(new ExpirySystem());
 		world.setSystem(new ManageSpawnRateChangeSystem());
@@ -99,11 +101,14 @@ public class InitializeWorld {
 			graph = GraphFactory.createTestOneGraph(parameters.isRoundabout());
 		}
 		world.setGraph(graph);
-		if (parameters.isManhattanGraph()) {
+		if (parameters.isManhattanGraph() && parameters != PredefinedParameters.highwaysGraph) {
 			EntityFactory.addSpawnPointsTest(world, world.getGraph());
 		}
-		// EntityFactory.addSpawnPoints(world, graph);
 		List<Entity> vertexEntities = EntityFactory.populateWorld(world, graph);
+		// EntityFactory.addSpawnPoints(world, graph);
+		if (parameters == PredefinedParameters.highwaysGraph) {
+			EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+		}
 
 		for (Entity vertexEntity : vertexEntities) {
 			int vertexID = ((EntityIdentificationData) vertexEntity.getComponent(PhysicsBodyComponent.class)
@@ -121,10 +126,9 @@ public class InitializeWorld {
 					}
 				}
 			}
-			
-			
 		}
-		EntityFactory.addSpawnPoints(world, graph, vertexEntities);
+
+
 
 		EntityFactory.addTrafficLights(world, world.getGraph(), vertexEntities);
 

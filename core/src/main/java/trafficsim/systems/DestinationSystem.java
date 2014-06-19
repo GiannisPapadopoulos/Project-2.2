@@ -2,6 +2,7 @@ package trafficsim.systems;
 
 import static trafficsim.TrafficSimConstants.RANDOM;
 import graph.Graph;
+import graph.Vertex;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,8 @@ public class DestinationSystem
 	@Getter
 	private List<Entity> spawnPoints = new ArrayList<>();
 
+	boolean tagged = false;
+
 	@SuppressWarnings("unchecked")
 	public DestinationSystem() {
 		super(Aspect.getAspectForAll(RouteComponent.class));
@@ -46,25 +49,31 @@ public class DestinationSystem
 			Entity entity = entities.get(i);
 			RouteComponent routeComp = routeComponentMapper.get(entity);
 			if (routeComp.getTarget() == null) {
-				assert routeComp.getSource() != null;
-				Graph<NavigationObject> graph = routeComp.getSource().getParent();
-				if (spawnPoints.size() <= 1) {
+				Vertex<NavigationObject> source = routeComp.getSource();
+				assert source != null;
+				Graph<NavigationObject> graph = source.getParent();
+				// To showcase highway
+				if (source.getID() == 230 && !tagged) {
+					tagged = true;
+					routeComp.setTarget(graph.getVertex(234));
+				}
+				else if (spawnPoints.size() <= 1) {
 					// int randIndex = RANDOM.nextInt(graph.getVertexCount() - 11);
 					int randIndex = RANDOM.nextInt(graph.getVertexCount() - 1);
 
 					// Make sure source != target
-					if (randIndex >= routeComp.getSource().getID()) {
+					if (randIndex >= source.getID()) {
 						randIndex++;
 					}
 					routeComp.setTarget(graph.getVertex(randIndex));
 				}
 				else {
 					int randIndex = RANDOM.nextInt(spawnPoints.size() - 1);
-					if (spawnComponentMapper.get(spawnPoints.get(randIndex)).getVertex() == routeComp.getSource()) {
+					if (spawnComponentMapper.get(spawnPoints.get(randIndex)).getVertex() == source) {
 						randIndex++;
 					}
 					routeComp.setTarget(spawnComponentMapper.get(spawnPoints.get(randIndex)).getVertex());
-					assert routeComp.getTarget() != routeComp.getSource();
+					assert routeComp.getTarget() != source;
 				}
 
 			}

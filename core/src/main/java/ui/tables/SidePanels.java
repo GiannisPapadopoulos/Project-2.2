@@ -280,6 +280,7 @@ public class SidePanels extends Table {
 		thirdPage.row();
 		thirdPage.add(new Label("FPS ", Assets.skin));
 		thirdPage.add(fps);
+		thirdPage.row();
 		thirdPage.add(new Label("Reached Destination: ", Assets.skin));
 		thirdPage.add(carsreached);
 

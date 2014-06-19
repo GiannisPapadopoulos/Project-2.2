@@ -86,8 +86,8 @@ public class CollisionDisablingSystem
 
 		@Override
 		public void preSolve(Contact contact, Manifold oldManifold) {
-			// disableCollision(contact);
-			handleCollision(contact);
+			disableCollision(contact);
+			// handleCollision(contact);
 		}
 
 		private void disableCollision(Contact contact) {

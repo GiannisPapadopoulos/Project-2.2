@@ -101,10 +101,10 @@ public class CurrentFocus extends Table {
 		
 	}
 	
-	private EntityType getEntityType(Entity entity) {
+	private EntityIdentificationData getIDdata(Entity entity) {
 		PhysicsBodyComponent physComp = entity.getComponent(PhysicsBodyComponent.class);
 		EntityIdentificationData idData = (EntityIdentificationData) physComp.getUserData();
-		return idData.getType();
+		return idData;
 	}
 
 	public void setEntityToRender(Entity clickedEntity){
@@ -114,7 +114,8 @@ public class CurrentFocus extends Table {
 			return;
 		}
 		entityToRender = clickedEntity;
-		entityType = getEntityType(clickedEntity);
+		EntityIdentificationData idData = getIDdata(clickedEntity);
+		entityType = idData.getType();
 		clearChildren();
 
 		if (entityType == EntityType.CAR) {
@@ -132,10 +133,10 @@ public class CurrentFocus extends Table {
 			
 			
 		}
-
 		else if (entityType == EntityType.VERTEX) {
 			add(new Label("Cars passing per minute: ", Assets.skin));
 			add(totalCarsPassed);
+			System.out.println("Vertex " + idData.getID());
 		}
 
 		else if (entityType == EntityType.EDGE) {

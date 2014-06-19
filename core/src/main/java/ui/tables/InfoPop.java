@@ -1,7 +1,6 @@
 package ui.tables;
 
 import lombok.AllArgsConstructor;
-import lombok.Setter;
 import trafficsim.components.DataComponent;
 import trafficsim.components.MaxSpeedComponent;
 import trafficsim.components.PhysicsBodyComponent;
@@ -73,7 +72,8 @@ public class InfoPop {
 			
 			BitmapFont font = new BitmapFont(Gdx.files.internal("assets/m2.fnt"), new TextureRegion(texture), false);
 		
-			popUp.setText((int)timeSpentOnTrafficLights  + "s\n" + (int)Math.max(Math.abs(speed.x), Math.abs(speed.y)) + "km/h");
+			// popUp.setText((int)timeSpentOnTrafficLights + "s\n" + (int) speed.len() + "km/h");
+			popUp.setText(String.format("%.3g", 3.6f * speed.len()) + " km/h");
 			popUp.setPosition(position.x+5f, position.y-19f);
 			
 //			float a= popUp.getFontScaleX();

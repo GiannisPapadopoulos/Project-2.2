@@ -47,23 +47,17 @@ public class PathFindingSystem extends EntitySystem {
 			Entity car = entities.get(i);
 			if (routeComponentMapper.has(car)) {
 				RouteComponent routeComp = routeComponentMapper.get(car);
-				if (!routeComp.isSet() && routeComp.getSource() != null
-						&& routeComp.getTarget() != null) {
-					Path<GraphState, GraphAction> path = new GraphBasedAstar()
-							.findRoute(routeComp.getSource(),
-									routeComp.getTarget());
-					assert path.isValidPath() : " No valid path found!" + car
-							+ " " + routeComp;
+				if (!routeComp.isSet() && routeComp.getSource() != null && routeComp.getTarget() != null) {
+					Path<GraphState, GraphAction> path = new GraphBasedAstar().findRoute(	routeComp.getSource(),
+																							routeComp.getTarget());
+					assert path.isValidPath() : " No valid path found!" + car + " " + routeComp;
 					routeComp.setPath(path);
 					routeComp.setSet(true);
 					routeComp.setCurrentVertex(routeComp.getSource());
 					routeComp.setEdgeIndex(0);
 					// TODO not tested
-					List<Vector2> waypoints = buildWaypointsParametric(
-							routeComp,
-							((PhysicsBodyComponent) (car
-									.getComponent(PhysicsBodyComponent.class)))
-									.getPosition());
+					List<Vector2> waypoints = buildWaypointsParametric(	routeComp,
+																		((PhysicsBodyComponent) (car.getComponent(PhysicsBodyComponent.class))).getPosition());
 					routeComp.setFollowingEdge(true);
 					routeComp.setWayPoints(waypoints);
 					updateRoadReference(routeComp, car.getId());

@@ -295,7 +295,8 @@ public class EntityFactory {
 		int index = 0;
 
 		for (Vertex<NavigationObject> vertex : graph.getVertexIterator()) {
-			if (((CrossRoad) vertex.getData()).getCrossRoadType() != CrossRoad.CR_TYPE.CrossRoad)
+			if (((CrossRoad) vertex.getData()).getCrossRoadType() != CrossRoad.CR_TYPE.CrossRoad
+				|| (vertex.getID() >= 225 && vertex.getID() <= 228))
 				continue;
 
 			List<List<GroupedTrafficLightData>> groupedLights = new ArrayList<List<GroupedTrafficLightData>>();

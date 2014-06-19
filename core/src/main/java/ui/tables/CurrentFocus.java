@@ -7,7 +7,6 @@ import graph.EntityIdentificationData.EntityType;
 import trafficsim.components.DataComponent;
 import trafficsim.components.IntersectionThroughputComponent;
 import trafficsim.components.PhysicsBodyComponent;
-import trafficsim.components.RouteComponent;
 import trafficsim.components.VehiclesOnRoadComponent;
 import utils.Assets;
 
@@ -133,7 +132,7 @@ public class CurrentFocus extends Table {
 			add(new Label("Distance Remaining: ", Assets.skin));
 			add(distanceRemaining);
 			
-			RouteComponent routeComp = entityToRender.getComponent(RouteComponent.class);
+			// RouteComponent routeComp = entityToRender.getComponent(RouteComponent.class);
 			// if (routeComp.isSet()) {
 			// System.out.println(routeComp.getWayPointIndex() + " " + routeComp.getWayPoints());
 			// }

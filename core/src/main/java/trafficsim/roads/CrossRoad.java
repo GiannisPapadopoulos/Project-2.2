@@ -106,8 +106,7 @@ public class CrossRoad extends NavigationObject {
 
 	@Override
 	public float getLength() {
-		// TODO Auto-generated method stub
-		return 0;
+		return size;
 	}
 
 	@Override

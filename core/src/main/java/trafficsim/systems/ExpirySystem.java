@@ -47,8 +47,6 @@ public class ExpirySystem
 				if (dataComponentMapper.has(entity) && dataComponentMapper.get(entity).getTotalTime() > 5) {
 					DataComponent dataComp = dataComponentMapper.get(entity);
 					((TrafficSimWorld) world).getDataGatherer().add(entity.getId());
-					// System.out.println(dataComp.getTotalDistance() + " " + dataComp.getAverageSpeed() + " pct "
-					// + dataComp.getPercentageStopped());
 					world.getSystem(MovementSystem.class).carRemoved();
 				}
 				entity.deleteFromWorld();

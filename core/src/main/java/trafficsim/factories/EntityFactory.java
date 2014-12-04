@@ -51,6 +51,7 @@ import trafficsim.roads.Road.Direction;
 import trafficsim.spawning.AbstractSpawnStrategy;
 import trafficsim.spawning.FixedIntervalSpawningStrategy;
 import trafficsim.spawning.PoissonSpawnStrategy;
+import utils.WeightedProbabilityList;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.MathUtils;
@@ -583,14 +584,53 @@ public class EntityFactory {
 		}
 	}
 
-	public static Entity createCitySquare(TrafficSimWorld world, String name) {
+	/** Returns a probability list of city square textures, with the probability of each being selected */
+	public static WeightedProbabilityList<String> buildCitySquareDistribution() {
+		List<String> textures = Arrays.asList(	"residence1", "residence2", "residence3", "residence4", "company",
+												"parking", "park", "green", "mac", "football", "square11");
+		List<Double> probabilities = Arrays.asList(0.15, 0.15, 0.15, 0.15, 0.08, 0.09, 0.1, 0.05, 0.05, 0.02, 0.01);
+		WeightedProbabilityList<String> cityTextures = new WeightedProbabilityList<String>(textures, probabilities);
+		return cityTextures;
+	}
+
+	public static void createCitySquares(TrafficSimWorld world, Graph<NavigationObject> graph, int width, int height,
+			float laneLength) {
+		WeightedProbabilityList<String> textureList = buildCitySquareDistribution();
+		for (int i = 0; i < width - 1; i++) {
+			for (int j = 0; j < height - 1; j++) {
+				Vertex<NavigationObject> vertex = graph.getVertex(i * width + j);
+				// SHould be the other way around
+				Vertex<NavigationObject> up = graph.getVertex(i * width + j + 1);
+				Vertex<NavigationObject> right = graph.getVertex((i + 1) * width + j);
+				float size = vertex.getData().getLength();
+				// #rHack
+				size = 18;
+				Vector2 position = vertex.getData().getPosition();
+				float shift = size / 4;
+				Vector2 bottomLeftPosition = new Vector2(position.x + shift, position.y + shift);
+				float squareLength = (right.getData().getPosition().x - position.x - 2 * shift) / 2;
+				float squareWidth = (up.getData().getPosition().y - position.y - 2 * shift) / 2;
+				float[] angles = { 90, 0, 180, 270 };
+				for(int m = 0; m < 2; m++) {
+					for(int n = 0; n < 2; n++) {
+						String name = "city/" + textureList.sample();
+						float angle = angles[m * 2 + n];
+						Vector2 squarePosition = new Vector2(bottomLeftPosition.x + squareLength * m,
+																bottomLeftPosition.y + squareWidth * n);
+						Entity square = createCitySquare(world, name, squarePosition, squareWidth, squareLength, angle);
+						square.addToWorld();
+					}
+				}
+
+			}
+		}
+	}
+
+	public static Entity createCitySquare(TrafficSimWorld world, String name, Vector2 bottomLeftCorner, float width,
+			float length, float angle) {
 		Entity backGround = world.createEntity();
 
-		float length = 1000 * 2;
-		float width = 1000 * 2;
-
-		Vector2 position = new Vector2(length / 2 - length / 10, width / 2 - width / 10);
-		float angle = 0;
+		Vector2 position = new Vector2(bottomLeftCorner.x + length / 2, bottomLeftCorner.y + width / 2);
 
 		backGround.addComponent(new DimensionComponent(length, width));
 		angle *= MathUtils.degRad;

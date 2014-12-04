@@ -70,8 +70,7 @@ public class VectorUtils {
 	}
 
 	public static Vector2 getUnitVectorRads(float angleInRads) {
-		return new Vector2(MathUtils.cos(angleInRads * MathUtils.degreesToRadians),
-							MathUtils.sin(angleInRads * MathUtils.degreesToRadians));
+		return new Vector2(MathUtils.cos(angleInRads), MathUtils.sin(angleInRads));
 	}
 
 	public static double getAbsAngleDifference(Vector2 v1, Vector2 v2) {

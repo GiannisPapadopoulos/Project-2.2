@@ -89,7 +89,8 @@ public class InitializeWorld {
 			graph = GraphFactory.createManhattanGraphWithCircuit(	graphInfo.getWidth(), graphInfo.getHeight(),
 														graphInfo.getLaneLength(), 0, 0);
 			
-		
+			EntityFactory.createCitySquares(world, graph, graphInfo.getWidth(), graphInfo.getHeight(),
+											graphInfo.getLaneLength());
 			//graph = new Graph<NavigationObject>();
 			//GraphFactory.laneSwitchTest(graph);
 			

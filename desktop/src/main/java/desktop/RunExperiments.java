@@ -13,7 +13,7 @@ public class RunExperiments {
 
 	public static void main(String[] args) {
 
-		ExperimentDefiniton definition = highwaysExperiment;
+		ExperimentDefiniton definition = intersectionExperiment;
 
 		AbstractExperiment experiment = new IntersectionThroughputExperiment(definition.getParameters());
 		experiment = new ManhattanExperiment(definition.getParameters());
